@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { ProofFileUpload } from "../components/ProofFileUpload";
 
 export const QuestionDetailPage = () => {
   const { id } = useParams();
@@ -11,11 +12,14 @@ export const QuestionDetailPage = () => {
     toggleSaveQuestion,
     submitAnswer,
     acceptAnswer,
+    deleteQuestion,
+    deleteAnswer,
     users,
     currentUser,
   } = useApp();
 
   const [answerText, setAnswerText] = useState("");
+  const [answerProofs, setAnswerProofs] = useState([]);
 
   const question = questions.find((q) => q.id === id) || questions[0];
 
@@ -34,12 +38,28 @@ export const QuestionDetailPage = () => {
   }
 
   const author = users.find((u) => u.id === question.authorId);
+  const isQuestionOwner = currentUser?.id === question.authorId || currentUser?.role === "admin" || currentUser?.rawRole === "ADMIN";
 
-  const handleAnswerSubmit = (e) => {
+  const handleAnswerSubmit = async (e) => {
     e.preventDefault();
     if (!answerText.trim()) return;
-    submitAnswer(question.id, answerText);
+    const proofDetailsStr = answerProofs.length > 0 ? JSON.stringify(answerProofs) : "";
+    await submitAnswer(question.id, answerText, proofDetailsStr);
     setAnswerText("");
+    setAnswerProofs([]);
+  };
+
+  const handleDeleteQuestion = async () => {
+    if (window.confirm("Are you sure you want to delete this question from the database?")) {
+      await deleteQuestion(question.id);
+      navigate("/questions");
+    }
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    if (window.confirm("Are you sure you want to delete this answer from the database?")) {
+      await deleteAnswer(question.id, answerId);
+    }
   };
 
   const relatedQuestions = questions.filter((q) => q.id !== question.id).slice(0, 3);
@@ -53,7 +73,7 @@ export const QuestionDetailPage = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-md bg-secondary-container/40 text-on-secondary-container font-mono text-label-sm font-semibold">
-                {question.subject}
+                {question.subject || "Academic Network"}
               </span>
               {question.staffVerified && (
                 <span className="px-3 py-1 rounded-md bg-primary-container text-on-primary font-mono text-label-sm font-semibold flex items-center gap-1">
@@ -62,7 +82,19 @@ export const QuestionDetailPage = () => {
                 </span>
               )}
             </div>
-            <span className="text-outline text-label-sm font-mono">{question.createdAt}</span>
+            <div className="flex items-center gap-3">
+              <span className="text-outline text-label-sm font-mono">{question.createdAt}</span>
+              {isQuestionOwner && (
+                <button
+                  onClick={handleDeleteQuestion}
+                  className="px-3 py-1 rounded-lg bg-error-container text-on-error-container text-label-sm font-semibold hover:bg-error/20 transition-all flex items-center gap-1"
+                  title="Delete Question from Database"
+                >
+                  <span className="material-symbols-outlined text-[16px]">delete</span>
+                  <span>Delete</span>
+                </button>
+              )}
+            </div>
           </div>
 
           <h1 className="font-headline-md text-headline-md text-on-surface font-serif font-bold leading-tight">
@@ -78,17 +110,17 @@ export const QuestionDetailPage = () => {
                 </div>
               ) : (
                 <img
-                  src={author?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80"}
-                  alt={author?.name}
+                  src={author?.avatar || question.authorAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80"}
+                  alt={author?.name || question.authorName}
                   className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20"
                 />
               )}
               <div>
                 <div className="font-title-sm text-title-sm font-semibold text-on-surface">
-                  {question.isAnonymous ? "Anonymous Student" : author?.name || "Academic Scholar"}
+                  {question.isAnonymous ? "Anonymous Student" : author?.name || question.authorName || "Academic Scholar"}
                 </div>
                 <div className="font-body-sm text-body-sm text-on-surface-variant">
-                  {question.isAnonymous ? "Identity hidden for peer accountability" : `${author?.degree} · ${author?.institution}`}
+                  {question.isAnonymous ? "Identity hidden for peer accountability" : (author ? `${author.degree} · ${author.institution}` : question.authorRole || "IIT Delhi Scholar")}
                 </div>
               </div>
             </div>
@@ -108,7 +140,7 @@ export const QuestionDetailPage = () => {
           </p>
 
           <div className="flex flex-wrap gap-2 pt-2">
-            {question.tags.map((t, idx) => (
+            {(question.tags || []).map((t, idx) => (
               <span key={idx} className="px-3 py-1 bg-surface-container-low text-on-surface-variant rounded-lg font-label-sm font-mono">
                 #{t}
               </span>
@@ -162,7 +194,17 @@ export const QuestionDetailPage = () => {
             placeholder="Write a clear, peer-validated response with technical rationale or open-source citations..."
             className="w-full p-4 bg-surface-container-low border border-surface-container-high rounded-xl text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
-          <div className="flex items-center justify-between">
+
+          {/* Proof / Image Attachment Dropzone for Answer */}
+          <ProofFileUpload
+            files={answerProofs}
+            onFilesChange={setAnswerProofs}
+            maxFiles={3}
+            label="Attach Technical Proof, Screenshots, or Output Logs"
+            helperText="Upload screenshots, benchmark logs, or proof images verifying your solution."
+          />
+
+          <div className="flex items-center justify-between pt-2">
             <span className="text-label-sm text-secondary font-mono">
               Accepted answers earn +10 contribution points
             </span>
@@ -179,72 +221,86 @@ export const QuestionDetailPage = () => {
         {/* Answers List */}
         <div className="space-y-space-md">
           <h2 className="font-headline-sm text-headline-sm text-primary font-serif">
-            Answers ({question.answers.length})
+            Answers ({(question.answers || []).length})
           </h2>
 
-          {question.answers.length === 0 ? (
+          {(!question.answers || question.answers.length === 0) ? (
             <div className="p-8 text-center bg-surface-container-lowest rounded-xl border border-surface-container-high text-on-surface-variant">
               No answers yet. Be the first scholar to respond!
             </div>
           ) : (
-            question.answers.map((ans) => (
-              <div
-                key={ans.id}
-                className={`p-space-lg bg-surface-container-lowest rounded-2xl border shadow-sm space-y-space-sm transition-all ${
-                  ans.isAccepted ? "border-secondary ring-2 ring-secondary/20" : "border-surface-container-high"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={ans.authorAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80"}
-                      alt={ans.authorName}
-                      className="w-9 h-9 rounded-full object-cover"
-                    />
-                    <div>
-                      <div className="font-title-sm text-title-sm font-semibold text-on-surface flex items-center gap-1.5">
-                        <span>{ans.authorName}</span>
-                        {ans.isAccepted && (
-                          <span className="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-mono text-[11px] font-bold flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                            Accepted Answer
-                          </span>
-                        )}
+            question.answers.map((ans) => {
+              const isAnswerOwner = currentUser?.id === ans.authorId || currentUser?.role === "admin" || currentUser?.rawRole === "ADMIN";
+              return (
+                <div
+                  key={ans.id}
+                  className={`p-space-lg bg-surface-container-lowest rounded-2xl border shadow-sm space-y-space-sm transition-all ${
+                    ans.isAccepted ? "border-secondary ring-2 ring-secondary/20" : "border-surface-container-high"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={ans.authorAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80"}
+                        alt={ans.authorName}
+                        className="w-9 h-9 rounded-full object-cover"
+                      />
+                      <div>
+                        <div className="font-title-sm text-title-sm font-semibold text-on-surface flex items-center gap-1.5">
+                          <span>{ans.authorName}</span>
+                          {ans.isAccepted && (
+                            <span className="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-mono text-[11px] font-bold flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                              Accepted Answer
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-body-sm text-body-sm text-on-surface-variant">{ans.authorRole}</div>
                       </div>
-                      <div className="font-body-sm text-body-sm text-on-surface-variant">{ans.authorRole}</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-outline text-label-sm font-mono">{ans.createdAt}</span>
+                      {isAnswerOwner && (
+                        <button
+                          onClick={() => handleDeleteAnswer(ans.id)}
+                          className="p-1 text-outline hover:text-error transition-colors"
+                          title="Delete Answer from Database"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                      )}
                     </div>
                   </div>
-                  <span className="text-outline text-label-sm font-mono">{ans.createdAt}</span>
-                </div>
 
-                <p className="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-line">
-                  {ans.content}
-                </p>
+                  <p className="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-line">
+                    {ans.content}
+                  </p>
 
-                <div className="flex items-center justify-between pt-3 border-t border-surface-container-low">
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 bg-surface-container-low rounded-lg font-mono text-label-sm text-on-surface-variant">
-                      {ans.votes} Upvotes
-                    </span>
+                  <div className="flex items-center justify-between pt-3 border-t border-surface-container-low">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 bg-surface-container-low rounded-lg font-mono text-label-sm text-on-surface-variant">
+                        {ans.votes || 0} Upvotes
+                      </span>
+                    </div>
+
+                    {!ans.isAccepted && (currentUser?.id === question.authorId || currentUser?.role === "faculty") && (
+                      <button
+                        onClick={() => acceptAnswer(question.id, ans.id)}
+                        className="px-4 py-1.5 bg-secondary text-on-secondary rounded-lg font-title-sm font-semibold shadow hover:bg-secondary/90 transition-all flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">check</span>
+                        <span>Mark as Accepted Answer</span>
+                      </button>
+                    )}
                   </div>
-
-                  {!ans.isAccepted && (currentUser.id === question.authorId || currentUser.role === "faculty") && (
-                    <button
-                      onClick={() => acceptAnswer(question.id, ans.id)}
-                      className="px-4 py-1.5 bg-secondary text-on-secondary rounded-lg font-title-sm font-semibold shadow hover:bg-secondary/90 transition-all flex items-center gap-1"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">check</span>
-                      <span>Mark as Accepted Answer</span>
-                    </button>
-                  )}
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
 
-      {/* Right 1 Col: Related Questions & Guidelines */}
+      {/* Right 1 Col: Related Questions */}
       <div className="space-y-space-lg">
         <div className="p-space-md bg-surface-container-lowest rounded-2xl border border-surface-container-high shadow-sm space-y-space-sm">
           <h3 className="font-title-md text-title-md text-primary font-semibold font-serif">Related Questions</h3>
@@ -260,7 +316,7 @@ export const QuestionDetailPage = () => {
                 </div>
                 <div className="flex items-center justify-between text-label-sm text-outline">
                   <span>{rq.subject}</span>
-                  <span>{rq.answers.length} ans</span>
+                  <span>{(rq.answers || []).length} ans</span>
                 </div>
               </div>
             ))}

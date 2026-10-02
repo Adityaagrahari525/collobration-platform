@@ -95,7 +95,7 @@ export const apiService = {
     return request("/auth/refresh", { method: "POST" });
   },
 
-  // User Profile
+  // User Profile & Account Management
   getCurrentUser: async () => {
     return request("/users/me");
   },
@@ -104,6 +104,18 @@ export const apiService = {
     return request("/users/me/profile", {
       method: "PATCH",
       body: JSON.stringify(profileData),
+    });
+  },
+
+  deleteMyAccount: async () => {
+    return request("/users/me", {
+      method: "DELETE",
+    });
+  },
+
+  deleteUser: async (id) => {
+    return request(`/users/${id}`, {
+      method: "DELETE",
     });
   },
 
@@ -149,5 +161,105 @@ export const apiService = {
 
   getPersonById: async (id) => {
     return request(`/users/${id}`);
+  },
+
+  // Questions & Answers Q&A
+  getQuestions: async (search, department, tag) => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (department) params.append("department", department);
+    if (tag) params.append("tag", tag);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    return request(`/questions${queryString}`);
+  },
+
+  getQuestionById: async (id) => {
+    return request(`/questions/${id}`);
+  },
+
+  createQuestion: async (questionData) => {
+    return request("/questions", {
+      method: "POST",
+      body: JSON.stringify(questionData),
+    });
+  },
+
+  updateQuestion: async (id, questionData) => {
+    return request(`/questions/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(questionData),
+    });
+  },
+
+  deleteQuestion: async (id) => {
+    return request(`/questions/${id}`, {
+      method: "DELETE",
+    });
+  },
+
+  voteQuestion: async (id) => {
+    return request(`/questions/${id}/vote`, {
+      method: "POST",
+    });
+  },
+
+  submitAnswer: async (questionId, content, proofDetails) => {
+    return request(`/questions/${questionId}/answers`, {
+      method: "POST",
+      body: JSON.stringify({ content, proofDetails }),
+    });
+  },
+
+  updateAnswer: async (answerId, content) => {
+    return request(`/questions/answers/${answerId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ content }),
+    });
+  },
+
+  deleteAnswer: async (answerId) => {
+    return request(`/questions/answers/${answerId}`, {
+      method: "DELETE",
+    });
+  },
+
+  acceptAnswer: async (answerId) => {
+    return request(`/questions/answers/${answerId}/accept`, {
+      method: "PATCH",
+    });
+  },
+
+  // Projects Workspace
+  getProjects: async (search, domain, status) => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (domain) params.append("domain", domain);
+    if (status) params.append("status", status);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    return request(`/projects${queryString}`);
+  },
+
+  getProjectById: async (id) => {
+    return request(`/projects/${id}`);
+  },
+
+  createProject: async (projectData) => {
+    return request("/projects", {
+      method: "POST",
+      body: JSON.stringify(projectData),
+    });
+  },
+
+  updateProject: async (id, projectData) => {
+    return request(`/projects/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(projectData),
+    });
+  },
+
+  deleteProject: async (id) => {
+    return request(`/projects/${id}`, {
+      method: "DELETE",
+    });
   },
 };

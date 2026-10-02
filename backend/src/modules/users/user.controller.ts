@@ -32,6 +32,37 @@ export class UserController {
     }
   }
 
+  static async deleteMyAccount(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Authentication required." });
+      }
+      const result = await UserService.deleteUser(req.user.userId);
+      res.clearCookie("access_token");
+      res.clearCookie("refresh_token");
+      return res.status(200).json({ success: true, ...result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Authentication required." });
+      }
+      const { id } = req.params;
+      // Allow self-deletion or admin deletion
+      if (req.user.userId !== id && req.user.role !== "ADMIN") {
+        return res.status(403).json({ success: false, message: "Permission denied." });
+      }
+      const result = await UserService.deleteUser(id);
+      return res.status(200).json({ success: true, ...result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getMySkills(req: Request, res: Response, next: NextFunction) {
     try {
       if (!req.user) {

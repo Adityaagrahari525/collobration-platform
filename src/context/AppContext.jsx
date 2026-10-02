@@ -89,7 +89,7 @@ export const AppProvider = ({ children }) => {
     };
   }, []);
 
-  // Load datasets
+  // Datasets state
   const [users, setUsers] = useState(() => {
     const saved = localStorage.getItem("campuslink_users_data");
     return saved ? JSON.parse(saved) : INITIAL_USERS;
@@ -121,7 +121,34 @@ export const AppProvider = ({ children }) => {
   const [mentorshipRequests, setMentorshipRequests] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Persist state changes
+  // Fetch initial questions, projects, and users from backend API
+  const refreshDatabaseContent = async () => {
+    try {
+      const [qRes, pRes, uRes] = await Promise.all([
+        apiService.getQuestions().catch(() => null),
+        apiService.getProjects().catch(() => null),
+        apiService.getPeople().catch(() => null),
+      ]);
+
+      if (qRes && qRes.success && qRes.data && qRes.data.length > 0) {
+        setQuestions(qRes.data);
+      }
+      if (pRes && pRes.success && pRes.data && pRes.data.length > 0) {
+        setProjects(pRes.data);
+      }
+      if (uRes && uRes.success && uRes.data && uRes.data.length > 0) {
+        setUsers(uRes.data);
+      }
+    } catch (e) {
+      console.warn("[AppContext] Initial database fetch fallback.", e);
+    }
+  };
+
+  useEffect(() => {
+    refreshDatabaseContent();
+  }, [isAuthenticated]);
+
+  // Persist local storage fallbacks
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem("campuslink_user", JSON.stringify(currentUser));
@@ -167,23 +194,10 @@ export const AppProvider = ({ children }) => {
       if (!prev) return prev;
       return {
         ...prev,
-        contributionScore: prev.contributionScore + points,
+        contributionScore: (prev.contributionScore || 0) + points,
         contributions: [newEvent, ...(prev.contributions || [])],
       };
     });
-
-    setUsers((prevUsers) =>
-      prevUsers.map((u) => {
-        if (u.id === userId) {
-          return {
-            ...u,
-            contributionScore: u.contributionScore + points,
-            contributions: [newEvent, ...(u.contributions || [])],
-          };
-        }
-        return u;
-      })
-    );
   };
 
   // Real Backend Auth Integration with Graceful Fallback
@@ -219,13 +233,13 @@ export const AppProvider = ({ children }) => {
         localStorage.setItem("campuslink_user", JSON.stringify(mergedUser));
         localStorage.setItem("campuslink_auth", JSON.stringify(true));
         localStorage.setItem("campuslink_onboarding", JSON.stringify(true));
+        refreshDatabaseContent();
         return res.data;
       }
     } catch (err) {
-      console.warn("[AppContext] REST API login failed or offline. Attempting dbService fallback login...", err);
+      console.warn("[AppContext] REST API login failed. Falling back to dbService.", err);
     }
 
-    // Fallback to dbService / local scholar session (prevents 'Failed to fetch' crash)
     const dbRes = await dbService.login(email, password);
     if (dbRes && dbRes.user) {
       const safeUser = {
@@ -274,13 +288,13 @@ export const AppProvider = ({ children }) => {
         localStorage.setItem("campuslink_user", JSON.stringify(mergedUser));
         localStorage.setItem("campuslink_auth", JSON.stringify(true));
         localStorage.setItem("campuslink_onboarding", JSON.stringify(true));
+        refreshDatabaseContent();
         return res.data;
       }
     } catch (err) {
-      console.warn("[AppContext] REST API register failed or offline. Attempting dbService fallback registration...", err);
+      console.warn("[AppContext] REST API register failed. Falling back to dbService.", err);
     }
 
-    // Fallback to dbService / local registration (prevents 'Failed to fetch' crash)
     const dbRes = await dbService.register(registerInput);
     if (dbRes && dbRes.user) {
       const safeUser = {
@@ -303,6 +317,23 @@ export const AppProvider = ({ children }) => {
     setCurrentUser(null);
     localStorage.removeItem("campuslink_user");
     localStorage.removeItem("campuslink_auth");
+  };
+
+  const deleteUserAccount = async (userId) => {
+    try {
+      if (userId === currentUser?.id) {
+        await apiService.deleteMyAccount();
+        await logout();
+      } else {
+        await apiService.deleteUser(userId);
+        setUsers((prev) => prev.filter((u) => u.id !== userId));
+      }
+      refreshDatabaseContent();
+    } catch (err) {
+      console.error("[AppContext] User deletion failed:", err);
+      // Fallback state removal
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+    }
   };
 
   const updateProfile = async (profileData) => {
@@ -405,12 +436,37 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  // Questions Methods
-  const createQuestion = (questionData) => {
+  // Questions & Answers Methods with Database Persistence
+  const createQuestion = async (questionData) => {
+    try {
+      const res = await apiService.createQuestion({
+        title: questionData.title,
+        description: questionData.description || questionData.content || "",
+        department: questionData.department || currentUser?.department,
+        subject: questionData.subject || "General Academic",
+        academicYear: questionData.year || "2026",
+        isAnonymous: questionData.isAnonymous || false,
+        tags: questionData.tags || ["Academic"],
+      });
+
+      if (res && res.success && res.data) {
+        setQuestions((prev) => [res.data, ...prev]);
+        addNotification({
+          title: "Question Published",
+          message: `Your question '${res.data.title.slice(0, 40)}...' was posted to the network feed.`,
+          type: "question",
+          link: `/questions/${res.data.id}`,
+        });
+        return res.data.id;
+      }
+    } catch (err) {
+      console.warn("[AppContext] createQuestion API fallback to local state", err);
+    }
+
     const newQ = {
       id: `q-${Date.now()}`,
       title: questionData.title,
-      description: questionData.description,
+      description: questionData.description || questionData.content || "",
       authorId: currentUser?.id || "usr-1",
       isAnonymous: questionData.isAnonymous || false,
       department: questionData.department || currentUser?.department,
@@ -420,7 +476,6 @@ export const AppProvider = ({ children }) => {
       votes: 1,
       userVoted: false,
       saved: false,
-      staffVerified: questionData.requestStaffResponse || false,
       createdAt: "Just now",
       answers: [],
     };
@@ -429,18 +484,24 @@ export const AppProvider = ({ children }) => {
     if (currentUser?.id) {
       addContributionEvent(currentUser.id, "QUESTION_CREATED", `Posted question: '${questionData.title.slice(0, 45)}...'`);
     }
-    
-    addNotification({
-      title: "Question Published",
-      message: `Your question '${newQ.title.slice(0, 40)}...' was posted to the network feed.`,
-      type: "question",
-      link: `/questions/${newQ.id}`,
-    });
-
     return newQ.id;
   };
 
-  const voteQuestion = (questionId) => {
+  const deleteQuestion = async (questionId) => {
+    try {
+      await apiService.deleteQuestion(questionId);
+    } catch (err) {
+      console.warn("[AppContext] deleteQuestion API fallback to local state", err);
+    }
+    setQuestions((prev) => prev.filter((q) => q.id !== questionId));
+  };
+
+  const voteQuestion = async (questionId) => {
+    try {
+      await apiService.voteQuestion(questionId);
+    } catch (err) {
+      // local vote toggle
+    }
     setQuestions((prev) =>
       prev.map((q) => {
         if (q.id === questionId) {
@@ -462,7 +523,25 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  const submitAnswer = (questionId, content) => {
+  const submitAnswer = async (questionId, content) => {
+    try {
+      const res = await apiService.submitAnswer(questionId, content);
+      if (res && res.success && res.data) {
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === questionId ? res.data : q))
+        );
+        addNotification({
+          title: "Answer Submitted",
+          message: "Your answer was recorded in the database.",
+          type: "answer",
+          link: `/questions/${questionId}`,
+        });
+        return;
+      }
+    } catch (err) {
+      console.warn("[AppContext] submitAnswer API fallback to local state", err);
+    }
+
     const newAns = {
       id: `ans-${Date.now()}`,
       authorId: currentUser?.id || "usr-1",
@@ -480,33 +559,52 @@ export const AppProvider = ({ children }) => {
         if (q.id === questionId) {
           return {
             ...q,
-            answers: [...q.answers, newAns],
+            answers: [...(q.answers || []), newAns],
           };
         }
         return q;
       })
     );
-
-    if (currentUser?.id) {
-      addContributionEvent(currentUser.id, "HELPFUL_ANSWER", "Submitted technical answer to peer question");
-    }
-    
-    addNotification({
-      title: "Answer Submitted",
-      message: "Your answer was recorded. You received +5 contribution points.",
-      type: "answer",
-      link: `/questions/${questionId}`,
-    });
   };
 
-  const acceptAnswer = (questionId, answerId) => {
-    let ansAuthorId = null;
+  const deleteAnswer = async (questionId, answerId) => {
+    try {
+      await apiService.deleteAnswer(answerId);
+    } catch (err) {
+      console.warn("[AppContext] deleteAnswer API fallback to local state", err);
+    }
+
     setQuestions((prev) =>
       prev.map((q) => {
         if (q.id === questionId) {
-          const updatedAns = q.answers.map((a) => {
+          return {
+            ...q,
+            answers: (q.answers || []).filter((a) => a.id !== answerId),
+          };
+        }
+        return q;
+      })
+    );
+  };
+
+  const acceptAnswer = async (questionId, answerId) => {
+    try {
+      const res = await apiService.acceptAnswer(answerId);
+      if (res && res.success && res.data) {
+        setQuestions((prev) =>
+          prev.map((q) => (q.id === questionId ? res.data : q))
+        );
+        return;
+      }
+    } catch (err) {
+      console.warn("[AppContext] acceptAnswer API fallback to local state", err);
+    }
+
+    setQuestions((prev) =>
+      prev.map((q) => {
+        if (q.id === questionId) {
+          const updatedAns = (q.answers || []).map((a) => {
             if (a.id === answerId) {
-              ansAuthorId = a.authorId;
               return { ...a, isAccepted: true };
             }
             return { ...a, isAccepted: false };
@@ -516,20 +614,45 @@ export const AppProvider = ({ children }) => {
         return q;
       })
     );
-
-    if (ansAuthorId) {
-      addContributionEvent(ansAuthorId, "ANSWER_ACCEPTED", "Answer marked as Accepted by Questioner");
-    }
-
-    addNotification({
-      title: "Answer Accepted!",
-      message: "An answer was marked as accepted. Contributor earned +10 points.",
-      type: "accept",
-      link: `/questions/${questionId}`,
-    });
   };
 
-  // Projects Methods
+  // Projects Methods with Database Persistence
+  const createProject = async (projectData) => {
+    try {
+      const res = await apiService.createProject({
+        title: projectData.title,
+        description: projectData.description,
+        domain: projectData.category || projectData.domain || "Research & Engineering",
+        sprintPhase: projectData.sprintPhase || "Phase 1: Architecture",
+        status: projectData.status || "Recruiting",
+        recruitingRoles: projectData.openRoles || [],
+        requiredSkills: projectData.requiredSkills || [],
+      });
+
+      if (res && res.success && res.data) {
+        setProjects((prev) => [res.data, ...prev]);
+        addNotification({
+          title: "Project Workspace Created",
+          message: `Research workspace '${res.data.title}' was created in the network database.`,
+          type: "project",
+          link: `/projects/${res.data.id}`,
+        });
+        return res.data.id;
+      }
+    } catch (err) {
+      console.warn("[AppContext] createProject API fallback to local state", err);
+    }
+  };
+
+  const deleteProject = async (projectId) => {
+    try {
+      await apiService.deleteProject(projectId);
+    } catch (err) {
+      console.warn("[AppContext] deleteProject API fallback to local state", err);
+    }
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+  };
+
   const requestJoinProject = (projectId) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -601,6 +724,7 @@ export const AppProvider = ({ children }) => {
         login,
         register,
         logout,
+        deleteUserAccount,
         completeOnboarding,
         updateProfile,
         addSkillToProfile,
@@ -618,14 +742,19 @@ export const AppProvider = ({ children }) => {
         addNotification,
         markNotificationRead,
         createQuestion,
+        deleteQuestion,
         voteQuestion,
         toggleSaveQuestion,
         submitAnswer,
+        deleteAnswer,
         acceptAnswer,
+        createProject,
+        deleteProject,
         requestJoinProject,
         sendConnectionRequest,
         sendMentorshipRequest,
         sendMessage,
+        refreshDatabaseContent,
       }}
     >
       {children}

@@ -6,9 +6,16 @@ import { calculateLevel } from "../utils/userStats";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
-  const { currentUser } = useApp();
+  const { currentUser, deleteUserAccount } = useApp();
   const [activeTab, setActiveTab] = useState("tab-all");
   const [targetRole, setTargetRole] = useState("Full Stack Developer");
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("WARNING: Are you sure you want to permanently delete your account and all associated profile, questions, answers, and project records from the database? This action cannot be undone.")) {
+      await deleteUserAccount(currentUser?.id);
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="flex flex-col w-full bg-surface">
@@ -97,9 +104,9 @@ export const ProfilePage = () => {
                     <span className="material-symbols-outlined text-[16px] text-primary">key</span>
                     <span>Verify Public Key</span>
                   </button>
-                  <button className="flex-1 inline-flex items-center justify-center gap-1.5 bg-surface-container-lowest border border-outline-variant/80 hover:bg-surface-container-high transition-colors px-2.5 py-1.5 rounded text-label-md text-on-surface">
-                    <span className="material-symbols-outlined text-[16px] text-on-surface-variant">share</span>
-                    <span>Share Ledger</span>
+                  <button onClick={handleDeleteAccount} className="inline-flex items-center justify-center gap-1.5 bg-error-container text-on-error-container border border-error/30 hover:bg-error/20 transition-colors px-2.5 py-1.5 rounded text-label-md font-semibold" title="Permanently delete user account from database">
+                    <span className="material-symbols-outlined text-[16px]">delete_forever</span>
+                    <span>Delete Account</span>
                   </button>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { findSimilarQuestions } from "../utils/duplicateDetector";
+import { ProofFileUpload } from "../components/ProofFileUpload";
 
 export const AskQuestionPage = () => {
   const navigate = useNavigate();
@@ -51,11 +52,11 @@ Has anyone formalized or implemented pre-vote protocol extensions or lease read 
     setTags(tags.filter((t) => t !== tagToRemove));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     if (!title || !description) return;
 
-    const newQuestionId = createQuestion({
+    const newQuestionId = await createQuestion({
       title,
       description,
       subject,
@@ -64,9 +65,10 @@ Has anyone formalized or implemented pre-vote protocol extensions or lease read 
       tags,
       isAnonymous,
       requestStaffResponse,
+      attachments,
     });
 
-    navigate(`/questions/${newQuestionId}`);
+    navigate(`/questions/${newQuestionId || ''}`);
   };
 
   return (
@@ -379,52 +381,14 @@ Has anyone formalized or implemented pre-vote protocol extensions or lease read 
                 </div>
               </div>
 
-              {/* 5. Attachments / Artifacts */}
-              <div className="space-y-space-xs">
-                <label className="font-title-sm text-title-sm text-on-surface font-semibold">Attachments &amp; Code Repositories</label>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">Upload Wireshark captures, mathematical appendixes, or log traces for peer reproduction.</p>
-                {/* Drag & Drop Zone */}
-                <div className="p-space-lg rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all text-center flex flex-col items-center justify-center cursor-pointer shadow-sm group">
-                  <div className="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center mb-space-xs group-hover:scale-105 transition-transform shadow-sm">
-                    <span className="material-symbols-outlined text-[24px]">upload_file</span>
-                  </div>
-                  <p className="font-title-sm text-title-sm text-on-surface mb-0.5">
-                    Drag &amp; drop lab logs, benchmark traces, or PDF proof draft
-                  </p>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant">
-                    Max file size 25MB · Or <span class="text-primary font-semibold underline underline-offset-2">Browse files</span>
-                  </p>
-                </div>
-                {/* Attached File Item Preview */}
-                {attachments.map((att, index) => (
-                  <div key={index} className="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between shadow-sm">
-                    <div className="flex items-center gap-space-sm min-w-0">
-                      <div className="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary shrink-0 shadow-sm">
-                        <span className="material-symbols-outlined text-[18px]">terminal</span>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-title-sm text-title-sm text-on-surface truncate">{att.name}</p>
-                        <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
-                          <span>{att.size}</span>
-                          <span>•</span>
-                          <span className="inline-flex items-center gap-0.5 text-secondary font-medium">
-                            <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                            {att.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      className="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-error transition-colors"
-                      title="Remove attachment"
-                      type="button"
-                      onClick={() => setAttachments(attachments.filter((_, i) => i !== index))}
-                    >
-                      <span className="material-symbols-outlined text-[18px]">delete</span>
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {/* 5. Attachments / Artifacts / Proof */}
+              <ProofFileUpload
+                files={attachments}
+                onFilesChange={setAttachments}
+                maxFiles={5}
+                label="Attachments, Proof Screenshots & Code Repositories"
+                helperText="Upload Wireshark captures, proof images, mathematical appendixes, or log traces for peer reproduction."
+              />
 
               {/* 6. Identity & Institutional Privacy Controls */}
               <div className="p-space-md sm:p-space-lg rounded-xl bg-surface-container-low/70 space-y-space-md shadow-sm">

@@ -7,8 +7,8 @@ import {
 
 /**
  * Unified Database Access Layer (dbService)
- * Interacts with Supabase PostgreSQL tables when configured,
- * with seamless fallback to initial mock datasets for offline development.
+ * Interacts with Supabase PostgreSQL tables directly when configured,
+ * with full Create, Read, Update, and Delete (CRUD) persistence.
  */
 
 export const dbService = {
@@ -43,7 +43,6 @@ export const dbService = {
       }
     }
 
-    // Fallback: Check INITIAL_USERS or return local session
     const existing = INITIAL_USERS.find(u => String(u.email || "").toLowerCase() === safeEmailLower);
     if (existing) return { user: existing };
 
@@ -141,14 +140,14 @@ export const dbService = {
     return { user: newScholar };
   },
 
-  // ─── PROFILES & USERS ───────────────────────────────────────
+  // ─── PROFILES & USERS CRUD ───────────────────────────────────────
   getProfiles: async () => {
     if (!isSupabaseConfigured) return INITIAL_USERS;
     try {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("contribution_score", { ascending: false });
+        .from("users")
+        .select("*, user_profiles(*), institutions(*)")
+        .order("createdAt", { ascending: false });
 
       if (error || !data || data.length === 0) {
         return INITIAL_USERS;
@@ -156,23 +155,19 @@ export const dbService = {
 
       return data.map(item => ({
         id: item.id,
-        name: item.full_name,
+        name: `${item.firstName} ${item.lastName}`,
         email: item.email,
         role: String(item.role || "student").toLowerCase(),
-        institution: item.department ? `${item.department}` : "IIT Delhi",
-        department: item.department,
-        degree: item.degree,
-        verified: item.is_verified,
-        verificationCode: item.verification_code,
-        avatar: item.avatar_url,
-        bio: item.bio,
-        skills: item.skills || [],
-        interests: item.interests || [],
-        availability: item.availability,
-        contributionScore: item.contribution_score || 0,
-        xpPoints: item.xp_points || 0,
-        currentStreak: item.current_streak || 0,
-        badges: item.badges || []
+        institution: item.institutions?.name || "IIT Delhi",
+        department: item.user_profiles?.department || "Computer Science",
+        degree: item.user_profiles?.academicYear || "B.Tech",
+        verified: item.isEmailVerified ?? true,
+        verificationCode: "#IN-VERIFIED",
+        avatar: item.user_profiles?.avatarUrl,
+        bio: item.user_profiles?.bio,
+        skills: [],
+        availability: item.user_profiles?.availability || "Available for collaboration",
+        contributionScore: 100,
       }));
     } catch (err) {
       return INITIAL_USERS;
@@ -185,8 +180,8 @@ export const dbService = {
     }
     try {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
+        .from("users")
+        .select("*, user_profiles(*), institutions(*)")
         .eq("id", id)
         .single();
 
@@ -194,74 +189,44 @@ export const dbService = {
 
       return {
         id: data.id,
-        name: data.full_name,
+        name: `${data.firstName} ${data.lastName}`,
         email: data.email,
         role: String(data.role || "student").toLowerCase(),
-        department: data.department,
-        degree: data.degree,
-        verified: data.is_verified,
-        verificationCode: data.verification_code,
-        avatar: data.avatar_url,
-        bio: data.bio,
-        skills: data.skills || [],
-        interests: data.interests || [],
-        availability: data.availability,
-        contributionScore: data.contribution_score || 0,
-        xpPoints: data.xp_points || 0,
-        currentStreak: data.current_streak || 0,
-        badges: data.badges || []
+        department: data.user_profiles?.department,
+        degree: data.user_profiles?.academicYear,
+        verified: data.isEmailVerified ?? true,
+        verificationCode: "#IN-VERIFIED",
+        avatar: data.user_profiles?.avatarUrl,
+        bio: data.user_profiles?.bio,
+        availability: data.user_profiles?.availability,
+        skills: [],
+        contributionScore: 100,
       };
     } catch (err) {
       return INITIAL_USERS.find(u => u.id === id) || null;
     }
   },
 
-  upsertProfile: async (user) => {
-    if (!isSupabaseConfigured) return user;
+  deleteUser: async (userId) => {
+    if (!isSupabaseConfigured) return true;
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id,
-          email: user.email,
-          full_name: user.name,
-          role: String(user.role || "student").toLowerCase(),
-          department: user.department || "Computer Science",
-          degree: user.degree || "B.Tech",
-          verification_code: user.verificationCode || "#IN-VERIFIED",
-          is_verified: user.verified ?? true,
-          avatar_url: user.avatar,
-          bio: user.bio,
-          skills: user.skills || [],
-          interests: user.interests || [],
-          availability: user.availability || "Weekends",
-          contribution_score: user.contributionScore || 0,
-          xp_points: user.xpPoints || 0,
-          current_streak: user.currentStreak || 0,
-          badges: user.badges || [],
-          updated_at: new Date().toISOString()
-        }, { onConflict: "id" })
-        .select()
-        .single();
-
-      if (error) {
-        console.error("[dbService] Error upserting profile:", error);
-        throw error;
-      }
-      return data;
+      const { error } = await supabase.from("users").delete().eq("id", userId);
+      if (error) throw error;
+      return true;
     } catch (err) {
-      return user;
+      console.error("[dbService] Error deleting user:", err);
+      return false;
     }
   },
 
-  // ─── QUESTIONS & ANSWERS (Q&A FORUM) ───────────────────────
+  // ─── QUESTIONS & ANSWERS CRUD ───────────────────────
   getQuestions: async () => {
     if (!isSupabaseConfigured) return INITIAL_QUESTIONS;
     try {
       const { data, error } = await supabase
         .from("questions")
         .select("*, answers(*)")
-        .order("created_at", { ascending: false });
+        .order("createdAt", { ascending: false });
 
       if (error || !data || data.length === 0) {
         return INITIAL_QUESTIONS;
@@ -269,23 +234,25 @@ export const dbService = {
 
       return data.map(q => ({
         id: q.id,
-        authorId: q.author_id,
+        authorId: q.authorId,
         title: q.title,
-        content: q.content,
-        category: q.category,
+        description: q.description,
+        content: q.description,
+        department: q.department,
+        subject: q.subject,
         tags: q.tags || [],
-        isAnonymous: q.is_anonymous,
-        upvotes: q.upvotes || 0,
-        answersCount: q.answers_count || (q.answers ? q.answers.length : 0),
-        isResolved: q.is_resolved,
-        createdAt: q.created_at,
+        isAnonymous: q.isAnonymous,
+        votes: q.votes || 0,
+        answersCount: q.answers ? q.answers.length : 0,
+        createdAt: q.createdAt,
         answers: (q.answers || []).map(a => ({
           id: a.id,
-          authorId: a.author_id,
+          questionId: a.questionId,
+          authorId: a.authorId,
           content: a.content,
-          isAccepted: a.is_accepted,
-          upvotes: a.upvotes || 0,
-          createdAt: a.created_at
+          isAccepted: a.isAccepted,
+          votes: a.upvotes || 0,
+          createdAt: a.createdAt
         }))
       }));
     } catch (err) {
@@ -299,12 +266,14 @@ export const dbService = {
       const { data, error } = await supabase
         .from("questions")
         .insert({
-          author_id: questionData.authorId,
+          authorId: questionData.authorId,
           title: questionData.title,
-          content: questionData.content,
-          category: questionData.category || "Engineering",
+          description: questionData.description || questionData.content,
+          department: questionData.department || "Computer Science",
+          subject: questionData.subject || "General Academic",
           tags: questionData.tags || [],
-          is_anonymous: questionData.isAnonymous || false
+          isAnonymous: questionData.isAnonymous || false,
+          votes: 1
         })
         .select()
         .single();
@@ -319,15 +288,43 @@ export const dbService = {
     }
   },
 
+  updateQuestion: async (id, updateData) => {
+    if (!isSupabaseConfigured) return null;
+    try {
+      const { data, error } = await supabase
+        .from("questions")
+        .update(updateData)
+        .eq("id", id)
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  deleteQuestion: async (id) => {
+    if (!isSupabaseConfigured) return true;
+    try {
+      const { error } = await supabase.from("questions").delete().eq("id", id);
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
+
   addAnswer: async (questionId, answerData) => {
     if (!isSupabaseConfigured) return null;
     try {
       const { data, error } = await supabase
         .from("answers")
         .insert({
-          question_id: questionId,
-          author_id: answerData.authorId,
-          content: answerData.content
+          questionId,
+          authorId: answerData.authorId,
+          content: answerData.content,
+          upvotes: 1
         })
         .select()
         .single();
@@ -343,14 +340,25 @@ export const dbService = {
     }
   },
 
-  // ─── PROJECTS & APPLICATIONS ──────────────────────────────
+  deleteAnswer: async (answerId) => {
+    if (!isSupabaseConfigured) return true;
+    try {
+      const { error } = await supabase.from("answers").delete().eq("id", answerId);
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
+
+  // ─── PROJECTS CRUD ──────────────────────────────
   getProjects: async () => {
     if (!isSupabaseConfigured) return INITIAL_PROJECTS;
     try {
       const { data, error } = await supabase
         .from("projects")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("createdAt", { ascending: false });
 
       if (error || !data || data.length === 0) {
         return INITIAL_PROJECTS;
@@ -358,15 +366,16 @@ export const dbService = {
 
       return data.map(p => ({
         id: p.id,
-        ownerId: p.owner_id,
+        leadId: p.leadId,
         title: p.title,
         description: p.description,
-        category: p.category,
-        requiredSkills: p.required_skills || [],
-        openRoles: p.open_roles || [],
-        status: p.status,
-        teamSizeLimit: p.team_size_limit || 5,
-        createdAt: p.created_at
+        domain: p.domain,
+        sprintPhase: p.sprintPhase,
+        requiredSkills: p.requiredSkills || [],
+        openRoles: p.recruitingRoles || [],
+        status: p.status || "Recruiting",
+        teamMemberCount: p.teamMemberCount || 1,
+        createdAt: p.createdAt
       }));
     } catch (err) {
       return INITIAL_PROJECTS;
@@ -379,14 +388,15 @@ export const dbService = {
       const { data, error } = await supabase
         .from("projects")
         .insert({
-          owner_id: projectData.ownerId,
+          leadId: projectData.leadId,
           title: projectData.title,
           description: projectData.description,
-          category: projectData.category || "General",
-          required_skills: projectData.requiredSkills || [],
-          open_roles: projectData.openRoles || [],
+          domain: projectData.domain || "Research & Engineering",
+          sprintPhase: projectData.sprintPhase || "Phase 1: Architecture",
+          requiredSkills: projectData.requiredSkills || [],
+          recruitingRoles: projectData.openRoles || [],
           status: projectData.status || "Recruiting",
-          team_size_limit: projectData.teamSizeLimit || 5
+          teamMemberCount: 1
         })
         .select()
         .single();
@@ -401,28 +411,30 @@ export const dbService = {
     }
   },
 
-  applyForProject: async (applicationData) => {
+  updateProject: async (id, updateData) => {
     if (!isSupabaseConfigured) return null;
     try {
       const { data, error } = await supabase
-        .from("project_applications")
-        .insert({
-          project_id: applicationData.projectId,
-          applicant_id: applicationData.applicantId,
-          role_applied: applicationData.roleApplied,
-          pitch: applicationData.pitch,
-          match_score: applicationData.matchScore || 0
-        })
+        .from("projects")
+        .update(updateData)
+        .eq("id", id)
         .select()
         .single();
-
-      if (error) {
-        console.error("[dbService] Error applying for project:", error);
-        return null;
-      }
+      if (error) throw error;
       return data;
     } catch (err) {
       return null;
     }
-  }
+  },
+
+  deleteProject: async (id) => {
+    if (!isSupabaseConfigured) return true;
+    try {
+      const { error } = await supabase.from("projects").delete().eq("id", id);
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
 };

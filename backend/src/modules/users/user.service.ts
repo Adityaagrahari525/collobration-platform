@@ -29,7 +29,7 @@ export class UserService {
 
     if (!user) {
       const error: any = new Error("User profile record not found.");
-      error.statusCode = 444;
+      error.statusCode = 404;
       throw error;
     }
 
@@ -110,6 +110,24 @@ export class UserService {
     });
 
     return this.getCurrentUser(userId);
+  }
+
+  static async deleteUser(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      const error: any = new Error("User account not found.");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return { message: "User account and all associated data deleted successfully." };
   }
 
   static async getUserSkills(userId: string) {

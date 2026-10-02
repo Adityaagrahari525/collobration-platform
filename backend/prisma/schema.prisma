@@ -38,29 +38,40 @@ model Institution {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users User[]
+  users       User[]
+  questions   Question[]
+  projects    Project[]
+  communities Community[]
 
   @@map("institutions")
 }
 
 model User {
-  id              String      @id @default(uuid())
-  email           String      @unique
+  id              String   @id @default(uuid())
+  email           String   @unique
   passwordHash    String
   firstName       String
   lastName        String
-  role            Role        @default(STUDENT)
+  role            Role     @default(STUDENT)
   institutionId   String
-  isEmailVerified Boolean     @default(false)
-  isActive        Boolean     @default(true)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  isEmailVerified Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   institution             Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   profile                 UserProfile?
   skills                  UserSkill[]
   refreshTokens           RefreshToken[]
   emailVerificationTokens EmailVerificationToken[]
+  questionsPosted         Question[]               @relation("QuestionAuthor")
+  answersGiven            Answer[]                 @relation("AnswerAuthor")
+  facultyAnswersEndorsed  Answer[]                 @relation("AnswerFacultyEndorser")
+  projectsLed             Project[]                @relation("ProjectLead")
+  sentMessages            Message[]                @relation("MessageSender")
+  receivedMessages        Message[]                @relation("MessageReceiver")
+  notifications           Notification[]
+  contributions           Contribution[]
 
   @@index([email])
   @@index([institutionId])
@@ -146,4 +157,124 @@ model EmailVerificationToken {
 
   @@index([userId])
   @@map("email_verification_tokens")
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  authorId      String?
+  institutionId String?
+  department    String?
+  subject       String?
+  academicYear  String?
+  isAnonymous   Boolean? @default(false)
+  votes         Int?     @default(0)
+  viewsCount    Int?     @default(0)
+  tags          String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  author      User?        @relation("QuestionAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  answers     Answer[]
+
+  @@map("questions")
+}
+
+model Answer {
+  id                  String   @id @default(uuid())
+  questionId          String
+  authorId            String?
+  content             String
+  isFacultyEndorsed   Boolean? @default(false)
+  endorsedByFacultyId String?
+  isAccepted          Boolean? @default(false)
+  upvotes             Int?     @default(0)
+  proofDetails        String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  author            User?    @relation("AnswerAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  endorsedByFaculty User?    @relation("AnswerFacultyEndorser", fields: [endorsedByFacultyId], references: [id], onDelete: Cascade)
+
+  @@map("answers")
+}
+
+model Project {
+  id                        String   @id @default(uuid())
+  title                     String
+  description               String
+  leadId                    String?
+  institutionId             String?
+  collaboratingInstitutions String[]
+  status                    String?  @default("Recruiting")
+  sprintPhase               String?
+  domain                    String?
+  recruitingRoles           String[]
+  requiredSkills            String[]
+  teamMemberCount           Int?     @default(1)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  lead        User?        @relation("ProjectLead", fields: [leadId], references: [id], onDelete: Cascade)
+  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}
+
+model Community {
+  id            String   @id @default(uuid())
+  name          String
+  description   String
+  institutionId String?
+  memberCount   Int?     @default(1)
+  category      String?
+  createdAt     DateTime @default(now())
+
+  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@map("communities")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  text       String
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Contribution {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  description String
+  points      Int
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("contributions")
 }

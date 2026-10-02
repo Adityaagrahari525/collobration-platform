@@ -6,12 +6,21 @@ import { CodeEditorModal } from "../components/CodeEditorModal";
 export const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { projects, requestJoinProject } = useApp();
+  const { projects, requestJoinProject, deleteProject, currentUser } = useApp();
 
   const project = projects.find((p) => p.id === id) || projects[0];
   const [activeTab, setActiveTab] = useState("overview");
   const [copiedCite, setCopiedCite] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const isProjectLead = currentUser?.id === project?.leadId || currentUser?.role === "admin" || currentUser?.rawRole === "ADMIN";
+
+  const handleDeleteProject = async () => {
+    if (window.confirm("Are you sure you want to delete this research project workspace from the database?")) {
+      await deleteProject(project.id);
+      navigate("/projects");
+    }
+  };
 
   const handleCopyCite = () => {
     const bibtex = `@article{floodsense2024,
@@ -133,6 +142,16 @@ export const ProjectDetailPage = () => {
               <span className="material-symbols-outlined text-[18px]">mail</span>
               <span>Contact Team</span>
             </button>
+            {isProjectLead && (
+              <button
+                onClick={handleDeleteProject}
+                className="w-full inline-flex items-center justify-center gap-2 bg-error-container text-on-error-container font-title-sm text-title-sm px-4 py-2 rounded-lg hover:bg-error/20 transition-colors"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[18px]">delete</span>
+                <span>Delete Workspace</span>
+              </button>
+            )}
             <div className="grid grid-cols-3 gap-1 pt-1">
               <button className="flex flex-col items-center justify-center p-2 rounded bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant transition-colors" title="Watch Repository" type="button">
                 <span className="material-symbols-outlined text-[18px] text-primary">star</span>

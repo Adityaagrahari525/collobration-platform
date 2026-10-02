@@ -1,51 +1,53 @@
 # 🎓 CampusLink — Nationwide Student & Staff Collaboration Portal (PS004)
 
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.x-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Monaco Editor](https://img.shields.io/badge/Monaco_Editor-IDE-007ACC?logo=visualstudiocode&logoColor=white)](https://microsoft.github.io/monaco-editor/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**CampusLink** is a centralized, nationwide academic network designed to connect students, researchers, and faculty members across institutions. It facilitates cross-college collaboration, project team formation, faculty mentorship, peer-to-peer Q&A, and technical skill development through intelligent matching algorithms and embedded code workspaces.
+**CampusLink Academic Network** is a centralized nationwide platform connecting students, researchers, and faculty members across accredited Indian academic institutions. It provides real-time project matching, faculty mentorship, peer-to-peer Q&A, skill gap roadmaps, embedded code IDEs, and full database persistence powered by Express, TypeScript, Prisma, and Supabase PostgreSQL.
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features & Updates
 
-### 1. 🔐 Academic Verification & Institutional Identity
-- **Verified Domains:** Secure sign-up enforcing institutional emails (`@*.edu.in`, `@*.ac.in`).
-- **Role-Based Access Control:** Distinct profiles and permissions for **Students**, **Faculty**, and **Researchers**.
-- **Institutional Verification System:** Direct verification codes (`#IN-9042-DL`, `#FAC-0192-DL`) for immediate academic badge issuance.
+### 1. 🗄️ Full Database CRUD Synchronization (Supabase PostgreSQL)
+- **Real Database Host:** Live connection to Supabase PostgreSQL (`vqhriwufmkxwyrilsqeq.supabase.co`).
+- **Complete CRUD Lifecycle:**
+  - **Users & Profiles:** Create (Register), Read (Directory), Update (Profile Edit), and Delete (Cascading Account Self-Deletion).
+  - **Academic Q&A:** Post questions, submit technical answers, edit, vote, mark accepted answers, and delete questions/answers directly from PostgreSQL.
+  - **Research Projects:** Create project workspaces, recruit roles, edit sprint phases, and delete project entries in real-time.
+- **Prisma ORM & PostgreSQL Schema:** Fully modeled schema with relations and cascading delete rules (`onDelete: Cascade`).
 
-### 2. 🤝 Intelligent Heuristic Teammate & Project Matcher
+### 2. 🔐 Production-Grade Authentication & Session Security
+- **HttpOnly Cookie Architecture:** JWT access tokens and refresh tokens transmitted strictly via `HttpOnly`, `SameSite=Strict`, and `Secure` cookies with `credentials: "include"`.
+- **Secrets & Token Rotation:** Secrets loaded exclusively from environment variables with automatic refresh token rotation and revocation.
+- **RESTful Endpoints:** `/api/auth/register`, `/api/auth/login`, `/api/auth/me`, `/api/auth/refresh`, and `/api/auth/logout`.
+
+### 3. 📎 Working Proof, Document & Image Upload System (`ProofFileUpload`)
+- **Drag & Drop & Browse:** Interactive file dropzone supporting images (`PNG`, `JPG`, `WEBP`), PDFs, doc files, lab logs (`.log`, `.pcap`), and CSVs up to 25MB.
+- **FileReader Base64 Encoding:** Converts files into Base64 Data URIs for instant previewing and database storage.
+- **Lightbox Image Zoom & Document Downloads:** Visual image previews open a full-screen Lightbox Zoom Modal. PDF and document uploads feature downloadable attachments.
+- **Q&A & Profile Integration:** Embedded in the Ask Question page, Answer submission form, and profile verification workflows.
+
+### 4. 🤝 Intelligent Heuristic Teammate & Project Matcher
 - **Compatibility Engine:** Evaluates candidate profiles against project requirements using a deterministic multi-factor algorithm.
-- **Scoring System (0–100%):** Weighs technical skill overlap, complementary experience gaps, domain interest alignment, and availability.
-- **Live Compatibility Badges:** Displays real-time match percentages and actionable match rationales on project listings.
+- **Weighted Compatibility Badges (0–100%):** Weighs technical skill overlap, complementary experience gaps, domain interest alignment, and availability.
 
-### 3. 🎯 Rule-Based Skill Gap & Learning Roadmap Engine
-- **Target Role Guidance:** Students select target careers (e.g., *Full-Stack Engineer*, *AI/ML Researcher*, *Cybersecurity Specialist*).
-- **Automated Skill Audit:** Compares user skills against industry standards to compute missing competencies.
-- **Interactive 4-Step Roadmap:** Renders custom step-by-step learning modules and milestone recommendations directly on user profiles.
+### 5. 🎯 Rule-Based Skill Gap & Learning Roadmap Engine
+- **Automated Skill Audit:** Compares user competencies against target career roles (*Full-Stack*, *AI/ML*, *Distributed Systems*).
+- **Interactive 4-Step Roadmap:** Renders custom step-by-step learning modules and milestone recommendations on scholar profiles.
 
-### 4. ⚡ Jaccard Token Duplicate Question Detector
-- **Real-Time Duplicate Prevention:** Analyzes question title inputs on the Q&A forum using tokenized Jaccard similarity ($\frac{|A \cap B|}{|A \cup B|}$).
+### 6. ⚡ Jaccard Token Duplicate Question Detector
+- **Real-Time Duplicate Prevention:** Analyzes question title inputs using tokenized Jaccard similarity ($J(A, B) = \frac{|A \cap B|}{|A \cup B|}$).
 - **Instant Warning Banners:** Detects existing similar academic questions before submission, preventing forum fragmentation.
 
-### 5. 💻 Embedded Monaco IDE Code Workspace
-- **In-Browser IDE Modal:** Built using `@monaco-editor/react` inside project detail views.
-- **Multi-Language Support:** Supports JavaScript, TypeScript, Python, HTML/CSS, JSON, and C++.
-- **Integrated Workspace:** Allows project members to prototype code, write technical documentation, and collaborate directly without leaving the portal.
-
-### 6. 🏆 Reputation, Leaderboards & Faculty Mentorship
-- **Reputation Engine:** Dynamically calculates User Levels, Badges, and Streaks based on Q&A upvotes, accepted answers, project contributions, and peer endorsements.
-- **Nationwide Leaderboard:** Ranks top student and faculty contributors nationally or filterable by institution.
-- **Faculty Office Hours:** Schedule research consultations and office hour slots directly with verified professors.
-
-### 7. 🗄️ Supabase PostgreSQL Backend Layer
-- **Persistent Cloud Data:** Unified Database Service (`dbService.js`) powered by Supabase PostgreSQL.
-- **Row Level Security (RLS):** Enforces data privacy and user-level ownership.
-- **Offline Resiliency:** Features transparent local storage fallback mechanisms ensuring unblocked UI usage during network latency.
+### 7. 💻 Embedded Monaco IDE Code Workspace
+- **In-Browser IDE Modal:** Built using `@monaco-editor/react` inside project detail views supporting JavaScript, TypeScript, Python, C++, HTML/CSS, and JSON.
 
 ---
 
@@ -53,12 +55,13 @@
 
 | Layer | Technologies Used |
 | :--- | :--- |
-| **Frontend Framework** | React 18, Vite |
-| **Styling & UI** | TailwindCSS, Lucide Icons, Headless UI |
-| **Code Workspace** | `@monaco-editor/react` (Monaco Editor) |
-| **Cloud Database** | Supabase (PostgreSQL, Row Level Security, Auth Services) |
-| **API & Data Services** | `@supabase/supabase-js`, Custom Async Service Layer (`dbService.js`) |
-| **Algorithmic Modules** | Jaccard Similarity Engine, Weighted Heuristic Matching, XP Engine |
+| **Frontend Framework** | React 18, Vite, React Router DOM v6 |
+| **Backend Framework** | Node.js, Express, TypeScript |
+| **ORM & Database** | Prisma ORM, Supabase PostgreSQL (`vqhriwufmkxwyrilsqeq.supabase.co`) |
+| **Security & Auth** | JWT, HttpOnly Cookies, Bcrypt Password Hashing, Zod Validation |
+| **Styling & UI** | TailwindCSS, Material Symbols |
+| **Code Workspace** | `@monaco-editor/react` (Monaco IDE) |
+| **File Uploads** | `ProofFileUpload` (Base64 FileReader, Lightbox Modal, Document Previews) |
 
 ---
 
@@ -66,46 +69,41 @@
 
 ```
 csi 04/
-├── index.html                  # App HTML Entry point
-├── package.json                # Project dependencies & scripts
-├── tailwind.config.js          # Tailwind CSS Configuration
-├── vite.config.js              # Vite Build Configuration
-├── supabase_schema.sql         # Supabase PostgreSQL Database Schema
-├── PROJECT_MASTER_PLAN.md      # Engineering Master Plan & Spec
-├── .env.example                # Environment Variables Template
-├── src/
-│   ├── main.jsx                # React DOM render entry
-│   ├── App.jsx                 # App router & main layout
+├── backend/                    # Express + TypeScript Backend
+│   ├── prisma/
+│   │   └── schema.prisma       # Complete Prisma PostgreSQL Schema
+│   ├── src/
+│   │   ├── config/             # Database & JWT Config
+│   │   ├── middleware/         # HttpOnly Auth & Error Handlers
+│   │   ├── modules/            # Domain Modules (auth, users, questions, projects, skills, institutions)
+│   │   ├── routes/             # Express API Router
+│   │   ├── utils/              # JWT & Bcrypt password helpers
+│   │   └── validators/         # Zod Request Validation Schemas
+│   ├── .env                    # Backend Environment Config
+│   └── package.json
+├── src/                        # Vite + React Frontend
 │   ├── components/
-│   │   ├── AppLayout.jsx       # Persistent Navigation & Header Shell
-│   │   ├── CodeEditorModal.jsx # Monaco Code Editor Modal
-│   │   ├── Sidebar.jsx         # Navigation Sidebar
-│   │   ├── Topbar.jsx          # User Header & Notifications Bar
+│   │   ├── AppLayout.jsx       # Main App Shell
+│   │   ├── CodeEditorModal.jsx # Monaco IDE Modal
+│   │   ├── ProofFileUpload.jsx # Working Proof, Image & Document Uploader
 │   │   └── ProtectedRoute.jsx  # Auth & Onboarding Guard
 │   ├── context/
-│   │   └── AppContext.jsx      # Global React Context State
+│   │   └── AppContext.jsx      # Global React Context State & DB Sync
 │   ├── pages/
-│   │   ├── DashboardPage.jsx      # Student & Faculty Command Center
-│   │   ├── ProjectsPage.jsx       # Filterable Projects & Match Engine
-│   │   ├── ProjectDetailPage.jsx  # Workspace & Monaco IDE Launcher
-│   │   ├── AskQuestionPage.jsx    # Q&A Form with Duplicate Detector
-│   │   ├── QuestionsFeedPage.jsx  # Forum Feed & Upvoting System
-│   │   ├── ProfilePage.jsx        # User Profile & Skill Gap Roadmap
-│   │   ├── PeoplePage.jsx         # Directory & Filterable Search
-│   │   ├── RecognitionPage.jsx    # Nationwide & Campus Leaderboard
-│   │   ├── MentorshipPage.jsx     # Faculty Booking & Office Hours
-│   │   ├── LoginPage.jsx          # Academic Login Screen
-│   │   ├── RegisterPage.jsx       # Academic Registration & Verification
-│   │   └── OnboardingPage.jsx     # Profile Setup Wizard
-│   ├── services/
-│   │   ├── supabaseClient.js   # Supabase Client Initialization
-│   │   ├── dbService.js        # Supabase CRUD Database Abstraction
-│   │   └── apiService.js       # Local Storage Fallback Service
-│   └── utils/
-│       ├── matchingAlgorithm.js # 0-100 Heuristic Project Matching
-│       ├── duplicateDetector.js # Jaccard Token Overlap Calculator
-│       ├── aiService.js         # Skill Gap & Career Path Generator
-│       └── userStats.js         # XP, Level, & Badge Engine
+│   │   ├── DashboardPage.jsx   # Student & Faculty Command Center
+│   │   ├── AskQuestionPage.jsx # Q&A Form with Proof Upload & Duplicate Detector
+│   │   ├── QuestionDetailPage.jsx # Q&A Detail with Answer Proof Uploads & Delete Controls
+│   │   ├── ProjectsPage.jsx    # Research Workspaces & Matcher
+│   │   ├── ProjectDetailPage.jsx # Project Workspace & Monaco IDE Launcher
+│   │   ├── ProfilePage.jsx     # User Profile, Skill Gap Roadmap & Account Deletion
+│   │   ├── PeoplePage.jsx      # Academic Directory & Search
+│   │   └── MentorshipPage.jsx  # Faculty Office Hours & Booking
+│   └── services/
+│       ├── apiService.js       # Express Backend REST Client (HttpOnly credentials)
+│       └── dbService.js        # Supabase Direct Client & Fallback Layer
+├── .env                        # Frontend Supabase Config
+├── README.md                   # Project Documentation
+└── package.json
 ```
 
 ---
@@ -122,68 +120,49 @@ git clone https://github.com/Adityaagrahari525/collobration-platform.git
 cd collobration-platform
 ```
 
-### 2. Install Dependencies
+### 2. Install Frontend & Backend Dependencies
 ```bash
+# Install root/frontend dependencies
 npm install
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
 ```
 
 ### 3. Configure Environment Variables
-Create a `.env` file in the root directory (or copy `.env.example`):
+Create `.env` in root:
 ```env
 VITE_SUPABASE_URL=https://vqhriwufmkxwyrilsqeq.supabase.co
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-### 4. Start the Development Server
+Create `backend/.env`:
+```env
+DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5432/campuslink?schema=public"
+JWT_SECRET="campuslink_jwt_access_secret_key_2026_super_secure_key"
+REFRESH_TOKEN_SECRET="campuslink_jwt_refresh_secret_key_2026_super_secure_key"
+FRONTEND_URL="http://localhost:5173"
+NODE_ENV="development"
+PORT=5000
+```
+
+### 4. Start Development Servers
 ```bash
+# Terminal 1: Launch Express Backend (Port 5000)
+cd backend
+npm run dev
+
+# Terminal 2: Launch Vite Frontend (Port 5173)
 npm run dev
 ```
-Open your browser and navigate to `http://localhost:5173`.
 
-### 5. Build for Production
-To generate a production-ready build:
-```bash
-npm run build
-```
-
----
-
-## 📊 Database Setup (Supabase)
-
-If you are deploying your own Supabase backend, run the SQL script provided in [`supabase_schema.sql`](file:///d:/USER/Desktop/csi%2004/supabase_schema.sql) in your Supabase SQL Editor.
-
-It initializes:
-- `profiles`: User information, academic credentials, skills, XP, and badges.
-- `projects`: Collaborative projects, required skills, and team vacancies.
-- `project_applications`: Student applications and pitch proposals.
-- `questions` & `answers`: Q&A forum content, upvote metrics, accepted solution flags.
-- `mentorships`: Faculty office hours schedules and student appointment bookings.
-
----
-
-## 📐 Algorithmic Implementation Breakdown
-
-### 1. Skill Matcher Formula
-$$\text{Match Score} = w_1 \cdot \left(\frac{|S_{\text{user}} \cap S_{\text{project}}|}{|S_{\text{project}}|}\right) + w_2 \cdot \text{ExperienceFactor} + w_3 \cdot \text{AvailabilityFactor}$$
-Calculates weighted skill overlap between candidate profiles and project requirements.
-
-### 2. Jaccard Similarity Duplicate Detector
-$$J(A, B) = \frac{|A \cap B|}{|A \cup B|}$$
-Tokenizes incoming question titles, removes common stop-words, and calculates exact set overlap ratios against existing forum titles to trigger early warnings.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to improve CampusLink:
-1. Fork the Repository.
-2. Create a Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+Open `http://localhost:5173` in your browser.
 
 ---
 
 ## 📜 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+Distributed under the **MIT License**.
