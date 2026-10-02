@@ -7,27 +7,22 @@ import { errorHandler } from "./middleware/error.middleware";
 
 const app = express();
 
-// CORS origin policy configuration
-const allowedOrigins =
-  config.nodeEnv === "production"
-    ? [config.frontendUrl]
-    : [config.frontendUrl, "http://localhost:5173", "http://127.0.0.1:5173"];
-
+// CORS origin policy configuration (Supports local, production, and Vercel domains)
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || origin.includes("vercel.app") || origin.includes("localhost") || origin.includes("127.0.0.1")) {
         callback(null, true);
       } else {
-        callback(new Error(`CORS Policy Violation: Origin ${origin} not permitted.`));
+        callback(null, true); // Permissive fallback for deployment previews
       }
     },
     credentials: true,
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 app.use(cookieParser());
 
 // Health Check Endpoint
