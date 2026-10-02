@@ -1,0 +1,40 @@
+# CampusGrid Product & Design Specification
+
+## Overview
+CampusGrid is an India-wide academic collaboration platform for verified students and academic staff across colleges and disciplines.
+Core loop: ASK → ANSWER → VALIDATE → CONTRIBUTE → COLLABORATE → BUILD → EARN TRUST.
+
+## Design System Specifications
+- **Theme**: Dark neutral, structured, calm, high readability, anti-AI tropes.
+- **Background**: `#0B0D0F`
+- **Sidebar**: `#101316`
+- **Primary Surface**: `#15191D`
+- **Secondary Surface**: `#1A1F24`
+- **Borders**: `#2A3036` (1px subtle border)
+- **Primary Text**: `#F2F4F5`
+- **Secondary Text**: `#A7AFB7`
+- **Muted Text**: `#737C85`
+- **Primary Accent**: `#49B6A5` (Teal)
+- **Dark Accent**: `#277F74`
+- **Soft Accent**: `#8AD8CC`
+- **Semantic Colors**: Information Blue `#5E8FD6`, Recognition Amber `#D6A955`, Success `#5DBB8A`, Error `#D66A6A`.
+- **Typography**: Inter (Page title 28-32px semibold, Section 20-22px semibold, Card 15-17px semibold, Body 14-15px, Metadata 12-13px).
+- **Layout**: Desktop-first, 240-250px persistent sidebar, 64px header, 1360-1440px max content width, 8px grid, max 8px border-radius, no heavy drop shadows or glassmorphism.
+
+## Navigation Architecture
+- **Persistent Sidebar**:
+  - Dashboard
+  - Explore: Questions, Projects, People
+  - Collaborate: My Projects, Teams, Mentorship
+  - Community: Communities, Rankings
+  - Communication: Messages, Notifications
+  - Divider
+  - My Profile, Settings, Help & Safety
+- **Header**: Global search (questions, projects, people, skills, communities), notifications, messages, verified profile badge.
+
+## Core Screens Planned
+1. **Questions / Academic Q&A Feed & Detail** (Stack Overflow + Piazza/Ed Discussion style: anonymous asking, faculty endorsements, vote counts, resolution badges, verified college tags).
+2. **Project Collaboration Hub** (Cross-college team recruiting, milestone tracking, open roles, skill requirements).
+3. **Peer & Mentor Discovery Directory** (Verified college affiliations like IIT/NIT/BITS/State Univs, skill matrices, academic contribution credits).
+4. **Academic Contribution Profile & Reputation Portfolio** (Questions resolved, peer validations, team contributions, verified credentials).
+5. **Main Dashboard / Academic Overview** (Activity feed, trending academic queries, project invites, contribution stats).

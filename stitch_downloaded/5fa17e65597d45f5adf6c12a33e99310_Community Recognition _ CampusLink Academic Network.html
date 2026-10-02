@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;family=Public+Sans:ital,wght@0,300..700;1,300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-fixed-variant":"#005137","primary-fixed":"#dce1ff","on-secondary-container":"#00714e","tertiary-fixed-dim":"#ffb77d","surface-bright":"#faf8ff","error":"#ba1a1a","surface-container-highest":"#dae2fd","surface-container-high":"#e2e7ff","on-background":"#131b2e","on-tertiary":"#ffffff","on-primary":"#ffffff","surface-tint":"#4059aa","on-tertiary-fixed-variant":"#6e3900","secondary-container":"#82f5c1","tertiary-container":"#653400","secondary-fixed-dim":"#68dba9","on-primary-container":"#90a8ff","on-surface":"#131b2e","inverse-surface":"#283044","inverse-on-surface":"#eef0ff","outline":"#757682","error-container":"#ffdad6","tertiary-fixed":"#ffdcc3","secondary":"#006c4a","on-secondary-fixed":"#002114","on-error":"#ffffff","outline-variant":"#c5c5d3","on-surface-variant":"#444651","surface-container-lowest":"#ffffff","on-error-container":"#93000a","primary-container":"#1e3a8a","surface-container-low":"#f2f3ff","on-primary-fixed-variant":"#264191","surface-variant":"#dae2fd","on-tertiary-container":"#fc922b","secondary-fixed":"#85f8c4","inverse-primary":"#b6c4ff","primary":"#00236f","on-tertiary-fixed":"#2f1500","surface-dim":"#d2d9f4","tertiary":"#442100","on-primary-fixed":"#00164e","surface-container":"#eaedff","on-secondary":"#ffffff","surface":"#faf8ff","background":"#faf8ff","primary-fixed-dim":"#b6c4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-lg":"1.5rem","gutter-mobile":"1rem","margin":"2.5rem","gutter":"1.5rem","space-sm":"0.5rem","margin-mobile":"1rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem"},"fontFamily":{"headline-lg-mobile":["Newsreader"],"label-md":["Public Sans"],"title-md":["Public Sans"],"headline-md":["Newsreader"],"title-sm":["Public Sans"],"headline-lg":["Newsreader"],"label-sm":["Public Sans"],"headline-sm":["Newsreader"],"body-md":["Public Sans"],"body-sm":["Public Sans"],"display-lg":["Newsreader"],"body-lg":["Public Sans"],"display-lg-mobile":["Newsreader"],"label-lg":["Public Sans"]},"fontSize":{"headline-lg-mobile":["26px",{"lineHeight":"34px","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"display-lg-mobile":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-lg":["13px",{"lineHeight":"18px","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-60 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><div class="w-9 h-9 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-surface-container-lowest text-[20px]">account_balance</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none">CampusLink</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mt-0.5">Academic Consortium</span></div></div><div class="px-space-md py-space-sm"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">Academic Directory</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="questions" href="#"><span class="material-symbols-outlined text-[18px]">quiz</span><span>Questions</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="projects" href="#"><span class="material-symbols-outlined text-[18px]">science</span><span>Projects</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="peers-and-mentors" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span>Peers &amp; Mentors</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="communities" href="#"><span class="material-symbols-outlined text-[18px]">hub</span><span>Communities</span></a></nav></div><div class="px-space-md py-space-xs"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">My Workspace</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="my-questions-and-answers" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>My Q&amp;A</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="saved-bookmarks" href="#"><span class="material-symbols-outlined text-[18px]">bookmarks</span><span>Saved References</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="collaboration-teams" href="#"><span class="material-symbols-outlined text-[18px]">groups_3</span><span>Collaboration Teams</span></a></nav></div></div><div class="p-space-md bg-surface-container-low"><div class="p-space-sm rounded bg-surface-container-lowest mb-space-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between mb-1"><span class="font-label-sm text-label-sm font-semibold text-primary uppercase">IIT Delhi Node</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><p class="font-body-sm text-[11px] leading-tight text-on-surface-variant">Authenticated via .ac.in credentials</p></div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings" href="#"><span class="material-symbols-outlined text-[16px]">settings</span><span>Institutional Settings</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="help-and-safety" href="#"><span class="material-symbols-outlined text-[16px]">help_outline</span><span>Scholarly Guidelines</span></a></nav></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md w-full max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full pl-9 pr-12 py-1.5 rounded bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-all" placeholder="Search academic discourse, papers, faculty, or tags..." type="text"/><span class="absolute right-2.5 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-1.5 py-0.5 rounded">Ctrl+K</span></div></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary text-on-primary px-space-md py-1.5 rounded font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary transition-all shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[18px]">add_circle</span><span>Ask Question</span></button><div class="flex items-center gap-space-xs"><button class="relative p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span></button><button class="p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">forum</span></button></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="text-right hidden sm:block"><div class="flex items-center justify-end gap-1"><span class="font-title-sm text-title-sm text-on-surface leading-none">Aditya Sharma</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">IIT Delhi • CS Dept</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 w-full bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="px-space-lg py-space-md max-w-[1360px] mx-auto w-full space-y-space-lg">
+<!-- Breadcrumb & Top Metas -->
+<section class="flex flex-col gap-space-xs">
+<nav aria-label="Breadcrumbs" class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Academic Network</span>
+<span class="material-symbols-outlined text-[12px] text-outline">chevron_right</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Community</span>
+<span class="material-symbols-outlined text-[12px] text-outline">chevron_right</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Recognition &amp; Impact</span>
+</nav>
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mt-1">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Community Recognition</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-3xl">
+            Honoring scholarly contributions, peer validation, and open academic research across 140+ consortium institutions.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-sm">
+<div class="inline-flex items-center gap-2 px-space-sm py-1.5 rounded bg-surface-container text-on-surface text-body-sm font-label-md">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_today</span>
+<span>Quarterly Cycle: Q2 2024 (April – June)</span>
+<div class="relative group cursor-pointer inline-flex items-center">
+<span class="material-symbols-outlined text-[16px] text-outline hover:text-primary transition-colors">info</span>
+<div class="absolute right-0 bottom-full mb-2 hidden group-hover:block w-72 p- space-sm p-3 bg-inverse-surface text-inverse-on-surface text-body-sm font-body-sm rounded shadow-xl z-30 pointer-events-none">
+                Recognitions update weekly based on verified peer reviews, accepted technical solutions, and project milestones.
+              </div>
+</div>
+</div>
+<button class="inline-flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-low transition-colors font-label-md text-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">download</span>
+<span>Export Archive</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Search & Domain Filter Toolbar -->
+<section class="bg-surface-container-lowest rounded p-space-md shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-4 py-2 rounded bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-all" id="scholar-search-input" placeholder="Filter by scholar name, researcher ID, or focus..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" id="domain-filter-group">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mr-2 hidden sm:inline">Filter Domain:</span>
+<button class="domain-btn active px-3 py-1.5 rounded font-label-md text-label-md bg-primary text-on-primary transition-colors" data-domain="all">All Domains</button>
+<button class="domain-btn px-3 py-1.5 rounded font-label-md text-label-md bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-domain="ai">AI / ML</button>
+<button class="domain-btn px-3 py-1.5 rounded font-label-md text-label-md bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-domain="systems">Systems &amp; Web</button>
+<button class="domain-btn px-3 py-1.5 rounded font-label-md text-label-md bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-domain="research">Applied Research</button>
+<button class="domain-btn px-3 py-1.5 rounded font-label-md text-label-md bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-domain="faculty">Faculty PIs</button>
+</div>
+</section>
+<!-- Scholarly Progress Benchmark Panel (Subtle & Academic) -->
+<section class="bg-surface-container-lowest rounded p-space-lg shadow-sm relative overflow-hidden">
+<div class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-lg">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Cohort Calibration</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-label-sm text-label-sm">
+              Computer Science &amp; Engineering • Distributed Systems
+            </span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-semibold">
+<span class="material-symbols-outlined text-[14px]">verified</span> Node Authenticated
+            </span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">My Scholarly Progress</h2>
+<p class="font-body-md text-body-md text-on-surface">
+            Your technical contribution score is currently ahead of <strong class="text-primary font-semibold">72% of active peer contributors</strong> within your selected domain node.
+          </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed pt-1">
+            Benchmarking is calibrated against verified <span class="font-semibold text-on-surface">.ac.in</span> activity to assist research matching and faculty mentorship eligibility. It is never utilized for punitive academic evaluation.
+          </p>
+</div>
+<!-- Metric Cluster -->
+<div class="w-full xl:w-auto grid grid-cols-2 sm:grid-cols-4 gap-space-sm sm:gap-space-md">
+<div class="bg-surface-container-low p-space-sm sm:p-space-md rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm">Score</span>
+<span class="material-symbols-outlined text-[16px] text-primary">analytics</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-primary font-semibold">742 pts</div>
+<span class="font-label-sm text-label-sm text-secondary mt-1">Top 28% Cohort</span>
+</div>
+<div class="bg-surface-container-low p-space-sm sm:p-space-md rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm">Solutions</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">14</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Formally Accepted</span>
+</div>
+<div class="bg-surface-container-low p-space-sm sm:p-space-md rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm">Repositories</span>
+<span class="material-symbols-outlined text-[16px] text-outline">source</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">3</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Active Sprints</span>
+</div>
+<div class="bg-surface-container-low p-space-sm sm:p-space-md rounded flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-label-sm text-label-sm">Endorsements</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">military_tech</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">4</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Faculty Endorsed</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-lowest">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">sync</span>
+<span>Last synchronized with IIT Delhi Node: Today, 08:30 IST</span>
+</div>
+<a class="inline-flex items-center gap-1 text-primary hover:underline font-label-md text-label-md" href="#calibration">
+<span>View full contribution breakdown</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- Main Recognition Content & Integrity Dual Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Recognition Tables (8 Columns) -->
+<section class="xl:col-span-8 space-y-space-md">
+<!-- Category Selector Tab Strip -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 bg-surface-container-lowest p-space-xs rounded shadow-sm">
+<button class="category-tab active px-3 py-2 rounded font-label-md text-label-md bg-surface-container text-primary transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-ai">
+<span class="material-symbols-outlined text-[16px]">neurology</span>
+<span>AI / ML</span>
+</button>
+<button class="category-tab px-3 py-2 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-systems">
+<span class="material-symbols-outlined text-[16px]">dns</span>
+<span>Web &amp; Systems</span>
+</button>
+<button class="category-tab px-3 py-2 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-research">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>Research</span>
+</button>
+<button class="category-tab px-3 py-2 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-mentors">
+<span class="material-symbols-outlined text-[16px]">supervisor_account</span>
+<span>Peer Mentors</span>
+</button>
+<button class="category-tab px-3 py-2 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-projects">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span>Project Sprints</span>
+</button>
+<button class="category-tab px-3 py-2 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all flex items-center gap-1.5 whitespace-nowrap" data-target="cat-faculty">
+<span class="material-symbols-outlined text-[16px]">school</span>
+<span>Faculty Contributors</span>
+</button>
+</div>
+<!-- CATEGORY 1: TOP AI/ML CONTRIBUTORS -->
+<div class="category-panel bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-ai">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">neurology</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top AI/ML Contributors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Validated neural architectures, reproducible checkpoints, and algorithmic peer solutions</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Dr. Rohini Ramanathan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Faculty PI • Neural Systems</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      IIT Delhi
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Physics-informed GNNs</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">4,180</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">54 accepted • 9 papers</div>
+<span class="text-[11px] text-on-surface-variant">54 citations indexed</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Devavrat Saxena</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ph.D. Scholar • Vision Lab</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      IIT Bombay
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Self-Supervised Vision Transformers</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,640</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">41 accepted • 4 models</div>
+<span class="text-[11px] text-on-surface-variant">HuggingFace verified node</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#3</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Ananya Chakraborty</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Postdoc Fellow • NLP Group</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      IISc Bangalore
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Indic Language Low-Resource LLMs</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,110</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">38 accepted • 12 datasets</div>
+<span class="text-[11px] text-on-surface-variant">Bhashini pipeline integration</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#4</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Vikramaditya Rao</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4th Year Dual Degree</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      IIIT Hyderabad
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Reinforcement Learning with Verifiable Bounds</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,870</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">29 accepted • 6 notebooks</div>
+<span class="text-[11px] text-on-surface-variant">NeurIPS Artifact Certified</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#5</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Tanya Sengupta</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Research Associate</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      BITS Pilani
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Diffusion Optimizations on Edge SoCs</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,490</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">24 accepted • 3 benchmarks</div>
+<span class="text-[11px] text-on-surface-variant">Cortex-M micro-kernels</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#6</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Sameer Siddiqui</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Senior Undergraduate</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                      NIT Trichy
+                    </span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Multimodal Graph Neural Alignment</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,180</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">19 accepted • 5 reviews</div>
+<span class="text-[11px] text-on-surface-variant">Open benchmark contributor</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CATEGORY 2: TOP WEB & SYSTEMS DEVELOPMENT CONTRIBUTORS -->
+<div class="category-panel hidden bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-systems">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">dns</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Web &amp; Systems Development</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Distributed protocols, kernel tracing, scalable backends, and institutional infrastructure</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Kabir Sen</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4th Year UG • Systems Group</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Kharagpur</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Raft &amp; Asynchronous Consensus</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,920</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">62 accepted • 8 crates</div>
+<span class="text-[11px] text-on-surface-variant">Rust WASM memory verification</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Pooja Varma</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Senior UG Researcher</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIIT Hyderabad</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">eBPF &amp; Microservices Telemetry</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,450</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">48 accepted • 5 packages</div>
+<span class="text-[11px] text-on-surface-variant">Linux foundation sub-grant</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#3</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Naveen Krishnan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">M.Tech Scholar</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Madras</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Zero-Copy WebRTC Infrastructure</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,980</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">35 accepted • 4 PRs</div>
+<span class="text-[11px] text-on-surface-variant">Consortium video core module</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#4</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Meera Iyer</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Research Scholar</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">BITS Pilani</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">CRDTs for Offline Collaborative Code</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,610</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">27 accepted • 3 projects</div>
+<span class="text-[11px] text-on-surface-variant">Authored peer consensus spec</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#5</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Gaurav Kulkarni</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3rd Year CSE</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Roorkee</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Hardware-enforced Secure Enclaves</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,300</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">22 accepted • 2 tools</div>
+<span class="text-[11px] text-on-surface-variant">RISC-V Keystone verified</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CATEGORY 3: TOP RESEARCH CONTRIBUTORS -->
+<div class="category-panel hidden bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-research">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">menu_book</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Research Contributors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Peer-reviewed preprints, formal reproducibility audits, and cross-lab datasets</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Dr. Arvind Swaminathan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Associate Professor • ECE</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IISc Bangalore</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Quantum Error Suppression</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">4,410</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">112 formal endorsements</div>
+<span class="text-[11px] text-on-surface-variant">IEEE Trans. Quantum Lead</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Dr. Sharada Menon</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Principal Scientist • CSIR Lab</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Madras</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Photovoltaic Degradation Models</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,720</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">84 verified datasets</div>
+<span class="text-[11px] text-on-surface-variant">ISRO Solar Consortium Grant</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#3</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Rohan Mathur</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Doctoral Candidate</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Kanpur</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Cryptographic Zero-Knowledge Rollups</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,190</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">44 accepted • 6 preprints</div>
+<span class="text-[11px] text-on-surface-variant">Formal Coq verifications</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline">#4</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Ayesha Khan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Senior Research Fellow</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Guwahati</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Bio-fluid Simulation Microfluidics</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,810</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">32 peer reviews completed</div>
+<span class="text-[11px] text-on-surface-variant">NIH cross-lab validation</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CATEGORY 4: TOP PEER MENTORS -->
+<div class="category-panel hidden bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-mentors">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">supervisor_account</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Peer Mentors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Mentorship hours logged, thesis guidance, code review assistance, and office hour sprints</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Devavrat Saxena</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ph.D. Scholar • Vision Lab</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Bombay</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Deep Learning Lab Instructor</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,780</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">96 logged mentorship hrs</div>
+<span class="text-[11px] text-on-surface-variant">32 student repos unblocked</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Kritika Bhatt</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Teaching Assistant • Algorithms</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Delhi</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Graph Theory &amp; Discrete Math</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,240</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">78 logged mentorship hrs</div>
+<span class="text-[11px] text-on-surface-variant">100% positive peer rating</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#3</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Dr. K. Ramanathan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Emeritus Faculty Advisor</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Madras</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Early Career Research Methodology</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">2,960</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">65 faculty endorsements</div>
+<span class="text-[11px] text-on-surface-variant">18 doctoral proposals vetted</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CATEGORY 5: TOP PROJECT CONTRIBUTORS -->
+<div class="category-panel hidden bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-projects">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Project Contributors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Open-hardware designs, inter-institutional repositories, and verified implementations</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Pooja Varma</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Lead Firmware Contributor</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIIT Hyderabad</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">LoRaWAN Hydrology Mesh Sensors</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,890</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">34 accepted • 21 HW tests</div>
+<span class="text-[11px] text-on-surface-variant">Deployed in 3 river basins</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Chirag Patel</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4th Year EE</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Roorkee</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Battery Management Open Schematic</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">3,120</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">28 gerbers verified</div>
+<span class="text-[11px] text-on-surface-variant">Adopted by EV Student Racing</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CATEGORY 6: TOP FACULTY CONTRIBUTORS -->
+<div class="category-panel hidden bg-surface-container-lowest rounded shadow-sm overflow-hidden" id="cat-faculty">
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">school</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Faculty Contributors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Consortium curriculum designers, cross-college exam moderators, and project mentors</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Q2 2024 Cycle</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md w-14">Rank</th>
+<th class="py-2.5 px-space-md">Scholar &amp; Credential</th>
+<th class="py-2.5 px-space-md">Institution</th>
+<th class="py-2.5 px-space-md">Primary Focus</th>
+<th class="py-2.5 px-space-md text-right">Score</th>
+<th class="py-2.5 px-space-md">Substantive Impact</th>
+<th class="py-2.5 px-space-md text-right w-24">Record</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary">#1</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-primary font-semibold">Dr. Rohini Ramanathan</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Head of Computing Node</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Delhi</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Neural Systems &amp; Compute Ethics</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">5,200</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">142 verified review approvals</div>
+<span class="text-[11px] text-on-surface-variant">Supervising 14 consortium teams</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-md font-label-md text-label-md text-on-surface">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface">#2</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="font-title-sm text-title-sm text-on-surface font-semibold">Prof. Bhaskar Mukhopadhyay</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Dean of Academic Research</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Kharagpur</span>
+</td>
+<td class="py-3 px-space-md text-on-surface-variant">Scalable Cryptographic Primitives</td>
+<td class="py-3 px-space-md text-right font-semibold text-primary font-label-md">4,890</td>
+<td class="py-3 px-space-md">
+<div class="font-label-sm text-label-sm text-secondary font-medium">118 formal endorsements</div>
+<span class="text-[11px] text-on-surface-variant">National Supercomputing Mission</span>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Sidebar: Recognition Methodology & Integrity Protocols (4 Columns) -->
+<aside class="xl:col-span-4 space-y-space-md" id="calibration">
+<!-- Methodology Card -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-space-sm pb-space-xs border-b border-surface-container-low">
+<span class="material-symbols-outlined text-primary text-[20px]">balance</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Calibration Methodology</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md leading-relaxed">
+            CampusLink metrics are designed to discourage superficial forum volume. Score weighting is governed strictly through verifiable scholarly utility:
+          </p>
+<ol class="space-y-space-sm font-body-sm text-body-sm">
+<li class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded">
+<span class="font-label-md text-label-md text-primary bg-surface-container px-2 py-0.5 rounded">1</span>
+<div>
+<strong class="text-on-surface block font-medium">Peer-Reviewed Technical Solutions</strong>
+<span class="text-on-surface-variant text-[12px] leading-snug block">
+                  Solutions accepted by verified researchers carry a 3.5× weight compared to unverified upvotes.
+                </span>
+</div>
+</li>
+<li class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded">
+<span class="font-label-md text-label-md text-primary bg-surface-container px-2 py-0.5 rounded">2</span>
+<div>
+<strong class="text-on-surface block font-medium">Open Science Artifacts</strong>
+<span class="text-on-surface-variant text-[12px] leading-snug block">
+                  Reproducible dataset uploads, validated schematics, and preprints archived with permanent DOIs.
+                </span>
+</div>
+</li>
+<li class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded">
+<span class="font-label-md text-label-md text-primary bg-surface-container px-2 py-0.5 rounded">3</span>
+<div>
+<strong class="text-on-surface block font-medium">Cross-Institution Mentorship</strong>
+<span class="text-on-surface-variant text-[12px] leading-snug block">
+                  Synchronous debugging sessions and sprint guidance between scholars across different state colleges.
+                </span>
+</div>
+</li>
+</ol>
+<div class="mt-space-md p-space-sm rounded bg-surface-container">
+<div class="flex items-center gap-1.5 text-primary font-label-md text-label-md mb-1">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Consortium Trust Node</span>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">
+              Cryptographic hashes are logged weekly on the IIT Delhi Anchor Chain to prevent bot voting or coordinated ring engagement.
+            </p>
+</div>
+</div>
+<!-- Institutional Ethical Attribution Notice -->
+<div class="bg-surface-container-low rounded p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">policy</span>
+<h4 class="font-title-sm text-title-sm text-on-surface">Ethical Attribution Notice</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-sm">
+            CampusLink adheres to the Berlin Declaration on Open Access. All recognized scholars retain complete moral copyright over code snippets, benchmark results, and responses published on the consortium exchange.
+          </p>
+<div class="flex items-center justify-between pt-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>Audit Standard: IEEE 7000-2021</span>
+<a class="text-primary hover:underline" href="#">Guidelines →</a>
+</div>
+</div>
+<!-- Verified Network Seal -->
+<div class="p-space-sm rounded bg-surface-container-lowest flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div>
+<div class="font-title-sm text-[13px] text-on-surface leading-snug font-semibold">140+ Accredited Indian Universities</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant leading-tight">MHRD / NIRF Recognized Node Network</p>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</div>
+<script>
+  // Tab Switching Logic for Categories
+  document.querySelectorAll('.category-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Deactivate all tabs
+      document.querySelectorAll('.category-tab').forEach(t => {
+        t.classList.remove('bg-surface-container', 'text-primary');
+        t.classList.add('text-on-surface-variant');
+      });
+      // Activate clicked
+      tab.classList.add('bg-surface-container', 'text-primary');
+      tab.classList.remove('text-on-surface-variant');
+
+      // Hide all panels
+      document.querySelectorAll('.category-panel').forEach(p => p.classList.add('hidden'));
+
+      // Show selected panel
+      const targetId = tab.getAttribute('data-target');
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+      }
+    });
+  });
+
+  // Filter Buttons UI Toggle
+  document.querySelectorAll('.domain-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.domain-btn').forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary');
+        b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+      btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      btn.classList.add('bg-primary', 'text-on-primary');
+
+      // Sync category tab if applicable
+      const domain = btn.getAttribute('data-domain');
+      if (domain === 'ai') {
+        document.querySelector('[data-target="cat-ai"]')?.click();
+      } else if (domain === 'systems') {
+        document.querySelector('[data-target="cat-systems"]')?.click();
+      } else if (domain === 'research') {
+        document.querySelector('[data-target="cat-research"]')?.click();
+      } else if (domain === 'faculty') {
+        document.querySelector('[data-target="cat-faculty"]')?.click();
+      }
+    });
+  });
+
+  // Simple In-table Text Filtering
+  const searchInput = document.getElementById('scholar-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      document.querySelectorAll('tbody tr').forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    });
+  }
+</script></main></div></body></html>

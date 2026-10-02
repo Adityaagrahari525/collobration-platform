@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;family=Public+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #F8FAFC;
+        color: #0F172A;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .font-serif-academic {
+      font-family: 'Newsreader', Georgia, serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00236f",
+            "primary-container": "#1e3a8a",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#90a8ff",
+            "secondary": "#006c4a",
+            "secondary-container": "#82f5c1",
+            "on-secondary": "#ffffff",
+            "surface": "#faf8ff",
+            "surface-dim": "#d2d9f4",
+            "surface-bright": "#faf8ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "surface-container": "#eaedff",
+            "surface-container-high": "#e2e7ff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#0F172A",
+            "on-surface-variant": "#334155",
+            "outline": "#64748B",
+            "outline-variant": "#CBD5E1",
+            "border-light": "#E2E8F0"
+          },
+          fontFamily: {
+            "display-lg": ["Newsreader", "Georgia", "serif"],
+            "headline-lg": ["Newsreader", "Georgia", "serif"],
+            "headline-md": ["Newsreader", "Georgia", "serif"],
+            "headline-sm": ["Newsreader", "Georgia", "serif"],
+            "body-lg": ["Public Sans", "sans-serif"],
+            "body-md": ["Public Sans", "sans-serif"],
+            "body-sm": ["Public Sans", "sans-serif"],
+            "title-md": ["Public Sans", "sans-serif"],
+            "title-sm": ["Public Sans", "sans-serif"],
+            "label-lg": ["Public Sans", "sans-serif"],
+            "label-md": ["Public Sans", "sans-serif"],
+            "label-sm": ["Public Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-blue-100 selection:text-blue-900">
+<!-- TOP NAVIGATION BAR -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-none border-b border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+<div class="h-16 max-w-7xl mx-auto px-6 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<a class="flex items-center gap-2.5 text-[#0F172A] hover:text-[#1E3A8A] transition-colors" data-path="platform" href="#">
+<div class="w-8 h-8 rounded bg-[#1E3A8A] flex items-center justify-center text-white shadow-sm">
+<span class="material-symbols-outlined text-[19px]">account_balance</span>
+</div>
+<span class="font-semibold text-[17px] tracking-tight text-[#0F172A]">CampusGrid</span>
+</a>
+<nav class="hidden md:flex items-center gap-6" data-active-classes="text-[#1E3A8A] font-semibold">
+<a aria-current="page" class="text-sm font-semibold text-[#1E3A8A] border-b-2 border-[#1E3A8A] py-5 -mb-[1px]" data-path="platform" href="#">Platform</a>
+<a class="text-sm font-medium text-[#475569] hover:text-[#0F172A] transition-colors py-5" data-path="questions" href="#">Questions</a>
+<a class="text-sm font-medium text-[#475569] hover:text-[#0F172A] transition-colors py-5" data-path="projects" href="#">Projects</a>
+<a class="text-sm font-medium text-[#475569] hover:text-[#0F172A] transition-colors py-5" data-path="institutions" href="#">Institutions</a>
+<a class="text-sm font-medium text-[#475569] hover:text-[#0F172A] transition-colors py-5" data-path="about" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<a class="text-sm font-medium text-[#334155] hover:text-[#0F172A] px-3 py-2 transition-colors" data-path="sign-in" href="#">Sign In</a>
+<a class="h-9 px-4 rounded bg-[#1E3A8A] hover:bg-[#172554] text-white text-sm font-medium flex items-center justify-center transition-colors shadow-sm" data-path="create-account" href="#">Create Account</a>
+<div class="w-8 h-8 rounded border border-[#CBD5E1] bg-[#F1F5F9] flex items-center justify-center text-[#475569]">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN CONTENT -->
+<main class="w-full pt-16 bg-[#F8FAFC]">
+<div class="flex flex-col w-full">
+<!-- HERO SECTION -->
+<section class="w-full px-6 py-14 md:py-20 max-w-7xl mx-auto flex flex-col items-center">
+<!-- Eyebrow Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-[#ECFDF5] border border-[#A7F3D0] rounded mb-5 shadow-xs">
+<span class="w-2 h-2 rounded-full bg-[#059669]"></span>
+<span class="font-mono-code text-[11px] font-semibold text-[#065F46] tracking-wider uppercase">VERIFIED ACADEMIC NETWORK • INDIA-WIDE</span>
+</div>
+<!-- Main Title -->
+<h1 class="font-serif-academic text-center text-[#0F172A] tracking-tight max-w-4xl text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.15]">
+          Ask. Contribute. Collaborate. Grow.
+        </h1>
+<!-- Supporting Text -->
+<p class="text-[16px] md:text-[18px] leading-[28px] text-[#475569] text-center max-w-2xl mt-4 font-normal">
+          A verified academic network where students and staff learn, build projects and contribute knowledge across institutions.
+        </p>
+<!-- CTAs -->
+<div class="flex flex-wrap items-center justify-center gap-3.5 mt-8">
+<a class="px-5 py-2.5 rounded bg-[#1E3A8A] text-white text-sm font-semibold hover:bg-[#172554] transition-colors shadow-sm" data-path="platform" href="#">
+            Explore the Platform
+          </a>
+<a class="px-5 py-2.5 rounded border border-[#CBD5E1] bg-white text-[#0F172A] text-sm font-medium hover:bg-[#F8FAFC] transition-colors shadow-xs" data-path="create-account" href="#">
+            Create Account
+          </a>
+</div>
+<!-- Component Preview Grid (Academic UI Artifacts) -->
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 mt-14">
+<!-- Top Left: Question Card UI -->
+<div class="lg:col-span-7 bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)] hover:border-[#94A3B8] transition-colors">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#94A3B8]"></span>
+<span class="text-xs font-medium text-[#64748B]">Posted Anonymously • 4h ago</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] text-xs font-semibold">
+<span class="material-symbols-outlined text-[15px]">verified</span>
+<span>Faculty Endorsed</span>
+</div>
+</div>
+<h2 class="text-base font-semibold text-[#0F172A] leading-snug">
+                How to implement distributed consensus on Byzantine fault tolerant nodes in heterogeneous networks?
+              </h2>
+<p class="text-sm text-[#475569] mt-2 line-clamp-2 leading-relaxed">
+                Evaluating PBFT state synchronization latency under asymmetric network delays between edge clusters. Specifically observing recovery state partition overhead in Raft-hybrid overlays.
+              </p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="h-6 px-2.5 flex items-center bg-[#F1F5F9] border border-[#E2E8F0] rounded text-[#334155] text-xs font-medium">Distributed Systems</span>
+<span class="h-6 px-2.5 flex items-center bg-[#F1F5F9] border border-[#E2E8F0] rounded text-[#334155] text-xs font-medium">CS-402</span>
+<span class="h-6 px-2.5 flex items-center bg-[#EFF6FF] border border-[#BFDBFE] rounded text-[#1E3A8A] text-xs font-medium">IIT Delhi</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 mt-4 border-t border-[#E2E8F0] text-[#64748B] text-xs font-medium">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 text-[#1E3A8A] font-semibold bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span> 18 Upvotes
+                </span>
+<span class="flex items-center gap-1 text-[#475569]">
+<span class="material-symbols-outlined text-[15px]">forum</span> 4 Solutions
+                </span>
+</div>
+<span class="font-mono-code text-[11px] text-[#64748B]">QID: #DL-8821</span>
+</div>
+</div>
+<!-- Top Right: Contribution Score Widget -->
+<div class="lg:col-span-5 bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)] hover:border-[#94A3B8] transition-colors">
+<div>
+<div class="flex items-start justify-between border-b border-[#E2E8F0] pb-3 mb-4">
+<div>
+<span class="font-mono-code text-[10px] font-semibold uppercase tracking-wider text-[#64748B]">Faculty Validator</span>
+<h3 class="text-base font-semibold text-[#0F172A] mt-0.5">Dr. Arishta Sen</h3>
+<p class="text-xs text-[#475569]">Assoc. Professor • CSE, IIT Kharagpur</p>
+</div>
+<div class="w-10 h-10 rounded bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#1E3A8A] shadow-xs">
+<span class="material-symbols-outlined text-[20px]">school</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mb-2">
+<div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">
+<div class="text-[11px] font-semibold text-[#64748B] uppercase tracking-wide">Contribution Index</div>
+<div class="text-xl font-bold text-[#0F172A] mt-1">1,420 <span class="text-xs text-[#1E3A8A] font-normal">pts</span></div>
+</div>
+<div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">
+<div class="text-[11px] font-semibold text-[#64748B] uppercase tracking-wide">Resolution Rate</div>
+<div class="text-xl font-bold text-[#0F172A] mt-1">98.2%</div>
+</div>
+</div>
+</div>
+<div class="p-2.5 bg-[#FFFBEB] border border-[#FDE68A] rounded flex items-center justify-between mt-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#D97706] text-[18px]">workspace_premium</span>
+<span class="text-xs font-semibold text-[#92400E]">Top 1% Peer Validator</span>
+</div>
+<span class="font-mono-code text-[11px] text-[#B45309] font-medium">SEMESTER II</span>
+</div>
+</div>
+<!-- Bottom Left: Project Card UI -->
+<div class="lg:col-span-7 bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)] hover:border-[#94A3B8] transition-colors">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="text-xs font-semibold text-[#1E3A8A]">Cross-College Lab • BITS Pilani × NIT Trichy</span>
+<span class="text-xs font-medium px-2 py-0.5 rounded bg-[#F1F5F9] border border-[#CBD5E1] text-[#475569]">Simulation Phase</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Autonomous Micro-Rover Sensor Fusion</h3>
+<p class="text-sm text-[#475569] mt-1.5 leading-relaxed">
+                Developing real-time EKF algorithms for multi-spectral terrain classification in low-compute robotics testbeds. Cross-calibrated across university robotics hangars.
+              </p>
+<div class="flex flex-wrap items-center gap-2 mt-4">
+<span class="text-xs font-medium text-[#64748B]">Recruiting:</span>
+<span class="px-2 py-0.5 bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E3A8A] rounded text-xs font-medium">Embedded C / ROS</span>
+<span class="px-2 py-0.5 bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] rounded text-xs font-medium">Kalman Filtering</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 mt-4 border-t border-[#E2E8F0] text-xs text-[#475569]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-[#64748B]">group</span>
+<span class="font-medium">3 of 5 Team Slots Filled</span>
+</div>
+<span class="font-semibold text-[#1E3A8A] hover:underline cursor-pointer">View Sprint Matrix →</span>
+</div>
+</div>
+<!-- Bottom Right: Expert Profile Snippet -->
+<div class="lg:col-span-5 bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)] hover:border-[#94A3B8] transition-colors">
+<div>
+<div class="flex items-center gap-3 pb-3 border-b border-[#E2E8F0]">
+<div class="w-10 h-10 rounded bg-[#1E3A8A] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                  RD
+                </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-[#0F172A]">Rohan Deshmukh</span>
+<span class="px-1.5 py-0.5 bg-[#ECFDF5] border border-[#A7F3D0] rounded text-[#065F46] text-[10px] font-bold tracking-wider uppercase">Verified Student</span>
+</div>
+<span class="text-xs text-[#475569]">M.Tech Scholar, EE • IIT Bombay</span>
+</div>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex items-center justify-between p-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded text-xs">
+<span class="text-[#475569] font-medium">Signal Processing Val.</span>
+<span class="font-mono-code text-[#0F172A] font-semibold">34 Verified Citations</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded text-xs">
+<span class="text-[#475569] font-medium">Open Math Proofs</span>
+<span class="font-mono-code text-[#0F172A] font-semibold">12 Peer Accepted</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-[#E2E8F0] text-right">
+<span class="font-mono-code text-[11px] text-[#64748B]">Eduroam SAML: UID-71049-IITB</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 1: THE PROBLEM -->
+<section class="w-full bg-[#F1F5F9] border-t border-b border-[#E2E8F0] py-16 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="max-w-2xl mb-12">
+<span class="font-mono-code text-xs font-bold text-[#1E3A8A] uppercase tracking-wider">Systemic Inefficiency</span>
+<h2 class="font-serif-academic text-2xl md:text-3xl text-[#0F172A] font-semibold mt-2">
+              The Problem: Academic Collaboration is Fragmented
+            </h2>
+<p class="text-sm md:text-base text-[#475569] mt-2 leading-relaxed">
+              Academic collaboration is fragmented across classrooms, WhatsApp groups, project teams and separate platforms.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+<div>
+<div class="w-10 h-10 rounded bg-[#F8FAFC] border border-[#CBD5E1] flex items-center justify-center text-[#1E3A8A] mb-4">
+<span class="material-symbols-outlined text-[20px]">folder_off</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A] mb-2">Information Silos</h3>
+<p class="text-sm text-[#475569] leading-relaxed">
+                  Valuable project insights and research queries disappear into ephemeral chat apps without persistent institutional archival or searchability for incoming cohorts.
+                </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#E2E8F0] font-mono-code text-[11px] font-medium text-[#64748B]">
+                ISSUE 01 • KNOWLEDGE LOSS
+              </div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+<div>
+<div class="w-10 h-10 rounded bg-[#F8FAFC] border border-[#CBD5E1] flex items-center justify-center text-[#1E3A8A] mb-4">
+<span class="material-symbols-outlined text-[20px]">person_cancel</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A] mb-2">Unverified Peer Networks</h3>
+<p class="text-sm text-[#475569] leading-relaxed">
+                  Lack of verified academic credentials across institutions makes multi-college team recruitment unreliable, leading to unaligned commits and abandoned repository roadmaps.
+                </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#E2E8F0] font-mono-code text-[11px] font-medium text-[#64748B]">
+                ISSUE 02 • ZERO TRUST BARRIER
+              </div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+<div>
+<div class="w-10 h-10 rounded bg-[#F8FAFC] border border-[#CBD5E1] flex items-center justify-center text-[#1E3A8A] mb-4">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A] mb-2">Uncredited Knowledge Sharing</h3>
+<p class="text-sm text-[#475569] leading-relaxed">
+                  Students and faculty spend countless hours answering peers and mentoring without verifiable academic contribution records or portable proof of institutional value.
+                </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#E2E8F0] font-mono-code text-[11px] font-medium text-[#64748B]">
+                ISSUE 03 • INVISIBLE LABOUR
+              </div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: CORE WORKFLOW -->
+<section class="w-full py-16 px-6 max-w-7xl mx-auto">
+<div class="mb-12">
+<span class="font-mono-code text-xs font-bold text-[#1E3A8A] uppercase tracking-wider">Sequential Process</span>
+<h2 class="font-serif-academic text-2xl md:text-3xl text-[#0F172A] font-semibold mt-2">
+            From Inquiry to Institutional Credibility
+          </h2>
+<p class="text-sm md:text-base text-[#475569] mt-1">
+            The verified academic iteration loop powering structured cross-college exchange.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+<!-- Step 1 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="font-mono-code text-base font-bold text-[#1E3A8A]">01</span>
+<span class="font-mono-code text-[11px] font-semibold uppercase text-[#64748B]">STEP</span>
+</div>
+<h3 class="text-sm font-bold text-[#0F172A] mb-2 tracking-wide">ASK</h3>
+<p class="text-xs text-[#475569] leading-relaxed">
+                Ask academic and research questions with verified department context, or toggle optional anonymity without peer judgment.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-[#E2E8F0] text-[11px] font-semibold text-[#1E3A8A]">
+              LaTeX &amp; Code Syntax
+            </div>
+</div>
+<!-- Step 2 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="font-mono-code text-base font-bold text-[#1E3A8A]">02</span>
+<span class="font-mono-code text-[11px] font-semibold uppercase text-[#64748B]">STEP</span>
+</div>
+<h3 class="text-sm font-bold text-[#0F172A] mb-2 tracking-wide">ANSWER</h3>
+<p class="text-xs text-[#475569] leading-relaxed">
+                Dissect complex proofs, share verified course solutions, and annotate methodology with inline datasets.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-[#E2E8F0] text-[11px] font-semibold text-[#1E3A8A]">
+              Peer Validation
+            </div>
+</div>
+<!-- Step 3 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="font-mono-code text-base font-bold text-[#1E3A8A]">03</span>
+<span class="font-mono-code text-[11px] font-semibold uppercase text-[#64748B]">STEP</span>
+</div>
+<h3 class="text-sm font-bold text-[#0F172A] mb-2 tracking-wide">COLLABORATE</h3>
+<p class="text-xs text-[#475569] leading-relaxed">
+                Connect with cross-college peers based on verified skill competencies, laboratory resources, and project briefs.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-[#E2E8F0] text-[11px] font-semibold text-[#1E3A8A]">
+              SAML Federated Match
+            </div>
+</div>
+<!-- Step 4 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="font-mono-code text-base font-bold text-[#1E3A8A]">04</span>
+<span class="font-mono-code text-[11px] font-semibold uppercase text-[#64748B]">STEP</span>
+</div>
+<h3 class="text-sm font-bold text-[#0F172A] mb-2 tracking-wide">BUILD</h3>
+<p class="text-xs text-[#475569] leading-relaxed">
+                Form multi-disciplinary teams across IITs, NITs, and universities with shared milestone tracking and sprint logs.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-[#E2E8F0] text-[11px] font-semibold text-[#1E3A8A]">
+              Cross-Campus Labs
+            </div>
+</div>
+<!-- Step 5 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-5 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-3">
+<span class="font-mono-code text-base font-bold text-[#1E3A8A]">05</span>
+<span class="font-mono-code text-[11px] font-semibold uppercase text-[#64748B]">STEP</span>
+</div>
+<h3 class="text-sm font-bold text-[#0F172A] mb-2 tracking-wide">EARN TRUST</h3>
+<p class="text-xs text-[#475569] leading-relaxed">
+                Build a permanent, verifiable academic contribution portfolio indexed by peer validations and faculty endorsements.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-[#E2E8F0] text-[11px] font-semibold text-[#1E3A8A]">
+              Permanent Ledger
+            </div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: PLATFORM CAPABILITIES -->
+<section class="w-full bg-[#F1F5F9] border-t border-b border-[#E2E8F0] py-16 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+<div>
+<span class="font-mono-code text-xs font-bold text-[#1E3A8A] uppercase tracking-wider">Functional Architecture</span>
+<h2 class="font-serif-academic text-2xl md:text-3xl text-[#0F172A] font-semibold mt-2">
+                Platform Capabilities
+              </h2>
+</div>
+<p class="text-sm text-[#475569] max-w-md mt-2 md:mt-0 leading-relaxed">
+              Engineered for rigour, peer accountability, and high-density technical discourse.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+<!-- Capability 1 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[24px]">help_center</span>
+<span class="font-mono-code text-[11px] font-medium text-[#64748B]">MODULE 01</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Academic Q&amp;A</h3>
+<p class="text-sm text-[#475569] mt-2 leading-relaxed">
+                  LaTeX equation parsing, structured monospaced code blocks, faculty endorsement banners, and privacy toggles for identity-safe inquiry.
+                </p>
+</div>
+<div class="mt-6 pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
+<span class="text-xs font-medium text-[#334155]">Integrated MathJax &amp; Highlight Engine</span>
+</div>
+</div>
+<!-- Capability 2 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[24px]">terminal</span>
+<span class="font-mono-code text-[11px] font-medium text-[#64748B]">MODULE 02</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Projects &amp; Collaboration Labs</h3>
+<p class="text-sm text-[#475569] mt-2 leading-relaxed">
+                  Cross-college repository discovery, open skill matrices, collaborator applicant screening, and multi-institutional sprint milestone tracking.
+                </p>
+</div>
+<div class="mt-6 pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
+<span class="text-xs font-medium text-[#334155]">Federated Milestone Logs</span>
+</div>
+</div>
+<!-- Capability 3 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[24px]">contacts</span>
+<span class="font-mono-code text-[11px] font-medium text-[#64748B]">MODULE 03</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Verified Academic Directory</h3>
+<p class="text-sm text-[#475569] mt-2 leading-relaxed">
+                  Authoritative directory of scholars and professors categorized strictly by institution, department, research domain, and publication index.
+                </p>
+</div>
+<div class="mt-6 pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
+<span class="text-xs font-medium text-[#334155]">Institutional SAML Handshake</span>
+</div>
+</div>
+<!-- Capability 4 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 shadow-xs flex flex-col justify-between md:col-span-1">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[24px]">forum</span>
+<span class="font-mono-code text-[11px] font-medium text-[#64748B]">MODULE 04</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Structured Advisory Channels</h3>
+<p class="text-sm text-[#475569] mt-2 leading-relaxed">
+                  Direct, asynchronous mentorship desks connecting postgraduate researchers and faculty to undergraduate builders for research thesis critiques.
+                </p>
+</div>
+<div class="mt-6 pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
+<span class="text-xs font-medium text-[#334155]">Audited Advisory Transcripts</span>
+</div>
+</div>
+<!-- Capability 5 -->
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-6 shadow-xs flex flex-col justify-between md:col-span-2">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[24px]">award_star</span>
+<span class="font-mono-code text-[11px] font-medium text-[#64748B]">MODULE 05</span>
+</div>
+<h3 class="text-base font-semibold text-[#0F172A]">Contribution Reputation</h3>
+<p class="text-sm text-[#475569] mt-2 leading-relaxed">
+                  Immutable, audit-ready academic contribution score that reflects peer answers, code reviews, reproducible dataset publications, and cross-campus project delivery—portable beyond graduation.
+                </p>
+</div>
+<div class="mt-6 pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
+<span class="text-xs font-medium text-[#334155]">Portable Institutional Ledger • No Speculative Tokens</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 4: CROSS-COLLEGE COLLABORATION -->
+<section class="w-full py-16 px-6 max-w-7xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-10">
+<span class="font-mono-code text-xs font-bold text-[#1E3A8A] uppercase tracking-wider">Topology Map</span>
+<h2 class="font-serif-academic text-2xl md:text-3xl text-[#0F172A] font-semibold mt-2">
+            Cross-College Academic Network
+          </h2>
+<p class="text-sm md:text-base text-[#475569] mt-2">
+            Verified peer connections across institutions, disciplines, and research laboratories.
+          </p>
+</div>
+<!-- Light Architectural Schematic SVG / Node Canvas -->
+<div class="w-full bg-white border border-[#CBD5E1] rounded-lg p-6 lg:p-8 overflow-hidden relative shadow-xs">
+<div class="w-full flex justify-center">
+<svg class="w-full max-w-4xl h-auto select-none" viewbox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+<!-- Connection Conduit Lines -->
+<g fill="none" stroke="#CBD5E1" stroke-dasharray="4 4" stroke-width="1.5">
+<path d="M 170 100 L 450 70"></path>
+<path d="M 450 70 L 730 100"></path>
+<path d="M 170 100 L 310 200"></path>
+<path d="M 730 100 L 590 200"></path>
+<path d="M 310 200 L 450 70"></path>
+<path d="M 590 200 L 450 70"></path>
+<path d="M 310 200 L 450 330"></path>
+<path d="M 590 200 L 450 330"></path>
+<path d="M 170 300 L 310 200"></path>
+<path d="M 730 300 L 590 200"></path>
+<path d="M 170 300 L 450 330"></path>
+<path d="M 730 300 L 450 330"></path>
+</g>
+<!-- Conduit Labels (Projects in Progress) -->
+<g class="font-mono-code" fill="#475569" font-size="10" text-anchor="middle">
+<rect fill="#F1F5F9" height="20" rx="3" stroke="#CBD5E1" stroke-width="1" width="120" x="250" y="70"></rect>
+<text font-weight="500" x="310" y="84">Joint Robotics Lab</text>
+<rect fill="#F1F5F9" height="20" rx="3" stroke="#CBD5E1" stroke-width="1" width="140" x="530" y="70"></rect>
+<text font-weight="500" x="600" y="84">Quantum Sim Benchmark</text>
+<rect fill="#F1F5F9" height="20" rx="3" stroke="#CBD5E1" stroke-width="1" width="140" x="380" y="190"></rect>
+<text font-weight="500" x="450" y="204">Edge AI Team Alpha</text>
+<rect fill="#F1F5F9" height="20" rx="3" stroke="#CBD5E1" stroke-width="1" width="140" x="380" y="320"></rect>
+<text font-weight="500" x="450" y="334">Bio-Informatics Stream</text>
+</g>
+<!-- Institutional Nodes -->
+<!-- Node 1: IIT Bombay -->
+<g transform="translate(90, 80)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="40" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="160"></rect>
+<circle cx="18" cy="20" fill="#1E3A8A" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="24">IIT Bombay</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="110" y="24">84 Collabs</text>
+</g>
+<!-- Node 2: IISc Bangalore -->
+<g transform="translate(370, 50)">
+<rect fill="#EFF6FF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="40" rx="4" stroke="#1E3A8A" stroke-width="1.5" width="160"></rect>
+<circle cx="18" cy="20" fill="#1E3A8A" r="4"></circle>
+<text fill="#1E3A8A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="700" x="32" y="24">IISc Bangalore</text>
+<text fill="#1E3A8A" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" x="115" y="24">Hub Node</text>
+</g>
+<!-- Node 3: BITS Pilani -->
+<g transform="translate(650, 80)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="40" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="160"></rect>
+<circle cx="18" cy="20" fill="#1E3A8A" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="24">BITS Pilani</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="110" y="24">62 Collabs</text>
+</g>
+<!-- Node 4: NIT Trichy -->
+<g transform="translate(230, 180)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="38" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="150"></rect>
+<circle cx="18" cy="19" fill="#0D9488" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="23">NIT Trichy</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="100" y="23">45 Collabs</text>
+</g>
+<!-- Node 5: Ashoka Univ -->
+<g transform="translate(520, 180)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="38" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="150"></rect>
+<circle cx="18" cy="19" fill="#0D9488" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="23">Ashoka Univ</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="105" y="23">31 Collabs</text>
+</g>
+<!-- Node 6: IIT Delhi -->
+<g transform="translate(90, 280)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="40" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="160"></rect>
+<circle cx="18" cy="20" fill="#1E3A8A" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="24">IIT Delhi</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="110" y="24">92 Collabs</text>
+</g>
+<!-- Node 7: AIIMS Bio-Info -->
+<g transform="translate(650, 280)">
+<rect fill="#FFFFFF" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.05))" height="40" rx="4" stroke="#CBD5E1" stroke-width="1.5" width="160"></rect>
+<circle cx="18" cy="20" fill="#1E3A8A" r="4"></circle>
+<text fill="#0F172A" font-family="'Public Sans', sans-serif" font-size="12" font-weight="600" x="32" y="24">AIIMS Bio-Inf</text>
+<text fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" x="112" y="24">28 Collabs</text>
+</g>
+<!-- Center Cross Point Pin -->
+<circle cx="450" cy="200" fill="#1E3A8A" r="5" stroke="#FFFFFF" stroke-width="2"></circle>
+</svg>
+</div>
+<!-- Network Scale Metrics Bar -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 mt-6 border-t border-[#E2E8F0] text-center">
+<div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">
+<div class="font-mono-code text-2xl font-bold text-[#0F172A]">140+</div>
+<div class="text-xs font-semibold text-[#64748B] mt-1 uppercase tracking-wide">Partner Institutions</div>
+</div>
+<div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">
+<div class="font-mono-code text-2xl font-bold text-[#0F172A]">24,000+</div>
+<div class="text-xs font-semibold text-[#64748B] mt-1 uppercase tracking-wide">Verified Academics</div>
+</div>
+<div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded">
+<div class="font-mono-code text-2xl font-bold text-[#0F172A]">1,800+</div>
+<div class="text-xs font-semibold text-[#64748B] mt-1 uppercase tracking-wide">Active Cross-College Projects</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: FINAL CTA -->
+<section class="w-full py-16 px-6 max-w-7xl mx-auto">
+<div class="bg-white border border-[#CBD5E1] rounded-lg p-8 md:p-14 text-center max-w-4xl mx-auto shadow-sm">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-[#EFF6FF] border border-[#BFDBFE] rounded mb-6">
+<span class="material-symbols-outlined text-[#1E3A8A] text-[16px]">verified_user</span>
+<span class="font-mono-code text-xs font-semibold text-[#1E3A8A] uppercase">Federated SAML Authentication</span>
+</div>
+<h2 class="font-serif-academic text-2xl md:text-4xl text-[#0F172A] font-semibold">
+            Join the Verified Academic Network
+          </h2>
+<p class="text-sm md:text-base text-[#475569] max-w-xl mx-auto mt-4 leading-relaxed">
+            Connect with researchers, students, and mentors across India. Start asking, building, and earning verifiable academic credibility.
+          </p>
+<div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+<a class="px-6 py-3 rounded bg-[#1E3A8A] text-white text-sm font-semibold hover:bg-[#172554] transition-colors shadow-sm" data-path="platform" href="#">
+              Explore the Platform
+            </a>
+<a class="px-6 py-3 rounded border border-[#CBD5E1] bg-white text-[#0F172A] text-sm font-medium hover:bg-[#F8FAFC] transition-colors shadow-xs" data-path="create-account" href="#">
+              Create Account with College ID
+            </a>
+</div>
+<div class="mt-8 pt-6 border-t border-[#E2E8F0] flex items-center justify-center gap-2 text-xs font-medium text-[#64748B]">
+<span class="material-symbols-outlined text-[16px] text-[#64748B]">lock</span>
+<span>Requires verified .ac.in, .edu.in or recognized college identification.</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="w-full bg-white border-t border-[#CBD5E1] pt-12 pb-8">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-8 pb-10 border-b border-[#E2E8F0]">
+<div class="md:col-span-2 space-y-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-[#1E3A8A] flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[17px]">account_balance</span>
+</div>
+<span class="text-base font-bold text-[#0F172A] tracking-tight">CampusGrid</span>
+</div>
+<p class="text-sm text-[#475569] max-w-sm leading-relaxed">
+            Unified academic exchange and verified research infrastructure across accredited collegiate networks.
+          </p>
+<div class="flex items-center gap-2 text-[#065F46] text-xs font-medium pt-2">
+<span class="material-symbols-outlined text-[16px] text-[#059669]">verified</span>
+<span>Verified Institutional Discourse Protocol</span>
+</div>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-[#0F172A] mb-3">Product</div>
+<ul class="space-y-2 text-sm text-[#475569]">
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="platform" href="#">Overview</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="questions" href="#">Academic Q&amp;A</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="projects" href="#">Collaboration Labs</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="institutions" href="#">University Directory</a></li>
+</ul>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-[#0F172A] mb-3">Knowledge</div>
+<ul class="space-y-2 text-sm text-[#475569]">
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="research-papers" href="#">Preprints</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="faculty-review" href="#">Peer Review</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="datasets" href="#">Open Datasets</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="citation-index" href="#">Citation Index</a></li>
+</ul>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-[#0F172A] mb-3">Community &amp; Legal</div>
+<ul class="space-y-2 text-sm text-[#475569]">
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="code-of-conduct" href="#">Honor Code</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="institutional-access" href="#">Access Policy</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="privacy-notice" href="#">Privacy Framework</a></li>
+<li><a class="hover:text-[#0F172A] transition-colors" data-path="credential-audit" href="#">Audit &amp; Governance</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64748B]">
+<div class="flex items-center gap-2">
+<span>© 2025 CampusGrid Consortium. All academic rights reserved.</span>
+</div>
+<div>Federated identity authenticated via institutional SAML/Eduroam standards.</div>
+</div>
+</div>
+</footer>
+</body></html>

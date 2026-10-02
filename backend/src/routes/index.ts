@@ -1,0 +1,14 @@
+import { Router } from "express";
+import authRoutes from "../modules/auth/auth.routes";
+import institutionRoutes from "../modules/institutions/institution.routes";
+import userRoutes from "../modules/users/user.routes";
+import skillRoutes from "../modules/skills/skill.routes";
+
+const router = Router();
+
+router.use("/auth", authRoutes);
+router.use("/institutions", institutionRoutes);
+router.use("/users", userRoutes);
+router.use("/skills", skillRoutes);
+
+export default router;

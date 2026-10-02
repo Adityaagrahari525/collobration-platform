@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;family=Public+Sans:ital,wght@0,300..700;1,300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-fixed-variant":"#005137","primary-fixed":"#dce1ff","on-secondary-container":"#00714e","tertiary-fixed-dim":"#ffb77d","surface-bright":"#faf8ff","error":"#ba1a1a","surface-container-highest":"#dae2fd","surface-container-high":"#e2e7ff","on-background":"#131b2e","on-tertiary":"#ffffff","on-primary":"#ffffff","surface-tint":"#4059aa","on-tertiary-fixed-variant":"#6e3900","secondary-container":"#82f5c1","tertiary-container":"#653400","secondary-fixed-dim":"#68dba9","on-primary-container":"#90a8ff","on-surface":"#131b2e","inverse-surface":"#283044","inverse-on-surface":"#eef0ff","outline":"#757682","error-container":"#ffdad6","tertiary-fixed":"#ffdcc3","secondary":"#006c4a","on-secondary-fixed":"#002114","on-error":"#ffffff","outline-variant":"#c5c5d3","on-surface-variant":"#444651","surface-container-lowest":"#ffffff","on-error-container":"#93000a","primary-container":"#1e3a8a","surface-container-low":"#f2f3ff","on-primary-fixed-variant":"#264191","surface-variant":"#dae2fd","on-tertiary-container":"#fc922b","secondary-fixed":"#85f8c4","inverse-primary":"#b6c4ff","primary":"#00236f","on-tertiary-fixed":"#2f1500","surface-dim":"#d2d9f4","tertiary":"#442100","on-primary-fixed":"#00164e","surface-container":"#eaedff","on-secondary":"#ffffff","surface":"#faf8ff","background":"#faf8ff","primary-fixed-dim":"#b6c4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-lg":"1.5rem","gutter-mobile":"1rem","margin":"2.5rem","gutter":"1.5rem","space-sm":"0.5rem","margin-mobile":"1rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem"},"fontFamily":{"headline-lg-mobile":["Newsreader"],"label-md":["Public Sans"],"title-md":["Public Sans"],"headline-md":["Newsreader"],"title-sm":["Public Sans"],"headline-lg":["Newsreader"],"label-sm":["Public Sans"],"headline-sm":["Newsreader"],"body-md":["Public Sans"],"body-sm":["Public Sans"],"display-lg":["Newsreader"],"body-lg":["Public Sans"],"display-lg-mobile":["Newsreader"],"label-lg":["Public Sans"]},"fontSize":{"headline-lg-mobile":["26px",{"lineHeight":"34px","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"display-lg-mobile":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-lg":["13px",{"lineHeight":"18px","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-60 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><div class="w-9 h-9 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-surface-container-lowest text-[20px]">account_balance</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none">CampusLink</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mt-0.5">Academic Consortium</span></div></div><div class="px-space-md py-space-sm"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">Academic Directory</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="questions" href="#"><span class="material-symbols-outlined text-[18px]">quiz</span><span>Questions</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="projects" href="#"><span class="material-symbols-outlined text-[18px]">science</span><span>Projects</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="peers-and-mentors" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span>Peers &amp; Mentors</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="communities" href="#"><span class="material-symbols-outlined text-[18px]">hub</span><span>Communities</span></a></nav></div><div class="px-space-md py-space-xs"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">My Workspace</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="my-questions-and-answers" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>My Q&amp;A</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="saved-bookmarks" href="#"><span class="material-symbols-outlined text-[18px]">bookmarks</span><span>Saved References</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="collaboration-teams" href="#"><span class="material-symbols-outlined text-[18px]">groups_3</span><span>Collaboration Teams</span></a></nav></div></div><div class="p-space-md bg-surface-container-low"><div class="p-space-sm rounded bg-surface-container-lowest mb-space-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between mb-1"><span class="font-label-sm text-label-sm font-semibold text-primary uppercase">IIT Delhi Node</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><p class="font-body-sm text-[11px] leading-tight text-on-surface-variant">Authenticated via .ac.in credentials</p></div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings" href="#"><span class="material-symbols-outlined text-[16px]">settings</span><span>Institutional Settings</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="help-and-safety" href="#"><span class="material-symbols-outlined text-[16px]">help_outline</span><span>Scholarly Guidelines</span></a></nav></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md w-full max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full pl-9 pr-12 py-1.5 rounded bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-all" placeholder="Search academic discourse, papers, faculty, or tags..." type="text"/><span class="absolute right-2.5 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-1.5 py-0.5 rounded">Ctrl+K</span></div></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary text-on-primary px-space-md py-1.5 rounded font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary transition-all shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[18px]">add_circle</span><span>Ask Question</span></button><div class="flex items-center gap-space-xs"><button class="relative p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span></button><button class="p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">forum</span></button></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="text-right hidden sm:block"><div class="flex items-center justify-end gap-1"><span class="font-title-sm text-title-sm text-on-surface leading-none">Aditya Sharma</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">IIT Delhi • CS Dept</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 w-full bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Sticky Context Header -->
+<div class="w-full bg-surface-container-lowest shadow-sm">
+<div class="max-w-[1360px] mx-auto px-space-md lg:px-space-xl py-space-md">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant mb-space-xs tracking-wide">
+<span class="hover:text-primary transition-colors cursor-pointer">Academic Network</span>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Activity &amp; Inbox</span>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<span class="text-primary font-semibold">Notifications</span>
+</nav>
+<!-- Main Headline Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Notifications</h1>
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-label-sm uppercase tracking-wider">
+              5 Unread
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-2xl">
+            Real-time ledger of academic validations, project invites, peer endorsements, and consortium alerts.
+          </p>
+</div>
+<!-- Global Action Controls -->
+<div class="flex items-center gap-space-xs flex-wrap">
+<button class="flex items-center gap-1 px-3 py-1.5 rounded bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md transition-colors shadow-sm" id="mark-all-read">
+<span class="material-symbols-outlined text-[16px]">done_all</span>
+<span>Mark all as read</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Audit Feed Filter</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px]">settings_suggest</span>
+<span>Preferences</span>
+</button>
+</div>
+</div>
+<!-- Secondary Audit Metric Ticker -->
+<div class="mt-space-md pt-space-xs flex flex-wrap items-center justify-between gap-space-sm text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low px-space-md py-1.5 rounded">
+<div class="flex items-center gap-space-md">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Consensus Node: <strong class="text-on-surface font-semibold">IITD-NKN-08 (Active)</strong>
+</span>
+<span class="hidden sm:inline-block text-outline-variant">/</span>
+<span class="hidden sm:flex items-center gap-1">
+<span>Archival Block:</span>
+<span class="font-mono text-primary font-semibold">#0x7B9E2</span>
+</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span>142 events logged in Semester I (2024–25)</span>
+<span class="text-outline-variant">•</span>
+<span class="text-secondary font-semibold">Verified Cryptographic Timestamp</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Workspace Content (Split layout) -->
+<div class="max-w-[1360px] w-full mx-auto px-space-md lg:px-space-xl py-space-lg">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left 8.5 Cols: Notification Feed -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1 bg-surface-container-low p-1 rounded max-w-full">
+<button class="filter-tab active px-3.5 py-1.5 rounded font-label-md text-label-md transition-all flex items-center gap-1.5 bg-surface-container-lowest text-primary shadow-sm" data-category="all">
+<span>All Notifications</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary-container text-on-primary text-[10px]">5</span>
+</button>
+<button class="filter-tab px-3.5 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5" data-category="contribution">
+<span class="material-symbols-outlined text-[14px]">military_tech</span>
+<span>Contributions</span>
+<span class="px-1 py-0.2 rounded bg-surface text-on-surface-variant text-[10px]">+3</span>
+</button>
+<button class="filter-tab px-3.5 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5" data-category="projects">
+<span class="material-symbols-outlined text-[14px]">folder_special</span>
+<span>Projects &amp; Sprints</span>
+</button>
+<button class="filter-tab px-3.5 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5" data-category="collaboration">
+<span class="material-symbols-outlined text-[14px]">handshake</span>
+<span>Collaboration</span>
+</button>
+<button class="filter-tab px-3.5 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5" data-category="system">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+<span>Consortium Ledger</span>
+</button>
+</div>
+<!-- Section 1: TODAY -->
+<div class="flex flex-col gap-space-xs mt-1">
+<div class="flex items-center justify-between px-space-xs py-1">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Today</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">3 Unread events</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">November 14, 2024</span>
+</div>
+<!-- Notification Card 1: Accepted Answer (Unread) -->
+<article class="notification-item relative bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="contribution" data-status="unread">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l"></div>
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-secondary-container/30 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container-high text-on-primary-fixed-variant">CSE Distributed Systems</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Block #489211</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">14 mins ago</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Unread"></span>
+</div>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+                  Your answer was accepted by <strong class="text-primary font-semibold">Priya Patel</strong> (CSE, IIT Bombay)
+                </h2>
+<blockquote class="mt-1.5 p-2 rounded bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm line-clamp-2">
+<span class="italic text-on-surface font-medium">“Raft consensus split-brain mitigation during uncommitted log replication”</span> — Resolved deadlock using synchronized lease intervals.
+                </blockquote>
+<!-- Metadata strip & actions -->
+<div class="mt-space-sm pt-2 flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2 font-label-md text-label-md text-secondary">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-semibold">+15 CCS points logged to ledger</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                      View Answer
+                    </button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">link</span>
+<span>Ledger Entry</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 2: Faculty Endorsement (Unread) -->
+<article class="notification-item relative bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="contribution" data-status="unread">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l"></div>
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-tertiary-container/10 text-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant">Faculty Peer Commendation</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Signature: Verified Ed25519</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 hours ago</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Unread"></span>
+</div>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+<strong class="text-primary font-semibold">Prof. A. K. Sharma</strong> (Dept of CSE, IIT Delhi) officially endorsed your answer
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Query: <span class="font-medium text-on-surface">“ARMv8 atomic barrier semantics in zero-copy ring buffers”</span>
+</p>
+<div class="mt-2 p-2 rounded bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-tertiary">history_edu</span>
+<span>Citation recorded in IIT Delhi Architecture Archive (Index #AR-409)</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-secondary">+20 pts Faculty Multiplier</span>
+</div>
+<div class="mt-space-sm pt-2 flex items-center justify-end gap-space-xs">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                    View Citation
+                  </button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">
+                    Export BibTeX
+                  </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 3: Ledger Block Verified / Score (Unread) -->
+<article class="notification-item relative bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="contribution" data-status="unread">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-l"></div>
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container-high text-primary font-mono">Consensus State Sync</span>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">4 hours ago</span>
+<span class="w-2 h-2 rounded-full bg-secondary" title="Unread"></span>
+</div>
+</div>
+<div class="flex items-baseline justify-between flex-wrap gap-2">
+<h2 class="font-title-sm text-title-sm text-on-surface">
+                    Your contribution score increased by <span class="text-secondary font-bold">+15</span>
+</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Anchor Node: NKN-DEL-02</span>
+</div>
+<div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2 p-2.5 rounded bg-surface-container-low">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Total Term Score</div>
+<div class="font-headline-sm text-headline-sm text-primary leading-none mt-0.5">757 <span class="text-body-sm font-normal text-on-surface-variant">pts</span></div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Percentile Stand</div>
+<div class="font-headline-sm text-headline-sm text-secondary leading-none mt-0.5">Top 4% <span class="text-body-sm font-normal text-on-surface-variant">cohort</span></div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Verified Ledger Block</div>
+<div class="font-mono text-body-sm text-on-surface leading-none mt-1">#489102-NKN</div>
+</div>
+</div>
+<div class="mt-space-sm pt-2 flex items-center justify-end">
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md transition-colors flex items-center gap-1 shadow-sm">
+<span>Open Contribution Center</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Section 2: YESTERDAY -->
+<div class="flex flex-col gap-space-xs mt-space-md">
+<div class="flex items-center justify-between px-space-xs py-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Yesterday</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">November 13, 2024</span>
+</div>
+<!-- Notification Card 4: Project Invite (Action Required / Unread) -->
+<article class="notification-item relative bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="projects" data-status="unread">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container rounded-l"></div>
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-primary-fixed text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-primary text-on-primary">Project Invitation</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Consortium Multi-Node</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Yesterday at 17:42</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Unread"></span>
+</div>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+<strong class="text-primary font-semibold">Aditya K.</strong> invited you to the <strong class="text-on-surface font-semibold">FloodSense</strong> project
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  IoT-Edge Hydrological Warning Network • Joint research node collaboration between <span class="font-semibold text-on-surface">IIT Roorkee</span> and <span class="font-semibold text-on-surface">NIT Trichy</span>.
+                </p>
+<div class="mt-2 p-2 rounded bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">badge</span>
+<span>Proposed Role: <strong class="font-semibold text-primary">Lead Firmware / RTOS Contributor</strong></span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sprint Cycle: Nov 2024 – Jan 2025</span>
+</div>
+<!-- Interactive Accept/Decline bar -->
+<div class="mt-space-sm pt-2 flex flex-wrap items-center justify-between gap-space-sm">
+<button class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">preview</span>
+<span>Inspect Workspace Spec</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error font-label-md text-label-md transition-colors">
+                      Decline
+                    </button>
+<button class="px-3.5 py-1 rounded bg-secondary text-on-secondary hover:bg-secondary/90 font-label-md text-label-md transition-colors shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Accept Invitation</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 5: Collaboration Request Accepted (Read) -->
+<article class="notification-item bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="collaboration" data-status="read">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Team Access</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Yesterday at 11:15</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+                  Your collaboration request was accepted
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  You joined the <strong class="text-on-surface font-semibold">ConsensusLab Educational Distributed Systems Lab</strong>. Primary maintainer: <span class="font-medium text-primary">Vikramaditya Rao</span> (IIIT Hyderabad).
+                </p>
+<div class="mt-space-sm pt-2 flex items-center justify-between gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock_open</span>
+                    Permissions provisioned: Read/Commit to repo <code class="font-mono text-on-surface">consensus-sim-v2</code>
+</span>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                    Go to Repository
+                  </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 6: Faculty Sign-off (Read) -->
+<article class="notification-item bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="projects" data-status="read">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Sprint Approval</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Yesterday at 09:30</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+                  Faculty Sign-off: <strong class="text-primary font-semibold">Prof. R. Ramanathan</strong> verified sprint deliverables
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Audit milestone verified for <strong class="text-on-surface font-semibold">Sensor Fusion Telemetry v0.3</strong>. Release notes cryptographically signed and archived into institutional repository.
+                </p>
+<div class="mt-space-sm pt-2 flex items-center justify-end gap-2">
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">
+                    Download Signed Certificate
+                  </button>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                    Review Sprint Metrics
+                  </button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Section 3: EARLIER THIS TERM -->
+<div class="flex flex-col gap-space-xs mt-space-md">
+<div class="flex items-center justify-between px-space-xs py-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Earlier this Term</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Autumn Session 2024</span>
+</div>
+<!-- Notification Card 7: Peer Review Request (Read) -->
+<article class="notification-item bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="collaboration" data-status="read">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">rate_review</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Scholarly Review</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nov 10, 2024</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+<strong class="text-primary font-semibold">Dr. Meenakshi Sundaram</strong> requested a peer code review
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Pull Request #104 in <code class="font-mono text-on-surface">Raft-Rust-Core</code>: <span class="italic text-on-surface">“Formal TLA+ proof invariants for state machine replication failure cases”</span>.
+                </p>
+<div class="mt-space-sm pt-2 flex items-center justify-end">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                    Start Code Review
+                  </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 8: System Alert (.ac.in Verification) (Read) -->
+<article class="notification-item bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="system" data-status="read">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-secondary-container/20 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container-high text-secondary font-mono">Consortium Security</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nov 08, 2024</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+                  .ac.in Institutional Node Re-verified Successfully
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Autumn Semester 2024 re-attestation confirmed via <strong class="text-on-surface">IIT Delhi Registrar Key</strong>. Identity validity extended until May 31, 2025 across all Indian National Knowledge Network (NKN) consortia.
+                </p>
+<div class="mt-space-sm pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="font-mono">Hash: 8f42..ce99a12</span>
+<span class="text-secondary font-semibold">Active &amp; Compliant</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Notification Card 9: Sprint Milestone Passed (Read) -->
+<article class="notification-item bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow group" data-category="projects" data-status="read">
+<div class="flex items-start gap-space-md">
+<div class="w-9 h-9 shrink-0 rounded bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">flag</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+<span class="font-label-md text-label-md px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Milestone Resolution</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nov 04, 2024</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-on-surface leading-snug">
+                  Sprint milestone passed: FloodSense Hydrological Surrogate Architecture reached Phase 2
+                </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Benchmarking dataset published with 99.4% precision against CWC gauge telemetry. +30 pts distributed among 4 consortium contributors.
+                </p>
+<div class="mt-space-sm pt-2 flex items-center justify-end">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors">
+                    View Published Dataset
+                  </button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Archival Bottom Footnote -->
+<div class="p-space-md text-center bg-surface-container-low rounded text-on-surface-variant font-body-sm text-body-sm mt-2">
+<span>Displaying recent ledger events for Fall 2024. For earlier terms, download the </span>
+<a class="text-primary font-semibold hover:underline" href="#">Archival Consortium Audit CSV (2021–2024)</a>.
+        </div>
+</div>
+<!-- Right 4 Cols: Contextual Panel / Academic Audits & Settings -->
+<aside class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- Widget 1: Recent Activity Summary -->
+<div class="bg-surface-container-lowest p-space-md rounded shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary">Term Metrics</h3>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-container/40 text-secondary font-semibold">Live</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-space-sm bg-surface-container-low rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Answers Resolved</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">14</span>
+<span class="font-label-sm text-label-sm text-secondary block mt-0.5">+3 this week</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Pending Invites</span>
+<span class="font-headline-md text-headline-md text-tertiary font-bold">3</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mt-0.5">Action required</span>
+</div>
+</div>
+<div class="mt-space-sm p-space-sm bg-surface-container-low rounded flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Local Node Uptime</span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">98.4% Availability</span>
+</div>
+<span class="material-symbols-outlined text-[24px] text-secondary">network_check</span>
+</div>
+<!-- Academic Activity Chart / Mini Visual -->
+<div class="mt-space-md">
+<div class="flex items-center justify-between mb-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span>Weekly Validation Activity</span>
+<span class="font-semibold text-primary">28 validations</span>
+</div>
+<div class="flex items-end gap-1.5 h-16 pt-2">
+<div class="flex-1 bg-surface-container rounded-t h-[30%] hover:bg-primary transition-colors" title="Mon: 4"></div>
+<div class="flex-1 bg-surface-container rounded-t h-[55%] hover:bg-primary transition-colors" title="Tue: 7"></div>
+<div class="flex-1 bg-surface-container rounded-t h-[40%] hover:bg-primary transition-colors" title="Wed: 5"></div>
+<div class="flex-1 bg-surface-container rounded-t h-[85%] hover:bg-primary transition-colors" title="Thu: 11"></div>
+<div class="flex-1 bg-primary rounded-t h-[100%]" title="Today: 15 (Peak)"></div>
+<div class="flex-1 bg-surface-container rounded-t h-[15%] hover:bg-primary transition-colors" title="Sat"></div>
+<div class="flex-1 bg-surface-container rounded-t h-[10%] hover:bg-primary transition-colors" title="Sun"></div>
+</div>
+<div class="flex justify-between text-[10px] text-on-surface-variant font-mono mt-1">
+<span>M</span><span>T</span><span>W</span><span>T</span><span class="text-primary font-bold">F</span><span>S</span><span>S</span>
+</div>
+</div>
+</div>
+<!-- Widget 2: Notification Delivery Channels -->
+<div class="bg-surface-container-lowest p-space-md rounded shadow-sm">
+<div class="flex items-center gap-2 mb-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Delivery Channels</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+            Control ledger notification frequencies dispatched to your verified institutional channels.
+          </p>
+<div class="space-y-space-sm">
+<!-- Channel 1 -->
+<label class="flex items-start gap- space-sm cursor-pointer p-2 rounded hover:bg-surface-container-low transition-colors">
+<input checked="" class="mt-1 h-4 w-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox"/>
+<div class="ml-2.5 flex-1 min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface block leading-tight">.ac.in Email Digest</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Daily summary sent to <span class="font-mono text-[11px] text-primary">aditya@cse.iitd.ac.in</span> at 18:00 IST</span>
+</div>
+</label>
+<!-- Channel 2 -->
+<label class="flex items-start gap-space-sm cursor-pointer p-2 rounded hover:bg-surface-container-low transition-colors">
+<input checked="" class="mt-1 h-4 w-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox"/>
+<div class="ml-2.5 flex-1 min-w-0">
+<span class="font-title-sm text-title-sm text-on-surface block leading-tight">Immediate In-App Signals</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Desktop banner alerts for peer review requests &amp; sprint signs</span>
+</div>
+</label>
+<!-- Channel 3 -->
+<label class="flex items-start gap-space-sm cursor-pointer p-2 rounded hover:bg-surface-container-low transition-colors">
+<input checked="" class="mt-1 h-4 w-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox"/>
+<div class="ml-2.5 flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-title-sm text-title-sm text-on-surface block leading-tight">Urgent Faculty Ping</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm">High Priority</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Bypasses quiet hours when authenticated faculty require sprint approval</span>
+</div>
+</label>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<button class="w-full py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors text-center">
+              Configure Detailed Webhooks
+            </button>
+</div>
+</div>
+<!-- Widget 3: Academic Verification & Audit Guarantee -->
+<div class="bg-surface-container-lowest p-space-md rounded shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
+<h3 class="font-title-md text-title-md text-on-surface">Cryptographic Provenance</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Every notification regarding score increments, faculty endorsements, and project contributions is an audited cryptographic transaction anchored across the <strong>Indian Higher Education Consortium Node Network</strong>.
+          </p>
+<div class="mt-3 p-2.5 rounded bg-surface-container-low font-mono text-[11px] text-on-surface-variant flex flex-col gap-1">
+<div class="flex justify-between">
+<span>Authority:</span>
+<span class="text-primary font-semibold">IIT Delhi Node #01</span>
+</div>
+<div class="flex justify-between">
+<span>Consensus:</span>
+<span>BFT-Raft-Auth (v2.4)</span>
+</div>
+<div class="flex justify-between">
+<span>Last Re-sync:</span>
+<span>0.42s ago (Block 489211)</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</div>
+<script>
+  // Simple category filtering and mark-all-read interaction logic
+  (function initNotificationsController() {
+    const tabs = document.querySelectorAll('.filter-tab');
+    const items = document.querySelectorAll('.notification-item');
+    const markReadBtn = document.getElementById('mark-all-read');
+
+    // Tab switcher
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          t.classList.add('text-on-surface-variant');
+        });
+        tab.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        tab.classList.remove('text-on-surface-variant');
+
+        const cat = tab.getAttribute('data-category');
+        items.forEach(item => {
+          if (cat === 'all' || item.getAttribute('data-category') === cat) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Mark all as read button
+    if (markReadBtn) {
+      markReadBtn.addEventListener('click', () => {
+        items.forEach(item => {
+          item.setAttribute('data-status', 'read');
+          // remove left accent line
+          const accent = item.querySelector('.absolute.left-0');
+          if (accent) accent.remove();
+          // remove unread dot
+          const dots = item.querySelectorAll('.rounded-full.bg-primary, .rounded-full.bg-secondary');
+          dots.forEach(d => {
+            if (d.getAttribute('title') === 'Unread') d.remove();
+          });
+        });
+
+        // Update header count badge
+        const badge = document.querySelector('.px-2.py-0\\.5.rounded.bg-primary-container');
+        if (badge) {
+          badge.textContent = '0 UNREAD';
+          badge.classList.remove('bg-primary-container', 'text-on-primary');
+          badge.classList.add('bg-surface-container', 'text-on-surface-variant');
+        }
+
+        markReadBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span><span>All Read</span>';
+        markReadBtn.classList.add('opacity-70', 'pointer-events-none');
+      });
+    }
+  })();
+</script></main></div></body></html>

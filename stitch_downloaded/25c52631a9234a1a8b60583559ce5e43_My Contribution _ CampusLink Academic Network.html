@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;family=Public+Sans:ital,wght@0,300..700;1,300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface-variant":"#444651","on-primary-container":"#90a8ff","tertiary-fixed":"#ffdcc3","inverse-surface":"#283044","surface":"#faf8ff","primary-fixed-dim":"#b6c4ff","primary-container":"#1e3a8a","outline-variant":"#c5c5d3","tertiary-container":"#653400","on-background":"#131b2e","surface-container-low":"#f2f3ff","on-tertiary-fixed-variant":"#6e3900","error-container":"#ffdad6","on-tertiary-fixed":"#2f1500","background":"#faf8ff","secondary-fixed":"#85f8c4","surface-container":"#eaedff","surface-tint":"#4059aa","outline":"#757682","tertiary":"#442100","on-tertiary-container":"#fc922b","on-error-container":"#93000a","secondary-fixed-dim":"#68dba9","on-primary-fixed-variant":"#264191","surface-container-highest":"#dae2fd","secondary":"#006c4a","surface-variant":"#dae2fd","inverse-primary":"#b6c4ff","surface-container-high":"#e2e7ff","surface-container-lowest":"#ffffff","primary":"#00236f","tertiary-fixed-dim":"#ffb77d","on-error":"#ffffff","on-tertiary":"#ffffff","on-surface":"#131b2e","on-primary-fixed":"#00164e","on-secondary-fixed":"#002114","on-secondary":"#ffffff","inverse-on-surface":"#eef0ff","surface-dim":"#d2d9f4","on-primary":"#ffffff","primary-fixed":"#dce1ff","on-secondary-fixed-variant":"#005137","on-secondary-container":"#00714e","surface-bright":"#faf8ff","error":"#ba1a1a","secondary-container":"#82f5c1"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{margin:"2.5rem","gutter-mobile":"1rem","space-xl":"2.5rem","space-xs":"0.25rem","space-sm":"0.5rem",gutter:"1.5rem","space-md":"1rem","margin-mobile":"1rem","space-lg":"1.5rem"},fontFamily:{"label-lg":["Public Sans"],"title-sm":["Public Sans"],"headline-lg":["Newsreader"],"display-lg":["Newsreader"],"label-sm":["Public Sans"],"label-md":["Public Sans"],"headline-lg-mobile":["Newsreader"],"body-lg":["Public Sans"],"display-lg-mobile":["Newsreader"],"title-md":["Public Sans"],"headline-md":["Newsreader"],"headline-sm":["Newsreader"],"body-md":["Public Sans"],"body-sm":["Public Sans"]},fontSize:{"label-lg":["13px",{lineHeight:"18px",fontWeight:"600"}],"title-sm":["14px",{lineHeight:"20px",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",fontWeight:"600"}],"display-lg":["48px",{lineHeight:"56px",fontWeight:"600"}],"label-sm":["10px",{lineHeight:"14px",fontWeight:"600"}],"label-md":["11px",{lineHeight:"16px",fontWeight:"600"}],"headline-lg-mobile":["26px",{lineHeight:"34px",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"display-lg-mobile":["32px",{lineHeight:"40px",fontWeight:"600"}],"title-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"500"}],"body-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}]}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30"><div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">account_balance</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary leading-none">CampusLink</span><span class="font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant font-medium">Academic Consortium</span></div></div><div class="px-space-md pt-space-md"><div class="font-label-sm text-label-sm uppercase tracking-widest text-outline font-semibold mb-space-xs px-space-sm">Academic Directory</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-surface-container-high text-primary font-semibold border-l-2 border-primary"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span>Dashboard</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="questions" href="#"><span class="material-symbols-outlined text-[18px]">forum</span>Questions</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="projects" href="#"><span class="material-symbols-outlined text-[18px]">science</span>Projects</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="peers-mentors" href="#"><span class="material-symbols-outlined text-[18px]">school</span>Peers &amp; Mentors</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="communities" href="#"><span class="material-symbols-outlined text-[18px]">groups</span>Communities</a></nav></div><div class="px-space-md pt-space-lg"><div class="font-label-sm text-label-sm uppercase tracking-widest text-outline font-semibold mb-space-xs px-space-sm">My Workspace</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-surface-container-high text-primary font-semibold border-l-2 border-primary"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="my-qa" href="#"><span class="material-symbols-outlined text-[18px]">help_center</span>My Q&amp;A</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="my-projects" href="#"><span class="material-symbols-outlined text-[18px]">folder_supervised</span>My Projects</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="saved-references" href="#"><span class="material-symbols-outlined text-[18px]">collections_bookmark</span>Saved References</a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="collaboration-teams" href="#"><span class="material-symbols-outlined text-[18px]">diversity_3</span>Collaboration Teams</a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded transition-colors bg-surface-container-high text-primary font-semibold border-l-2 border-primary" data-path="my-contribution" href="#"><span class="material-symbols-outlined text-[18px]">military_tech</span>My Contribution</a></nav></div></div><div class="px-space-md pb-space-md pt-space-sm border-t border-outline-variant/30 flex flex-col gap-space-sm"><div class="bg-surface-container-low border border-outline-variant/40 rounded p-2.5 flex flex-col gap-1"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm font-bold text-on-surface tracking-wide uppercase">IIT Delhi Node</span></div><p class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Authenticated via .ac.in credentials</p></div><nav class="flex flex-col gap-0.5 text-on-surface-variant" data-active-classes="bg-surface-container-high text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="institutional-settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span>Institutional Settings</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="scholarly-guidelines" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span>Scholarly Guidelines</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-title-sm text-title-sm" data-path="help-support" href="#"><span class="material-symbols-outlined text-[18px]">help</span>Help &amp; Support</a></nav></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 px-space-lg flex items-center justify-between gap-space-md"><div class="flex-1 max-w-2xl"><div class="relative flex items-center w-full"><span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span><input class="w-full bg-surface-container-low border border-outline-variant/50 rounded pl-10 pr-4 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all" placeholder="Search academic discourse, contributions, papers, or projects... (Ctrl+K)" type="text"/></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-fixed/30 border border-secondary/20"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm font-semibold text-secondary">IIT-Delhi Node · Operational</span></div><div class="flex items-center gap-1 text-on-surface-variant"><button aria-label="Notifications" class="p-2 rounded hover:bg-surface-container-low hover:text-on-surface transition-colors relative"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary-container"></span></button><button aria-label="Messages" class="p-2 rounded hover:bg-surface-container-low hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">chat_bubble</span></button></div><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm pl-1"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface leading-tight">Aditya Sharma</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">IIT Delhi · CS Dept</span></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen px-space-lg py-space-lg"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Metadata Anchor -->
+<div class="flex items-center justify-between gap-space-md mb-space-sm text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">
+<div class="flex items-center gap-1.5">
+<span>Academic Network</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>My Workspace</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Contribution Center</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 text-on-surface-variant font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>LEDGER AUDIT REF: IITD-SYS-2024-C9</span>
+</div>
+</div>
+<!-- Editorial Header Section -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-lg mb-space-lg">
+<div class="max-w-3xl">
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight leading-tight mb-2">
+        My Contribution
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Verifiable academic audit of peer answers, research projects, technical mentorship, and institutional citations across the CampusLink consortium.
+      </p>
+</div>
+<!-- Academic Utility Actions -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="flex items-center gap-1.5 px-3 py-2 bg-surface-container-low text-on-surface-variant rounded hover:bg-surface-container-high transition-colors font-title-sm text-title-sm" onclick="document.getElementById('methodology-panel').scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Attestation Keys</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-2 bg-primary-container text-on-primary rounded hover:bg-primary transition-colors font-title-sm text-title-sm shadow-sm" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+<span>Export Verified Audit (PDF)</span>
+</button>
+</div>
+</div>
+<!-- Hero Scorecard & Recognition Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-space-xl">
+<!-- Primary Score Metric Card (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-lg p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-outline font-bold">Consortium Index</span>
+<span class="px-2 py-0.5 rounded bg-secondary-fixed/40 text-secondary font-label-sm text-label-sm font-bold">Verified</span>
+</div>
+<span class="font-mono text-label-sm text-on-surface-variant">NODE: #04-IITD-8821</span>
+</div>
+<div class="flex items-baseline gap-space-md mb-1">
+<span class="font-display-lg text-display-lg font-bold text-on-surface tracking-tight leading-none">742</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-1 text-secondary font-title-sm text-title-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+38 this cycle</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">+5.4% vs previous 30d</span>
+</div>
+</div>
+<p class="font-title-sm text-title-sm text-primary font-semibold mt-1">Top 4% in Distributed Systems &amp; Architecture</p>
+</div>
+<!-- Weekly Cadence Activity Grid (16 Academic Term Weeks) -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low/60 rounded p-space-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider">16-Week Research Term Cadence</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Avg: 4.8 Artifacts / Wk</span>
+</div>
+<!-- 16 discrete cadence bars mimicking publication volume -->
+<div class="flex items-end gap-1.5 h-12 w-full pt-1">
+<div class="flex-1 bg-surface-container-highest rounded-t h-4" title="Week 1: 2 artifacts"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t h-6" title="Week 2: 3 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-7" title="Week 3: 4 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-8" title="Week 4: 5 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-7" title="Week 5: 4 artifacts"></div>
+<div class="flex-1 bg-primary-container rounded-t h-9" title="Week 6: 6 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-6" title="Week 7: 3 artifacts"></div>
+<div class="flex-1 bg-primary-container rounded-t h-10" title="Week 8: Mid-Sem Review (7 artifacts)"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t h-5" title="Week 9: 2 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-7" title="Week 10: 4 artifacts"></div>
+<div class="flex-1 bg-primary-container rounded-t h-9" title="Week 11: 6 artifacts"></div>
+<div class="flex-1 bg-primary-container rounded-t h-10" title="Week 12: 7 artifacts"></div>
+<div class="flex-1 bg-secondary rounded-t h-12" title="Week 13: End-Sem Sprint (9 artifacts)"></div>
+<div class="flex-1 bg-primary-container rounded-t h-8" title="Week 14: 5 artifacts"></div>
+<div class="flex-1 bg-primary-fixed-dim rounded-t h-7" title="Week 15: 4 artifacts"></div>
+<div class="flex-1 bg-secondary rounded-t h-10" title="Week 16: Final Jury (7 artifacts)"></div>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-1.5">
+<span>Term W01</span>
+<span>Mid-Review</span>
+<span>Term W16</span>
+</div>
+</div>
+</div>
+<!-- Parallel Academic Status & Milestones (7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-sm justify-between">
+<!-- Recognition Tier & Streak Pair -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-2 text-primary font-label-sm text-label-sm uppercase font-bold tracking-wider">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Recognition Tier</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface leading-tight">
+            Senior Research Contributor
+          </div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">
+            Tier III status attested by Faculty Board (IIT Delhi &amp; IISc Nodes).
+          </p>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<div class="flex items-center gap-2 mb-2 text-secondary font-label-sm text-label-sm uppercase font-bold tracking-wider">
+<span class="material-symbols-outlined text-[18px]">event_repeat</span>
+<span>Active Term Streak</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface leading-tight">
+            18 Consecutive Weeks
+          </div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">
+            Current streak active through Summer Research Term 2024.
+          </p>
+</div>
+</div>
+<!-- Recent Academic Milestones -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-outline font-bold">Recent Academic Milestones</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">All Sign-offs Verified</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">task_alt</span>
+<span class="font-body-md text-body-md font-medium truncate">FloodSense Hydrological Surrogate Architecture Milestone Passed</span>
+</div>
+<span class="font-mono text-label-sm font-bold text-secondary bg-surface-container-lowest px-2 py-0.5 rounded shrink-0 ml-2">+20 pts</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span class="font-body-md text-body-md font-medium truncate">Raft Consensus Byzantine Partition Proof marked as Canonical Answer</span>
+</div>
+<span class="font-mono text-label-sm font-bold text-secondary bg-surface-container-lowest px-2 py-0.5 rounded shrink-0 ml-2">+15 pts</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">school</span>
+<span class="font-body-md text-body-md font-medium truncate">Mentored 4 Undergrad Researchers in Rust Concurrency Primitives</span>
+</div>
+<span class="font-mono text-label-sm font-bold text-secondary bg-surface-container-lowest px-2 py-0.5 rounded shrink-0 ml-2">+10 pts</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Categorized Contribution Audit Grid (6 Core Categories) -->
+<div class="mb-space-xl">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Audited Scholarly Verticals</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Breakdown across 6 primary academic vectors monitored by consortium validators.</p>
+</div>
+<span class="hidden md:inline font-mono text-label-sm text-on-surface-variant">AGGREGATE WEIGHT: 100%</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- 1. Answers -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">380 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Technical Answers</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Total Peer Responses:</span><span class="font-semibold text-on-surface">34</span></div>
+<div class="flex justify-between"><span>Accepted Solutions:</span><span class="font-semibold text-secondary">21</span></div>
+<div class="flex justify-between"><span>Faculty Endorsed:</span><span class="font-semibold text-primary">8</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-primary">61.7% Acceptance Ratio</span>
+</div>
+</div>
+<!-- 2. Questions -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">help_center</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">95 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Research Inquiries</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Inquiries Posted:</span><span class="font-semibold text-on-surface">14</span></div>
+<div class="flex justify-between"><span>Definitively Resolved:</span><span class="font-semibold text-secondary">12</span></div>
+<div class="flex justify-between"><span>Resolution Velocity:</span><span class="font-semibold text-on-surface">94%</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-secondary">High Inquiry Quality</span>
+</div>
+</div>
+<!-- 3. Projects -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">science</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">140 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Active Consortium Labs</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Collaborative Labs:</span><span class="font-semibold text-on-surface">3 (FloodSense, ZeroCopy, BFT)</span></div>
+<div class="flex justify-between"><span>Completed Milestones:</span><span class="font-semibold text-secondary">6 merged</span></div>
+<div class="flex justify-between"><span>Peer Code Reviews:</span><span class="font-semibold text-on-surface">24 PRs approved</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-primary">Lead Systems Architect</span>
+</div>
+</div>
+<!-- 4. Mentorship -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">school</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">70 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Technical Mentorship</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Mentees Supervised:</span><span class="font-semibold text-on-surface">6 Researchers</span></div>
+<div class="flex justify-between"><span>Code Review Hours:</span><span class="font-semibold text-secondary">42 Clocked Hours</span></div>
+<div class="flex justify-between"><span>Departmental Cohorts:</span><span class="font-semibold text-on-surface">IITD BTech Y2/Y3</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-secondary">100% Milestone Completion</span>
+</div>
+</div>
+<!-- 5. Resources -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">dataset</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">35 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Datasets &amp; Proof Templates</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Published Artifacts:</span><span class="font-semibold text-on-surface">9 Datasets &amp; LaTeX</span></div>
+<div class="flex justify-between"><span>Consortium Downloads:</span><span class="font-semibold text-secondary">320 Across 14 Nodes</span></div>
+<div class="flex justify-between"><span>Zenodo/DOI Synced:</span><span class="font-semibold text-on-surface">4 Repositories</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-primary">Open Science CC BY 4.0</span>
+</div>
+</div>
+<!-- 6. Endorsements -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">approval</span>
+</div>
+<span class="font-mono font-bold text-primary text-title-sm">22 pts</span>
+</div>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Faculty Attestations</h3>
+<div class="mt-2 space-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between"><span>Tenured Endorsements:</span><span class="font-semibold text-primary">7 Faculty Heads</span></div>
+<div class="flex justify-between"><span>Partner Institutions:</span><span class="font-semibold text-on-surface">IITR, IITD, BITS Pilani</span></div>
+<div class="flex justify-between"><span>Peer Commendations:</span><span class="font-semibold text-secondary">22 Senior Fellows</span></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-right">
+<span class="font-label-sm text-label-sm font-bold text-secondary">Cryptographically Signed</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive "How Contribution Score Works" Methodology Panel -->
+<div class="bg-surface-container-low rounded-lg p-space-lg mb-space-xl" id="methodology-panel">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm pb-space-sm mb-space-md">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">balance</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Contribution Index Methodology &amp; Weighting</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          CampusLink scores operate strictly under peer-reviewed academic integrity protocols, not commercial engagement gamification.
+        </p>
+</div>
+<span class="font-mono text-label-sm font-bold bg-surface-container-highest px-3 py-1.5 rounded text-on-surface-variant shrink-0">
+        PROTOCOL SPEC v3.2
+      </span>
+</div>
+<!-- Methodology Formula Matrix -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md mb-space-md">
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Useful Answers</span>
+<span class="font-mono text-label-sm font-bold text-primary bg-surface-container px-2 py-0.5 rounded">+5 pts</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Triggered when a technical answer accumulates ≥3 affirmative verifications from verified graduate or faculty accounts.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Accepted Solution</span>
+<span class="font-mono text-label-sm font-bold text-primary bg-surface-container px-2 py-0.5 rounded">+10 to +15 pts</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Designated by the inquiry author or course coordinator as the definitive resolution with reproducible code or proofs.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Project Milestones</span>
+<span class="font-mono text-label-sm font-bold text-primary bg-surface-container px-2 py-0.5 rounded">+15 to +30 pts</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Audited pull requests, hardware schematics, or benchmark datasets merged into active Consortium Workspaces.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Technical Mentorship</span>
+<span class="font-mono text-label-sm font-bold text-secondary bg-surface-container px-2 py-0.5 rounded">+10 pts / milestone</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Structured academic guidance, peer debugging sessions, and code reviews verified by participating scholars.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Faculty Attestation</span>
+<span class="font-mono text-label-sm font-bold text-secondary bg-surface-container px-2 py-0.5 rounded">+20 pts multiplier</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Explicit endorsement or co-citation by tenured faculty or lab directors, sealing cryptographic node provenance.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<span class="font-title-sm text-title-sm font-bold text-error">Integrity Penalty</span>
+<span class="font-mono text-label-sm font-bold text-error bg-error-container/40 px-2 py-0.5 rounded">-100 pts / Revocation</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Applied automatically upon confirmed AI hallucination without disclosure, plagiarism, or coordinated voting rings.
+        </p>
+</div>
+</div>
+<!-- Institutional Policy Footnote -->
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-outline text-[18px] shrink-0 mt-0.5">policy</span>
+<span>
+<strong>Consortium Audit Compliance:</strong> Scores are audited every semester by the Institutional Academic Committee. Attestations are permanently synchronized to the National Knowledge Network (NKN) mesh register.
+      </span>
+</div>
+</div>
+<!-- Chronological Contribution Provenance Ledger -->
+<div class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm mb-space-xl">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-space-sm mb-space-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Chronological Provenance Ledger</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Immutable chronological event trail synced with partner university nodes.</p>
+</div>
+<!-- Filter Controls -->
+<div class="flex flex-wrap items-center gap-1.5 p-1 bg-surface-container-low rounded" id="filter-container">
+<button class="filter-tab px-3 py-1 rounded text-title-sm font-title-sm bg-surface-container-lowest text-primary font-bold shadow-xs" onclick="filterAudit('all', this)">All Events</button>
+<button class="filter-tab px-3 py-1 rounded text-title-sm font-title-sm text-on-surface-variant hover:text-on-surface" onclick="filterAudit('answers', this)">Answers</button>
+<button class="filter-tab px-3 py-1 rounded text-title-sm font-title-sm text-on-surface-variant hover:text-on-surface" onclick="filterAudit('projects', this)">Projects</button>
+<button class="filter-tab px-3 py-1 rounded text-title-sm font-title-sm text-on-surface-variant hover:text-on-surface" onclick="filterAudit('mentorship', this)">Mentorship</button>
+<button class="filter-tab px-3 py-1 rounded text-title-sm font-title-sm text-on-surface-variant hover:text-on-surface" onclick="filterAudit('endorsements', this)">Endorsements</button>
+</div>
+</div>
+<!-- Event Rows -->
+<div class="flex flex-col gap-space-sm" id="ledger-stream">
+<!-- Item 1 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="answers">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">June 24, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-primary font-bold uppercase">Accepted Answer</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· Distributed Systems Hub</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              Formal proof of Raft pre-vote safety with non-contiguous log replication
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>IISc Bangalore Inquiry</span>
+<span>·</span>
+<span class="text-secondary font-medium">Faculty Confirmed (Dr. A. Sen, IISc)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x9a8f...4e12</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+15 pts</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="projects">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">merge</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">June 20, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-primary font-bold uppercase">Project Milestone</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· FloodSense Workspace</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              LoRa SX1262 SPI Driver &amp; Power Profiling v0.3 merge
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>IIT Roorkee Environmental Informatics Node</span>
+<span>·</span>
+<span>3 Peer Approvals</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x4f12...bc90</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+20 pts</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="endorsements">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">June 15, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container-highest font-label-sm text-label-sm text-primary font-bold uppercase">Faculty Endorsement</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· Hydrological Modeling Lab</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              Citation in Dr. K. Ramanathan's Monsoon Runoff Technical Working Note
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span>SERB Grant #SRB-2024-89</span>
+<span>·</span>
+<span class="text-primary font-medium">IIT Delhi Civil &amp; Comp. Sci Joint Taskforce</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x7c3d...11fe</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+15 pts</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="mentorship">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-secondary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">supervised_user_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">June 11, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-secondary font-bold uppercase">Technical Mentorship</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· Operating Systems Practicum</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              Reviewed Rust memory layout &amp; unsafe boundary audit for 2nd Year Systems Group
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span>IIT Delhi CS Department</span>
+<span>·</span>
+<span>4 Mentees Attested</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x12ba...44aa</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+10 pts</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="resources">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">June 04, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-bold uppercase">Shared Resource</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· Benchmark Repository</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              Published synthetic multi-node packet loss trace (.pcap format, 45ms latency jitter)
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span>42 Consortium Forks Across 6 Universities</span>
+<span>·</span>
+<span>Open-Access Artifact</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x88ec...7921</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+8 pts</span>
+</div>
+</div>
+<!-- Item 6 -->
+<div class="ledger-row p-space-md rounded-md bg-surface-container-low/40 hover:bg-surface-container-low transition-colors flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-category="answers">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1 flex-wrap">
+<span class="font-mono text-label-sm text-on-surface-variant">May 29, 2024</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-primary font-bold uppercase">Accepted Answer</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">· Embedded Systems Subforum</span>
+</div>
+<h4 class="font-title-sm text-title-sm text-on-surface font-semibold">
+              Zero-allocation deserialization with Serde in memory-constrained microcontrollers
+            </h4>
+<div class="flex items-center gap-3 mt-1.5 font-body-sm text-body-sm text-on-surface-variant">
+<span>BITS Pilani Inquiry</span>
+<span>·</span>
+<span class="text-secondary font-medium">Canonical Solution Marked</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0">
+<span class="font-mono text-label-sm text-on-surface-variant">TX: 0x55d1...2009</span>
+<span class="font-mono font-bold text-title-sm text-secondary bg-surface-container-lowest px-2.5 py-1 rounded shadow-xs">+10 pts</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Verification Seal & Consortium Attestation Footer -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col md:flex-row items-center justify-between gap-space-md text-on-surface-variant">
+<div class="flex items-center gap-3 text-left">
+<div class="w-10 h-10 rounded bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs shrink-0">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm font-bold text-on-surface uppercase tracking-wider">Cryptographic Provenance Verified</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<p class="font-mono text-label-sm text-on-surface-variant break-all">
+          Academic Provenance Hash: 0x9f88c3a71b2d0012e84...71ca · Synced across NKN Mesh Nodes
+        </p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Governed under CC BY-NC-SA 4.0</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">CampusLink Academic Consortium Standards Board</span>
+</div>
+</div>
+<!-- Interactive Filtering Script -->
+<script>
+    function filterAudit(category, clickedBtn) {
+      // Update Tab Styles
+      const tabs = document.querySelectorAll('.filter-tab');
+      tabs.forEach(tab => {
+        tab.className = 'filter-tab px-3 py-1 rounded text-title-sm font-title-sm text-on-surface-variant hover:text-on-surface';
+      });
+      clickedBtn.className = 'filter-tab px-3 py-1 rounded text-title-sm font-title-sm bg-surface-container-lowest text-primary font-bold shadow-xs';
+
+      // Filter rows
+      const rows = document.querySelectorAll('#ledger-stream .ledger-row');
+      rows.forEach(row => {
+        if (category === 'all' || row.getAttribute('data-category') === category) {
+          row.style.display = 'flex';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</div></main></div></body></html>

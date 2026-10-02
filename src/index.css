@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    color: #0f172a;
+    background-color: #faf8ff;
+    font-size: 1rem;
+    line-height: 1.625;
+  }
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+  main > :last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Eye-smoothing readability adjustments for small text overrides */
+.text-\[10px\] {
+  font-size: 0.75rem !important; /* 12px minimum */
+  line-height: 1rem !important;
+}
+.text-\[11px\] {
+  font-size: 0.8125rem !important; /* 13px */
+  line-height: 1.125rem !important;
+}
+.text-\[12px\] {
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.25rem !important;
+}
+.text-\[13px\] {
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.25rem !important;
+}
+
+/* User density preferences */
+body.font-comfortable {
+  font-size: 1.0625rem; /* 17px base */
+}
+body.font-large {
+  font-size: 1.125rem; /* 18px base */
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.4);
+}

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;family=Public+Sans:ital,wght@0,300..700;1,300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-fixed-variant":"#005137","primary-fixed":"#dce1ff","on-secondary-container":"#00714e","tertiary-fixed-dim":"#ffb77d","surface-bright":"#faf8ff","error":"#ba1a1a","surface-container-highest":"#dae2fd","surface-container-high":"#e2e7ff","on-background":"#131b2e","on-tertiary":"#ffffff","on-primary":"#ffffff","surface-tint":"#4059aa","on-tertiary-fixed-variant":"#6e3900","secondary-container":"#82f5c1","tertiary-container":"#653400","secondary-fixed-dim":"#68dba9","on-primary-container":"#90a8ff","on-surface":"#131b2e","inverse-surface":"#283044","inverse-on-surface":"#eef0ff","outline":"#757682","error-container":"#ffdad6","tertiary-fixed":"#ffdcc3","secondary":"#006c4a","on-secondary-fixed":"#002114","on-error":"#ffffff","outline-variant":"#c5c5d3","on-surface-variant":"#444651","surface-container-lowest":"#ffffff","on-error-container":"#93000a","primary-container":"#1e3a8a","surface-container-low":"#f2f3ff","on-primary-fixed-variant":"#264191","surface-variant":"#dae2fd","on-tertiary-container":"#fc922b","secondary-fixed":"#85f8c4","inverse-primary":"#b6c4ff","primary":"#00236f","on-tertiary-fixed":"#2f1500","surface-dim":"#d2d9f4","tertiary":"#442100","on-primary-fixed":"#00164e","surface-container":"#eaedff","on-secondary":"#ffffff","surface":"#faf8ff","background":"#faf8ff","primary-fixed-dim":"#b6c4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-lg":"1.5rem","gutter-mobile":"1rem","margin":"2.5rem","gutter":"1.5rem","space-sm":"0.5rem","margin-mobile":"1rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem"},"fontFamily":{"headline-lg-mobile":["Newsreader"],"label-md":["Public Sans"],"title-md":["Public Sans"],"headline-md":["Newsreader"],"title-sm":["Public Sans"],"headline-lg":["Newsreader"],"label-sm":["Public Sans"],"headline-sm":["Newsreader"],"body-md":["Public Sans"],"body-sm":["Public Sans"],"display-lg":["Newsreader"],"body-lg":["Public Sans"],"display-lg-mobile":["Newsreader"],"label-lg":["Public Sans"]},"fontSize":{"headline-lg-mobile":["26px",{"lineHeight":"34px","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"display-lg-mobile":["32px",{"lineHeight":"40px","fontWeight":"600"}],"label-lg":["13px",{"lineHeight":"18px","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-60 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><div class="w-9 h-9 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-surface-container-lowest text-[20px]">account_balance</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-none">CampusLink</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mt-0.5">Academic Consortium</span></div></div><div class="px-space-md py-space-sm"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">Academic Directory</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="questions" href="#"><span class="material-symbols-outlined text-[18px]">quiz</span><span>Questions</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="projects" href="#"><span class="material-symbols-outlined text-[18px]">science</span><span>Projects</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="peers-and-mentors" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span>Peers &amp; Mentors</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="communities" href="#"><span class="material-symbols-outlined text-[18px]">hub</span><span>Communities</span></a></nav></div><div class="px-space-md py-space-xs"><div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs px-space-xs">My Workspace</div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="my-questions-and-answers" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>My Q&amp;A</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="saved-bookmarks" href="#"><span class="material-symbols-outlined text-[18px]">bookmarks</span><span>Saved References</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="collaboration-teams" href="#"><span class="material-symbols-outlined text-[18px]">groups_3</span><span>Collaboration Teams</span></a></nav></div></div><div class="p-space-md bg-surface-container-low"><div class="p-space-sm rounded bg-surface-container-lowest mb-space-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between mb-1"><span class="font-label-sm text-label-sm font-semibold text-primary uppercase">IIT Delhi Node</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><p class="font-body-sm text-[11px] leading-tight text-on-surface-variant">Authenticated via .ac.in credentials</p></div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings" href="#"><span class="material-symbols-outlined text-[16px]">settings</span><span>Institutional Settings</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="help-and-safety" href="#"><span class="material-symbols-outlined text-[16px]">help_outline</span><span>Scholarly Guidelines</span></a></nav></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md w-full max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full pl-9 pr-12 py-1.5 rounded bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-all" placeholder="Search academic discourse, papers, faculty, or tags..." type="text"/><span class="absolute right-2.5 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-1.5 py-0.5 rounded">Ctrl+K</span></div></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xs bg-primary text-on-primary px-space-md py-1.5 rounded font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary transition-all shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[18px]">add_circle</span><span>Ask Question</span></button><div class="flex items-center gap-space-xs"><button class="relative p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span></button><button class="p-2 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">forum</span></button></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="text-right hidden sm:block"><div class="flex items-center justify-end gap-1"><span class="font-title-sm text-title-sm text-on-surface leading-none">Aditya Sharma</span><span class="material-symbols-outlined text-secondary text-[16px]">verified</span></div><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">IIT Delhi • CS Dept</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 w-full bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-space-md sm:px-space-lg py-space-lg">
+<!-- Breadcrumb Hierarchy -->
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-on-surface-variant mb-space-sm">
+<span class="font-label-md text-label-md hover:text-primary cursor-pointer transition-colors">Academic Network</span>
+<span class="material-symbols-outlined text-outline-variant text-[14px]">chevron_right</span>
+<span class="font-label-md text-label-md hover:text-primary cursor-pointer transition-colors">Knowledge Exchange</span>
+<span class="material-symbols-outlined text-outline-variant text-[14px]">chevron_right</span>
+<span class="font-label-md text-label-md hover:text-primary cursor-pointer transition-colors">Questions</span>
+<span class="material-symbols-outlined text-outline-variant text-[14px]">chevron_right</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Ask a Question</span>
+</nav>
+<!-- Header Section with Safe Space Callout -->
+<header class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-lg">
+<div class="space-y-1 max-w-2xl">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Ask a Question</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Ask the community. Choose to remain anonymous.
+        </p>
+</div>
+<div class="bg-surface-container-low px-space-md py-space-sm rounded-lg flex items-start gap-space-sm max-w-md shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5 shrink-0" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div class="space-y-0.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold tracking-wide block">Scholarly Safe Space</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+            Questions are reviewed by verified peer moderators and faculty. Identity controls are strictly preserved.
+          </p>
+</div>
+</div>
+</header>
+<!-- Main Two-Column Work Area -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Main Question Composer Form (68% approx -> 8 cols) -->
+<section class="lg:col-span-8 space-y-space-lg">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md sm:p-space-lg space-y-space-lg">
+<!-- 1. Question Title -->
+<div class="space-y-space-xs">
+<div class="flex items-baseline justify-between">
+<label class="font-title-sm text-title-sm text-on-surface font-semibold" for="question-title">
+                Question Title <span class="text-error">*</span>
+</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="title-counter">84 / 150</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Be specific and imagine you are posing a query to a colleague or professor.
+            </p>
+<div class="relative mt-1">
+<input class="w-full px-space-md py-2.5 rounded bg-surface-container-low text-on-surface font-title-sm text-title-sm focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary shadow-inner transition-all placeholder:text-outline" id="question-title" maxlength="150" oninput="document.getElementById('title-counter').innerText = `${this.value.length} / 150`" placeholder="e.g., How does Raft handle leader partition during uncommitted log replication under high network jitter?" type="text" value="How does Raft handle leader partition during uncommitted log replication under high network jitter?"/>
+</div>
+</div>
+<!-- 2. Academic Classification Row -->
+<div class="space-y-space-xs pt-space-xs">
+<label class="font-title-sm text-title-sm text-on-surface font-semibold">Academic Classification</label>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Categorize your inquiry to ensure it indexes with accredited subject matter experts.</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-1">
+<!-- Department -->
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Department</span>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low hover:bg-surface-container px-3 py-2 pr-8 rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-sm cursor-pointer">
+<option selected="">Computer Science &amp; Engineering</option>
+<option>Electrical &amp; Electronics Engineering</option>
+<option>Mathematics &amp; Scientific Computing</option>
+<option>Mechanical &amp; Aerospace Systems</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Subject Domain -->
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Course Domain</span>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low hover:bg-surface-container px-3 py-2 pr-8 rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-sm cursor-pointer">
+<option selected="">Distributed Systems &amp; Cloud</option>
+<option>Database Internals &amp; Storage</option>
+<option>Formal Verification &amp; Logic</option>
+<option>Network Protocol Engineering</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Academic Cohort -->
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Academic Cohort</span>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low hover:bg-surface-container px-3 py-2 pr-8 rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-sm cursor-pointer">
+<option selected="">3rd Year Undergrad (B.Tech)</option>
+<option>4th Year Undergrad / Capstone</option>
+<option>Master of Science / M.Tech</option>
+<option>Doctoral Candidate (Ph.D.)</option>
+<option>Postdoctoral / Faculty</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Detailed Description / Body -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-title-sm text-title-sm text-on-surface font-semibold" for="question-body">
+                Detailed Description <span class="text-error">*</span>
+</label>
+<div class="flex items-center gap-1 bg-surface-container-low p-0.5 rounded">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-sm font-semibold" type="button">Edit</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm" type="button">Preview</button>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Include all context, equations, reproducible steps, or academic citations. Markdown and LaTeX syntax supported.
+            </p>
+<!-- Formatting Toolbar -->
+<div class="rounded-t-lg bg-surface-container-low p-1.5 flex flex-wrap items-center gap-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Bold (Ctrl+B)" type="button">
+<span class="material-symbols-outlined text-[18px]">format_bold</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Italic (Ctrl+I)" type="button">
+<span class="material-symbols-outlined text-[18px]">format_italic</span>
+</button>
+<span class="w-px h-4 bg-outline-variant mx-1"></span>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center font-label-sm" title="Code Block" type="button">
+<span class="material-symbols-outlined text-[18px]">code</span>
+</button>
+<button class="px-2 py-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md tracking-wider" title="LaTeX Formula" type="button">
+                $$ \LaTeX $$
+              </button>
+<span class="w-px h-4 bg-outline-variant mx-1"></span>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Bulleted List" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Numbered List" type="button">
+<span class="material-symbols-outlined text-[18px]">format_list_numbered</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Insert Quote" type="button">
+<span class="material-symbols-outlined text-[18px]">format_quote</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Hyperlink" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" title="Table Layout" type="button">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+</button>
+<div class="ml-auto flex items-center gap-1.5 text-on-surface-variant px-2">
+<span class="material-symbols-outlined text-[16px]">help_outline</span>
+<span class="font-label-sm text-label-sm">KaTeX Syntax Ready</span>
+</div>
+</div>
+<!-- Textarea Content -->
+<textarea class="w-full p-space-md rounded-b-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary shadow-inner leading-relaxed resize-y" id="question-body" rows="9">In our lab implementation of Raft consensus in Rust, when the leader network is partitioned after appending log entries to a minority of nodes but before receiving the quorum ack, we observe split-brain livelocks upon reconnection.
+
+Specific environment:
+- 5-node cluster running over simulated wide-area latency (45ms ± 12ms jitter)
+- Election timeout randomized between 150ms-300ms
+
+Has anyone formalized or implemented pre-vote protocol extensions or lease read mechanisms in an academic testbed to prevent this?</textarea>
+</div>
+<!-- 4. Tags Section -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-title-sm text-title-sm text-on-surface font-semibold">Scholarly Tags</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4 / 5 tags added</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Add up to 5 tags to describe what your question is about.</p>
+<div class="flex flex-wrap items-center gap-2 p-2 rounded bg-surface-container-low min-h-[46px]">
+<!-- Active Tag 1 -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md">
+<span>distributed-systems</span>
+<button class="hover:text-error transition-colors leading-none" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</span>
+<!-- Active Tag 2 -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md">
+<span>raft-consensus</span>
+<button class="hover:text-error transition-colors leading-none" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</span>
+<!-- Active Tag 3 -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md">
+<span>rust</span>
+<button class="hover:text-error transition-colors leading-none" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</span>
+<!-- Active Tag 4 -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm font-label-md text-label-md">
+<span>fault-tolerance</span>
+<button class="hover:text-error transition-colors leading-none" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</span>
+<!-- Tag Input Field -->
+<div class="flex-1 min-w-[120px]">
+<input class="w-full bg-transparent px-2 py-1 text-on-surface font-body-sm text-body-sm focus:outline-none placeholder:text-outline" placeholder="+ Add Tag" type="text"/>
+</div>
+</div>
+<!-- Tag suggestions -->
+<div class="flex items-center gap-2 pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Recommended:</span>
+<div class="flex items-center gap-1.5 flex-wrap">
+<button class="px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">+ concurrency</button>
+<button class="px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">+ algorithms</button>
+<button class="px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">+ formal-verification</button>
+</div>
+</div>
+</div>
+<!-- 5. Attachments / Artifacts -->
+<div class="space-y-space-xs">
+<label class="font-title-sm text-title-sm text-on-surface font-semibold">Attachments &amp; Code Repositories</label>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Upload Wireshark captures, mathematical appendixes, or log traces for peer reproduction.</p>
+<!-- Drag & Drop Zone -->
+<div class="p-space-lg rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all text-center flex flex-col items-center justify-center cursor-pointer shadow-sm group">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center mb-space-xs group-hover:scale-105 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-[24px]">upload_file</span>
+</div>
+<p class="font-title-sm text-title-sm text-on-surface mb-0.5">
+                Drag &amp; drop lab logs, benchmark traces, or PDF proof draft
+              </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Max file size 25MB · Or <span class="text-primary font-semibold underline underline-offset-2">Browse files</span>
+</p>
+</div>
+<!-- Attached File Item Preview -->
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+</div>
+<div class="min-w-0">
+<p class="font-title-sm text-title-sm text-on-surface truncate">raft_partition_trace_v2.pcap</p>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span>4.2 MB</span>
+<span>•</span>
+<span class="inline-flex items-center gap-0.5 text-secondary font-medium">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                      Verified Clean (SHA-256 Validated)
+                    </span>
+</div>
+</div>
+</div>
+<button class="p-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-error transition-colors" title="Remove attachment" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- 6. Identity & Institutional Privacy Controls (Comfort & Safety Card) -->
+<div class="p-space-md sm:p-space-lg rounded-xl bg-surface-container-low/70 space-y-space-md shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">shield_person</span>
+<h2 class="font-title-md text-title-md text-primary font-semibold">Identity &amp; Institutional Privacy Controls</h2>
+</div>
+<!-- Checkbox 1: Anonymous -->
+<label class="flex items-start gap-space-sm cursor-pointer group">
+<div class="pt-0.5">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="space-y-0.5">
+<div class="flex items-center gap-2">
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors font-medium">
+                    Post anonymously
+                  </span>
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+                    Node Privacy Active
+                  </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Your legal name and student ID will be masked as <span class="font-semibold text-on-surface">"Anonymous Scholar (IIT Delhi Node)"</span>. Cryptographic institution verification remains intact to uphold academic integrity.
+                </p>
+</div>
+</label>
+<!-- Checkbox 2: Staff Response -->
+<label class="flex items-start gap-space-sm cursor-pointer group">
+<div class="pt-0.5">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer" type="checkbox"/>
+</div>
+<div class="space-y-0.5">
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors font-medium">
+                  Request staff response
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Routes this question with priority queue to verified faculty members, teaching assistants, and accredited research fellows in the Distributed Systems domain.
+                </p>
+</div>
+</label>
+</div>
+<!-- 7. Actions Bar -->
+<div class="pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<!-- Primary Button -->
+<button class="flex items-center justify-center gap-2 bg-primary-container text-on-primary hover:bg-primary px-space-lg py-2.5 rounded font-label-lg text-label-lg shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-primary w-full sm:w-auto" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Publish Question</span>
+</button>
+<!-- Secondary Button -->
+<button class="flex items-center justify-center gap-1.5 bg-surface-container-lowest hover:bg-surface-container-low text-on-surface px-space-md py-2.5 rounded font-label-lg text-label-lg shadow-sm transition-all w-full sm:w-auto" type="button">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">save</span>
+<span>Save Draft</span>
+</button>
+</div>
+<!-- Auto-save timestamp & Discard -->
+<div class="flex items-center justify-between sm:justify-end gap-space-md w-full sm:w-auto">
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Draft saved 45s ago
+              </span>
+<button class="font-label-lg text-label-lg text-outline hover:text-error transition-colors" type="button">
+                Discard
+              </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Sidebar Column: Helper & Live Similar Questions Rail (32% approx -> 4 cols) -->
+<aside class="lg:col-span-4 space-y-space-lg">
+<!-- 1. "Similar questions" Compact Live Panel -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md space-y-space-md">
+<div>
+<div class="flex items-center justify-between gap-2 mb-1">
+<h2 class="font-title-md text-title-md text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">find_in_page</span>
+                Similar questions
+              </h2>
+<span class="px-2 py-0.5 rounded bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">
+                3 matches
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Review these existing consortium answers before publishing to get faster solutions and avoid duplicate inquiries.
+            </p>
+</div>
+<!-- Similar Cards Stack -->
+<div class="space-y-space-sm">
+<!-- Card 1 -->
+<article class="p-space-sm rounded-lg bg-surface-container-low/70 hover:bg-surface-container-high/60 transition-colors space-y-1.5 group cursor-pointer">
+<a class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors font-medium leading-snug line-clamp-2 block" href="#">
+                How to handle cascading split-brain in Raft consensus with asymmetric network partitions?
+              </a>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="font-semibold text-primary">24 votes</span>
+<span>•</span>
+<span class="text-secondary font-medium flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">school</span> 6 answers (1 faculty)
+                </span>
+<span>•</span>
+<span>IIT Bombay</span>
+</div>
+<div class="pt-0.5">
+<span class="font-label-sm text-label-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  View solution <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="p-space-sm rounded-lg bg-surface-container-low/70 hover:bg-surface-container-high/60 transition-colors space-y-1.5 group cursor-pointer">
+<a class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors font-medium leading-snug line-clamp-2 block" href="#">
+                Pre-vote protocol edge cases when nodes rejoin after Byzantine network split
+              </a>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="font-semibold text-primary">18 votes</span>
+<span>•</span>
+<span>3 answers</span>
+<span>•</span>
+<span>IISc Bangalore</span>
+</div>
+<div class="pt-0.5">
+<span class="font-label-sm text-label-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  View solution <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</span>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="p-space-sm rounded-lg bg-surface-container-low/70 hover:bg-surface-container-high/60 transition-colors space-y-1.5 group cursor-pointer">
+<a class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors font-medium leading-snug line-clamp-2 block" href="#">
+                Formal TLA+ specifications for lease read safety in Paxos and Raft
+              </a>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="font-semibold text-primary">31 votes</span>
+<span>•</span>
+<span>8 answers</span>
+<span>•</span>
+<span>BITS Pilani</span>
+</div>
+<div class="pt-0.5">
+<span class="font-label-sm text-label-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  View solution <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</span>
+</div>
+</article>
+</div>
+</div>
+<!-- 2. "Writing an Effective Academic Inquiry" Reassurance Guide -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md space-y-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">lightbulb</span>
+<h2 class="font-title-md text-title-md text-on-surface font-semibold">Writing an Effective Inquiry</h2>
+</div>
+<ul class="space-y-2.5 font-body-sm text-body-sm text-on-surface-variant pt-1">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+<span>Search existing literature and consortium archive first.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+<span>State your hypothesis and what you have already attempted.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+<span>Provide minimal reproducible environment details (OS, toolchain, seed logs).</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+<span>Anonymous inquiries undergo identical peer review without identity disclosure.</span>
+</li>
+</ul>
+</div>
+<!-- 3. Institutional Support & Code of Conduct Note -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-1.5 shadow-sm">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">policy</span>
+<span class="font-label-md text-label-md font-semibold tracking-wide">CampusLink Academic Integrity</span>
+</div>
+<p class="font-body-sm text-[11px] leading-relaxed text-on-surface-variant">
+            Under CC BY-NC 4.0 academic integrity framework. Plagiarism and automated LLM regurgitation strictly prohibited across all university nodes.
+          </p>
+</div>
+</aside>
+</div>
+</div>
+</div></main></div></body></html>
