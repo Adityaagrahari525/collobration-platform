@@ -1,18 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { apiService } from "../services/apiService";
 
 export const MentorshipPage = () => {
   const navigate = useNavigate();
-  const { mentors, requestConnection } = useApp();
+  const { mentors, requestConnection, currentUser, bookMentorshipSlot } = useApp();
   const [activeRoleTab, setActiveRoleTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [requestedMentors, setRequestedMentors] = useState({});
+
+  const [dbSlots, setDbSlots] = useState([]);
+  const [bookingSlot, setBookingSlot] = useState(null);
+  const [bookingPurpose, setBookingPurpose] = useState("");
+  const [isBooking, setIsBooking] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState("");
+
+  const loadSlots = async () => {
+    try {
+      const res = await apiService.getMentorshipSlots();
+      if (res?.success && res.data) {
+        setDbSlots(res.data);
+      }
+    } catch (e) {
+      console.warn("Failed to load mentorship slots:", e);
+    }
+  };
+
+  useEffect(() => {
+    loadSlots();
+  }, []);
 
   const handleRequestMentorship = (mentorId) => {
     setRequestedMentors((prev) => ({ ...prev, [mentorId]: true }));
     if (requestConnection) {
       requestConnection(mentorId);
+    }
+  };
+
+  const handleOpenBookingModal = (slot) => {
+    setBookingSlot(slot);
+    setBookingPurpose("");
+  };
+
+  const handleConfirmBooking = async (e) => {
+    e.preventDefault();
+    if (!bookingSlot) return;
+    setIsBooking(true);
+    try {
+      if (bookMentorshipSlot) {
+        await bookMentorshipSlot(bookingSlot.id, bookingPurpose || "Research guidance and paper review.");
+      } else {
+        await apiService.bookMentorshipSlot(bookingSlot.id, bookingPurpose || "Research guidance and paper review.");
+      }
+      setBookingSuccess(`Office hour with ${bookingSlot.mentorName} successfully booked in the database!`);
+      setBookingSlot(null);
+      setBookingPurpose("");
+      await loadSlots();
+      setTimeout(() => setBookingSuccess(""), 5000);
+    } catch (err) {
+      alert(err.message || "Failed to book mentorship slot.");
+    } finally {
+      setIsBooking(false);
     }
   };
 
@@ -165,9 +214,97 @@ export const MentorshipPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
           {/* Left Column: Mentor Cards Catalog (8 cols on large display) */}
           <div className="lg:col-span-8 flex flex-col gap-space-md">
+            {bookingSuccess && (
+              <div className="p-3.5 bg-secondary-container text-on-secondary-container rounded-xl flex items-center gap-2 text-title-sm font-medium shadow-sm animate-fade-in">
+                <span className="material-symbols-outlined text-[20px]">verified</span>
+                <span>{bookingSuccess}</span>
+              </div>
+            )}
+
+            {/* REAL POSTGRESQL FACULTY OFFICE HOURS */}
+            {dbSlots && dbSlots.length > 0 && (
+              <div className="bg-primary/5 rounded-xl p-space-md border border-primary/20 flex flex-col gap-space-sm mb-2 shadow-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-primary/10">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+                    <h2 className="font-title-md font-bold text-on-surface">
+                      Verified Faculty Office Hours (Live Database)
+                    </h2>
+                  </div>
+                  <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-semibold">
+                    {dbSlots.length} Active Slots
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 pt-1">
+                  {dbSlots.map((slot) => {
+                    const isMySlot = slot.mentorId === currentUser?.id;
+                    const hasBooked = slot.bookings?.some((b) => b.student?.id === currentUser?.id || b.studentId === currentUser?.id);
+                    const isAvailable = slot.status === "AVAILABLE" && !hasBooked;
+
+                    return (
+                      <div
+                        key={slot.id}
+                        className="p-4 rounded-lg bg-surface-container-lowest border border-outline-variant/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs hover:border-primary/40 transition-all"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-title-sm font-bold text-on-surface">{slot.mentorName}</span>
+                            <span className="text-xs px-2 py-0.5 rounded font-mono font-medium bg-surface-container text-on-surface-variant">
+                              {slot.mentorInstitution}
+                            </span>
+                            <span className="text-xs text-outline">{slot.mentorDepartment}</span>
+                          </div>
+                          <p className="text-body-sm text-primary font-medium">
+                            Topic: {slot.topic}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant font-mono">
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-xs">schedule</span>
+                              {new Date(slot.startAt).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}
+                            </span>
+                            <span>•</span>
+                            <span>{slot.durationMinutes} mins</span>
+                            <span>•</span>
+                            <span className="text-secondary font-semibold">1:1 Video Sync</span>
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 flex items-center gap-2">
+                          {isMySlot ? (
+                            <span className="px-3 py-1.5 rounded bg-surface-container text-primary font-mono text-xs font-semibold">
+                              Your Hosted Slot
+                            </span>
+                          ) : hasBooked ? (
+                            <span className="px-3 py-1.5 rounded bg-secondary-container text-on-secondary-container font-mono text-xs font-semibold flex items-center gap-1">
+                              <span className="material-symbols-outlined text-xs">check_circle</span>
+                              Reserved
+                            </span>
+                          ) : isAvailable ? (
+                            <button
+                              onClick={() => handleOpenBookingModal(slot)}
+                              className="px-4 py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-title-sm text-title-sm shadow-xs flex items-center gap-1.5 transition-colors"
+                              type="button"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">event_available</span>
+                              <span>Book Office Hour</span>
+                            </button>
+                          ) : (
+                            <span className="px-3 py-1.5 rounded bg-surface-container text-outline font-mono text-xs">
+                              Slot Filled
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Catalog Metric Summary Bar */}
             <div className="flex items-center justify-between px-1 text-on-surface-variant font-label-md text-label-md">
-              <span>Displaying <strong className="text-on-surface font-semibold">6 accredited mentors</strong> matching selected criteria</span>
+              <span>Displaying <strong className="text-on-surface font-semibold">Consortium Directory</strong> matching selected criteria</span>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-secondary"></span>
                 <span>All credential attestations refreshed at 06:00 IST</span>
@@ -559,6 +696,79 @@ export const MentorshipPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Faculty Office Hour Booking Modal */}
+      {bookingSlot && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button
+              onClick={() => setBookingSlot(null)}
+              className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-primary text-[24px]">event_available</span>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                Reserve Faculty Office Hour
+              </h3>
+            </div>
+            <p className="text-body-sm text-on-surface-variant mb-4">
+              Mentor: <span className="font-semibold text-primary">{bookingSlot.mentorName}</span> ({bookingSlot.mentorInstitution})
+            </p>
+
+            <div className="mb-4 p-3 bg-surface-container-low rounded-lg border border-surface-container space-y-1 text-xs">
+              <div className="text-on-surface">
+                <span className="text-outline uppercase font-mono font-semibold">Topic:</span>{" "}
+                <span className="font-medium text-primary">{bookingSlot.topic}</span>
+              </div>
+              <div className="text-on-surface">
+                <span className="text-outline uppercase font-mono font-semibold">Scheduled:</span>{" "}
+                <span>{new Date(bookingSlot.startAt).toLocaleString([], { dateStyle: "full", timeStyle: "short" })}</span>
+              </div>
+              <div className="text-on-surface">
+                <span className="text-outline uppercase font-mono font-semibold">Duration:</span>{" "}
+                <span>{bookingSlot.durationMinutes} minutes (Google Meet)</span>
+              </div>
+            </div>
+
+            <form onSubmit={handleConfirmBooking} className="space-y-4">
+              <div>
+                <label className="block text-label-sm font-semibold text-on-surface mb-1">
+                  Research Question or Purpose of Consultation
+                </label>
+                <textarea
+                  rows={4}
+                  value={bookingPurpose}
+                  onChange={(e) => setBookingPurpose(e.target.value)}
+                  placeholder="Outline your research question, thesis blocker, or project code you'd like feedback on..."
+                  className="w-full p-3 rounded-lg border border-outline-variant bg-surface text-on-surface font-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+                <button
+                  type="button"
+                  onClick={() => setBookingSlot(null)}
+                  className="px-4 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isBooking}
+                  className="px-5 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary/90 font-semibold text-label-md flex items-center gap-1.5 shadow-sm transition-colors"
+                >
+                  {isBooking ? "Reserving..." : "Confirm Booking"}
+                  <span className="material-symbols-outlined text-[16px]">check</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

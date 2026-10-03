@@ -7,8 +7,31 @@ export const PeoplePage = () => {
   const { users, sendConnectionRequest, connections } = useApp();
 
   const [activeRole, setActiveRole] = useState("all");
-  const [activeDept, setActiveDept] = useState("Computer Science & Eng.");
+  const [activeDept, setActiveDept] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const safeUsers = Array.isArray(users) ? users : [];
+  const filteredUsers = safeUsers.filter((u) => {
+    if (activeRole !== "all") {
+      const r = (u.role || "").toUpperCase();
+      if (activeRole === "student" && r !== "STUDENT") return false;
+      if (activeRole === "faculty" && r !== "FACULTY") return false;
+      if (activeRole === "fellows" && !["FELLOW", "RESEARCHER", "SCHOLAR"].includes(r)) return false;
+    }
+    if (activeDept !== "All" && u.department) {
+      if (!u.department.toLowerCase().includes(activeDept.toLowerCase())) return false;
+    }
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (u.name && u.name.toLowerCase().includes(q)) ||
+      (u.firstName && u.firstName.toLowerCase().includes(q)) ||
+      (u.lastName && u.lastName.toLowerCase().includes(q)) ||
+      (u.headline && u.headline.toLowerCase().includes(q)) ||
+      (u.institution && typeof u.institution === "string" && u.institution.toLowerCase().includes(q)) ||
+      (u.skills && u.skills.some((s) => typeof s === "string" && s.toLowerCase().includes(q)))
+    );
+  });
 
   return (
     <div className="flex flex-col w-full bg-background min-h-screen">
@@ -247,247 +270,110 @@ export const PeoplePage = () => {
             {/* Sorting and Counter Header */}
             <div className="bg-surface-container-lowest px-space-md py-2 rounded shadow-sm flex items-center justify-between border border-surface-container-high">
               <div className="font-body-sm text-body-sm text-on-surface-variant">
-                Showing <strong className="text-on-surface font-semibold">6 Scholars</strong> matched to your current research interests
+                Showing <strong className="text-on-surface font-semibold">{filteredUsers.length} Verified Scholars</strong> in the Consortium
               </div>
               <div className="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
-                <span>Sort by:</span>
-                <select className="bg-surface-container-low py-1 px-2 rounded font-label-md text-label-md text-primary font-medium focus:outline-none border border-surface-container-high">
-                  <option>Relevance &amp; Match %</option>
-                  <option>Contribution Karma (Desc)</option>
-                  <option>Accepted Answers</option>
-                  <option>Active Collaborative Sprints</option>
-                </select>
+                <span>Role:</span>
+                <span className="font-mono text-primary font-bold uppercase">{activeRole}</span>
               </div>
             </div>
 
-            {/* PROFILE 1: Devavrat Saxena */}
-            <div className="bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col gap-space-sm border border-surface-container-high">
-              <div className="flex items-start justify-between gap-space-sm">
-                <div className="flex items-start gap-space-sm">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-primary-container flex items-center justify-center text-on-primary">
-                    <span className="font-title-md font-bold">DS</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h2 onClick={() => navigate("/people/usr-1")} className="font-title-md text-title-md text-on-surface leading-snug font-semibold hover:text-primary cursor-pointer">
-                        Devavrat Saxena
-                      </h2>
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">
-                        <span className="material-symbols-outlined text-secondary text-[14px]">verified</span>
-                        .ac.in Verified Scholar
-                      </span>
-                    </div>
-                    <div className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-                      <span className="material-symbols-outlined text-[15px] text-outline">school</span>
-                      <span>Ph.D. Scholar · Distributed Systems · IIT Delhi</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="shrink-0 bg-surface-container-low px-2 py-1 rounded text-right flex items-center gap-1 text-secondary font-label-sm text-label-sm border border-surface-container-high">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                  <span>91% match for your project</span>
-                </div>
+            {filteredUsers.length === 0 ? (
+              <div className="bg-surface-container-lowest p-space-xl rounded text-center border border-surface-container-high shadow-sm space-y-2">
+                <span className="material-symbols-outlined text-4xl text-outline">group_off</span>
+                <h3 className="font-title-lg text-title-lg text-on-surface font-semibold">No scholars found</h3>
+                <p className="font-body-md text-body-md text-on-surface-variant">
+                  Try adjusting your role or department filters, or clear your search query.
+                </p>
               </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                Investigating Byzantine fault tolerance in asynchronous storage engines. Authoring proofs in TLA+ for multi-master consensus across constrained edge gateways.
-              </p>
-              <div className="flex flex-wrap items-center gap-1 font-mono text-[11px]">
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Rust</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Raft Consensus</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Distributed Systems</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">TLA+</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">eBPF</span>
-              </div>
-              <div className="bg-surface-container-low p-space-sm rounded grid grid-cols-4 gap-space-xs text-center border border-surface-container-high">
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Karma</span>
-                  <span className="font-title-sm text-title-sm text-primary font-bold">2,420 pts</span>
-                  <span className="font-label-sm text-[10px] text-secondary">Top 1% Peer</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Accepted Q&amp;A</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">48 accepted</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">19 faculty endorsed</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Consortium Sprints</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">7 projects</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">Lead Maintainer</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Peer Reviews</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">34 validations</span>
-                  <span className="font-label-sm text-[10px] text-secondary">99.2% Accuracy</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-1.5 font-label-md text-label-md text-secondary">
-                  <span className="w-2 h-2 rounded-full bg-secondary"></span>
-                  <span>Available for Q2 Research Sprints</span>
-                </div>
-                <div className="flex items-center gap-space-xs">
-                  <button onClick={() => navigate("/messages")} className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded" title="Send Scholarly Message">
-                    <span className="material-symbols-outlined text-[18px]">chat_bubble_outline</span>
-                  </button>
-                  <button onClick={() => navigate("/people/usr-1")} className="px-space-sm py-1 bg-surface-container-low text-on-surface hover:bg-surface-container rounded font-label-md text-label-md border border-surface-container-high">
-                    View Profile
-                  </button>
-                  <button onClick={() => sendConnectionRequest("usr-1")} className="px-space-md py-1 bg-primary text-on-primary hover:bg-primary-container rounded font-label-md text-label-md transition-colors shadow-sm font-semibold">
-                    Connect
-                  </button>
-                </div>
-              </div>
-            </div>
+            ) : (
+              filteredUsers.map((u) => {
+                const institutionName = typeof u.institution === "string" ? u.institution : (u.institutionDetail?.name || "Consortium Node");
+                const skillsList = u.skills || (u.skillsDetail?.map((s) => s.name)) || [];
+                const isConnected = connections && connections.includes(u.id);
 
-            {/* PROFILE 2: Dr. Rohini Ramanathan */}
-            <div className="bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col gap-space-sm border border-surface-container-high">
-              <div className="flex items-start justify-between gap-space-sm">
-                <div className="flex items-start gap-space-sm">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-tertiary-container text-on-tertiary flex items-center justify-center font-title-md font-bold">
-                    RR
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h2 onClick={() => navigate("/people/usr-2")} className="font-title-md text-title-md text-on-surface leading-snug font-semibold hover:text-primary cursor-pointer">
-                        Dr. Rohini Ramanathan
-                      </h2>
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
-                        <span className="material-symbols-outlined text-tertiary text-[14px]">stars</span>
-                        Faculty Verified PI
-                      </span>
+                return (
+                  <div
+                    key={u.id}
+                    className="bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col gap-space-sm border border-surface-container-high"
+                  >
+                    <div className="flex items-start justify-between gap-space-sm">
+                      <div className="flex items-start gap-space-sm">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-primary-container flex items-center justify-center text-on-primary">
+                          {u.avatarUrl ? (
+                            <img src={u.avatarUrl} alt={u.name} className="w-12 h-12 rounded-full object-cover" />
+                          ) : (
+                            <span className="font-title-md font-bold">
+                              {u.firstName?.[0] || "S"}{u.lastName?.[0] || "C"}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h2
+                              onClick={() => navigate(`/people/${u.id}`)}
+                              className="font-title-md text-title-md text-on-surface leading-snug font-semibold hover:text-primary cursor-pointer"
+                            >
+                              {u.name || `${u.firstName} ${u.lastName}`}
+                            </h2>
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">
+                              <span className="material-symbols-outlined text-secondary text-[14px]">verified</span>
+                              .ac.in Verified Scholar
+                            </span>
+                          </div>
+                          <div className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+                            <span className="material-symbols-outlined text-[15px] text-outline">school</span>
+                            <span>{u.department || u.role} · {institutionName}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="shrink-0 bg-surface-container-low px-2 py-1 rounded text-right flex items-center gap-1 text-secondary font-label-sm text-label-sm border border-surface-container-high">
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                        <span>{u.role || "Scholar"}</span>
+                      </div>
                     </div>
-                    <div className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-                      <span className="material-symbols-outlined text-[15px] text-outline">business_center</span>
-                      <span>Associate Professor · AI &amp; Speech · IIT Bombay</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="shrink-0 bg-surface-container-low px-2 py-1 rounded text-right flex items-center gap-1 text-secondary font-label-sm text-label-sm border border-surface-container-high">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                  <span>88% match for Indic LLM Research</span>
-                </div>
-              </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                Leading the Multilingual Audio &amp; NLP Lab. Currently supervising cross-campus efforts in low-resource dialect speech models under the National Language Mission.
-              </p>
-              <div className="flex flex-wrap items-center gap-1 font-mono text-[11px]">
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">PyTorch</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Speech Processing</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Indic NLP</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Transformer Architecture</span>
-              </div>
-              <div className="bg-surface-container-low p-space-sm rounded grid grid-cols-4 gap-space-xs text-center border border-surface-container-high">
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Karma</span>
-                  <span className="font-title-sm text-title-sm text-primary font-bold">4,180 pts</span>
-                  <span className="font-label-sm text-[10px] text-tertiary-container font-semibold">Distinguished PI</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Endorsements</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">112 formal</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">Council Verified</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Research Projects</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">14 grants</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">₹4.2 Cr Consortium</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Scholars Mentored</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">28 active</span>
-                  <span className="font-label-sm text-[10px] text-secondary">3 Campuses</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-1.5 font-label-md text-label-md text-tertiary-container font-medium">
-                  <span className="w-2 h-2 rounded-full bg-tertiary-container"></span>
-                  <span>Mentoring 2 Teams · Advisory Only</span>
-                </div>
-                <div className="flex items-center gap-space-xs">
-                  <button onClick={() => navigate("/mentorship")} className="px-space-sm py-1 bg-surface-container-low text-on-surface hover:bg-surface-container rounded font-label-md text-label-md border border-surface-container-high">
-                    Lab Dossier
-                  </button>
-                  <button onClick={() => navigate("/mentorship")} className="px-space-md py-1 bg-primary text-on-primary hover:bg-primary-container rounded font-label-md text-label-md transition-colors shadow-sm font-semibold">
-                    Request Mentorship
-                  </button>
-                </div>
-              </div>
-            </div>
 
-            {/* PROFILE 3: Kabir Sen */}
-            <div className="bg-surface-container-lowest p-space-md rounded shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col gap-space-sm border border-surface-container-high">
-              <div className="flex items-start justify-between gap-space-sm">
-                <div className="flex items-start gap-space-sm">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-primary-container flex items-center justify-center text-on-primary font-title-md font-bold">
-                    KS
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h2 onClick={() => navigate("/people/usr-3")} className="font-title-md text-title-md text-on-surface leading-snug font-semibold hover:text-primary cursor-pointer">
-                        Kabir Sen
-                      </h2>
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-label-sm text-label-sm">
-                        <span className="material-symbols-outlined text-secondary text-[14px]">verified</span>
-                        .ac.in Verified Scholar
-                      </span>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                      {u.bio || u.headline || "Active scholar in the CampusLink Academic Collaboration Network."}
+                    </p>
+
+                    {skillsList.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1 font-mono text-[11px]">
+                        {skillsList.map((skillName, sIdx) => (
+                          <span key={sIdx} className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">
+                            {skillName}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-1 border-t border-surface-container-low">
+                      <div className="flex items-center gap-1.5 font-label-md text-label-md text-secondary">
+                        <span className="w-2 h-2 rounded-full bg-secondary"></span>
+                        <span>{u.availability || "Open to Collaboration"}</span>
+                      </div>
+                      <div className="flex items-center gap-space-xs">
+                        <button
+                          onClick={() => navigate(`/people/${u.id}`)}
+                          className="px-space-sm py-1 bg-surface-container-low text-on-surface hover:bg-surface-container rounded font-label-md text-label-md border border-surface-container-high"
+                        >
+                          View Profile
+                        </button>
+                        <button
+                          onClick={() => sendConnectionRequest(u.id)}
+                          disabled={isConnected}
+                          className={`px-space-md py-1 rounded font-label-md text-label-md transition-colors shadow-sm font-semibold ${
+                            isConnected ? "bg-surface-container text-outline" : "bg-primary text-on-primary hover:bg-primary-container"
+                          }`}
+                        >
+                          {isConnected ? "Connected" : "Connect"}
+                        </button>
+                      </div>
                     </div>
-                    <div className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-                      <span className="material-symbols-outlined text-[15px] text-outline">school</span>
-                      <span>4th Year B.Tech CSE · BITS Pilani (Goa)</span>
-                    </div>
                   </div>
-                </div>
-                <div className="shrink-0 bg-surface-container-low px-2 py-1 rounded text-right flex items-center gap-1 text-secondary font-label-sm text-label-sm border border-surface-container-high">
-                  <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                  <span>94% match for FloodSense</span>
-                </div>
-              </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                Working on edge-embedded telemetry arrays and Kalman filters for disaster hydrometric sensor networks. High-throughput CUDA signal acceleration.
-              </p>
-              <div className="flex flex-wrap items-center gap-1 font-mono text-[11px]">
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">C++</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">CUDA</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Sensor Fusion</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container-low text-on-surface">Embedded Systems</span>
-              </div>
-              <div className="bg-surface-container-low p-space-sm rounded grid grid-cols-4 gap-space-xs text-center border border-surface-container-high">
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Karma</span>
-                  <span className="font-title-sm text-title-sm text-primary font-bold">1,650 pts</span>
-                  <span className="font-label-sm text-[10px] text-secondary">Top 5% UG</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Accepted Answers</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">34 accepted</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">8 hardware verified</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Projects</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">5 sprints</span>
-                  <span className="font-label-sm text-[10px] text-on-surface-variant">2 Open Source PIs</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Peer Validation</span>
-                  <span className="font-title-sm text-title-sm text-on-surface font-bold">21 reviews</span>
-                  <span className="font-label-sm text-[10px] text-secondary">Verified Firmware</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-1.5 font-label-md text-label-md text-secondary">
-                  <span className="w-2 h-2 rounded-full bg-secondary"></span>
-                  <span>Available for Cross-Campus Projects</span>
-                </div>
-                <div className="flex items-center gap-space-xs">
-                  <button onClick={() => navigate("/people/usr-3")} className="px-space-sm py-1 bg-surface-container-low text-on-surface hover:bg-surface-container rounded font-label-md text-label-md border border-surface-container-high">
-                    View Profile
-                  </button>
-                  <button onClick={() => sendConnectionRequest("usr-3")} className="px-space-md py-1 bg-primary text-on-primary hover:bg-primary-container rounded font-label-md text-label-md transition-colors shadow-sm font-semibold">
-                    Connect
-                  </button>
-                </div>
-              </div>
-            </div>
+                );
+              })
+            )}
           </div>
 
           {/* COLUMN 3: Right Intelligence Rail (lg:col-span-3) */}

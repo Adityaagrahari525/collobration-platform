@@ -130,10 +130,31 @@ export const NotificationsPage = () => {
       ),
       primaryBtn: "Go to Repository",
       primaryAction: () => navigate("/projects"),
-    }
+    },
   ];
 
-  const filteredItems = notificationItems.filter((item) => {
+  const realNotifications = notifications && notifications.length > 0
+    ? notifications.map((n) => ({
+        id: n.id,
+        category: n.type?.toLowerCase().includes("project") ? "projects" : "contribution",
+        unread: !n.isRead && !n.read,
+        section: "today",
+        time: n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now",
+        tag: n.type || "Consortium Alert",
+        tagStyle: "bg-primary-fixed text-primary",
+        icon: n.type?.includes("ACCEPTED") ? "task_alt" : n.type?.includes("PROJECT") ? "account_tree" : "notifications",
+        iconStyle: "bg-primary-container text-on-primary",
+        borderStyle: "bg-primary",
+        title: n.title,
+        subtitle: n.message,
+        primaryBtn: "View Details",
+        primaryAction: () => navigate(n.link || "/dashboard"),
+      }))
+    : [];
+
+  const combinedItems = [...realNotifications, ...notificationItems];
+
+  const filteredItems = combinedItems.filter((item) => {
     if (activeTab === "all") return true;
     return item.category === activeTab;
   });

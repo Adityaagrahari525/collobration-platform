@@ -6,11 +6,17 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useApp();
 
-  const [email, setEmail] = useState("scholar@iitd.ac.in");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("rahul.sharma@iitd.ac.in");
+  const [password, setPassword] = useState("Password@123");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const setDemoAccount = (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setErrorMsg("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +36,7 @@ export const LoginPage = () => {
     <div className="bg-[#faf8ff] font-['Public_Sans'] text-[#131b2e] antialiased min-h-screen flex items-center justify-center p-4 sm:p-6">
       <main className="w-full max-w-xl mx-auto">
         <div className="flex flex-col w-full items-center justify-center py-6">
-          <div className="w-full max-w-[420px] mx-auto flex flex-col gap-6">
+          <div className="w-full max-w-[440px] mx-auto flex flex-col gap-6">
             {/* CampusLink Architectural Brand Anchor */}
             <header className="flex flex-col items-center text-center gap-2.5">
               <div onClick={() => navigate("/")} className="flex items-center gap-3 cursor-pointer">
@@ -54,10 +60,67 @@ export const LoginPage = () => {
             </header>
 
             {/* Main Authentication Workstation Card */}
-            <div className="w-full bg-white border border-[#e2e8f0] rounded-lg p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
+            <div className="w-full bg-white border border-[#e2e8f0] rounded-lg p-6 sm:p-8 flex flex-col gap-5 shadow-sm">
               <div className="flex flex-col gap-1 text-left">
                 <h1 className="font-serif text-[26px] leading-tight font-semibold text-[#0f172a] tracking-tight">Welcome back</h1>
-                <p className="text-[13px] leading-relaxed text-[#64748b]">Sign in to access your institutional workstation</p>
+                <p className="text-[13px] leading-relaxed text-[#64748b]">Sign in with your verified institutional credentials</p>
+              </div>
+
+              {/* Demo Account Quick-Fill Buttons */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-left">
+                <span className="text-[11px] uppercase tracking-wider font-semibold text-slate-500 block mb-2">
+                  Demo Accounts (Click to autofill):
+                </span>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setDemoAccount("rahul.sharma@iitd.ac.in", "Password@123")}
+                    className={`p-1.5 rounded text-left border transition-all ${
+                      email === "rahul.sharma@iitd.ac.in"
+                        ? "bg-blue-50 border-blue-500 text-blue-900 font-semibold"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-medium truncate">Rahul (Lead)</div>
+                    <div className="text-[10px] text-slate-400 font-mono">IIT Delhi</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDemoAccount("ananya.iyer@iitb.ac.in", "Password@123")}
+                    className={`p-1.5 rounded text-left border transition-all ${
+                      email === "ananya.iyer@iitb.ac.in"
+                        ? "bg-blue-50 border-blue-500 text-blue-900 font-semibold"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-medium truncate">Ananya (Candidate)</div>
+                    <div className="text-[10px] text-slate-400 font-mono">IIT Bombay</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDemoAccount("prof.sharma@cse.iitd.ac.in", "Password@123")}
+                    className={`p-1.5 rounded text-left border transition-all ${
+                      email === "prof.sharma@cse.iitd.ac.in"
+                        ? "bg-blue-50 border-blue-500 text-blue-900 font-semibold"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-medium truncate">Prof. Sharma</div>
+                    <div className="text-[10px] text-slate-400 font-mono">Faculty Mentor</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDemoAccount("admin@campuslink.ac.in", "AdminPassword@123")}
+                    className={`p-1.5 rounded text-left border transition-all ${
+                      email === "admin@campuslink.ac.in"
+                        ? "bg-blue-50 border-blue-500 text-blue-900 font-semibold"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-medium truncate">Consortium Admin</div>
+                    <div className="text-[10px] text-slate-400 font-mono">System Admin</div>
+                  </button>
+                </div>
               </div>
 
               {/* Authentication Form */}

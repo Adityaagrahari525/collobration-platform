@@ -1,4 +1,4 @@
-import { prisma } from "../../config/database";
+import prisma from "../../config/database";
 import { UpdateProfileInput, AddUserSkillInput, QueryUsersInput } from "../../validators/user.validator";
 
 export class UserService {
@@ -9,7 +9,7 @@ export class UserService {
     if (user.institution) score += 20;
     if (user.profile?.department) score += 20;
     if (user.profile?.academicYear) score += 20;
-    if (user.skills && user.skills.length > 0) score += 20;
+    if (user.userSkills && user.userSkills.length > 0) score += 20;
     return score;
   }
 
@@ -19,7 +19,7 @@ export class UserService {
       include: {
         institution: true,
         profile: true,
-        skills: {
+        userSkills: {
           include: {
             skill: true,
           },
@@ -65,7 +65,7 @@ export class UserService {
         isProfileComplete: user.profile?.isProfileComplete || completionScore >= 80,
         profileCompletion: completionScore,
       },
-      skills: user.skills.map((us) => ({
+      skills: user.userSkills.map((us: any) => ({
         id: us.skill.id,
         name: us.skill.name,
         category: us.skill.category || "General",
@@ -77,7 +77,6 @@ export class UserService {
   static async updateProfile(userId: string, input: UpdateProfileInput) {
     const { firstName, lastName, ...profileFields } = input;
 
-    // 1. Update User basic info if supplied
     if (firstName || lastName) {
       await prisma.user.update({
         where: { id: userId },
@@ -88,8 +87,7 @@ export class UserService {
       });
     }
 
-    // 2. Upsert UserProfile fields
-    const updatedProfile = await prisma.userProfile.upsert({
+    await prisma.userProfile.upsert({
       where: { userId },
       create: {
         userId,
@@ -100,42 +98,13 @@ export class UserService {
       },
     });
 
-    // 3. Recalculate profile completion
-    const fullUser = await this.getCurrentUser(userId);
-    const isComplete = fullUser.profile.profileCompletion >= 80;
-
-    await prisma.userProfile.update({
-      where: { userId },
-      data: { isProfileComplete: isComplete },
-    });
-
     return this.getCurrentUser(userId);
-  }
-
-  static async deleteUser(userId: string) {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      const error: any = new Error("User account not found.");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    await prisma.user.delete({
-      where: { id: userId },
-    });
-
-    return { message: "User account and all associated data deleted successfully." };
   }
 
   static async getUserSkills(userId: string) {
     const userSkills = await prisma.userSkill.findMany({
       where: { userId },
-      include: {
-        skill: true,
-      },
+      include: { skill: true },
     });
 
     return userSkills.map((us) => ({
@@ -143,53 +112,28 @@ export class UserService {
       name: us.skill.name,
       category: us.skill.category || "General",
       proficiency: us.proficiency,
-      assignedAt: us.createdAt,
     }));
   }
 
   static async addUserSkill(userId: string, input: AddUserSkillInput) {
-    const skill = await prisma.skill.findUnique({
-      where: { id: input.skillId },
-    });
-
-    if (!skill) {
-      const error: any = new Error("Skill ID does not exist in skill directory.");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    const existing = await prisma.userSkill.findUnique({
+    await prisma.userSkill.upsert({
       where: {
         userId_skillId: {
           userId,
           skillId: input.skillId,
         },
       },
-    });
-
-    if (existing) {
-      const error: any = new Error("This skill is already assigned to your profile.");
-      error.statusCode = 409;
-      throw error;
-    }
-
-    const created = await prisma.userSkill.create({
-      data: {
+      create: {
         userId,
         skillId: input.skillId,
-        proficiency: input.proficiency,
+        proficiency: input.proficiency || "INTERMEDIATE",
       },
-      include: {
-        skill: true,
+      update: {
+        proficiency: input.proficiency || "INTERMEDIATE",
       },
     });
 
-    return {
-      id: created.skill.id,
-      name: created.skill.name,
-      category: created.skill.category || "General",
-      proficiency: created.proficiency,
-    };
+    return this.getCurrentUser(userId);
   }
 
   static async removeUserSkill(userId: string, skillId: string) {
@@ -203,7 +147,7 @@ export class UserService {
     });
 
     if (!existing) {
-      const error: any = new Error("Skill assignment not found on your profile.");
+      const error: any = new Error("Skill not associated with user profile.");
       error.statusCode = 404;
       throw error;
     }
@@ -217,41 +161,64 @@ export class UserService {
       },
     });
 
-    return { message: "Skill successfully removed from your academic profile." };
+    return { message: "Skill removed from user profile." };
+  }
+
+  static async deleteUser(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw { statusCode: 404, message: "User not found." };
+    }
+
+    await prisma.user.delete({ where: { id: userId } });
+    return { message: "User account deleted successfully." };
   }
 
   static async getPeopleDirectory(query: QueryUsersInput) {
-    const { search, role, institutionId, department, academicYear, skillId, availability, page, limit } = query;
+    const page = query.page || 1;
+    const limit = query.limit || 20;
     const skip = (page - 1) * limit;
 
     const where: any = {
       isActive: true,
     };
 
-    if (role) where.role = role;
-    if (institutionId) where.institutionId = institutionId;
-
-    if (department || academicYear || availability) {
-      where.profile = {};
-      if (department) where.profile.department = { contains: department, mode: "insensitive" };
-      if (academicYear) where.profile.academicYear = { contains: academicYear, mode: "insensitive" };
-      if (availability) where.profile.availability = { contains: availability, mode: "insensitive" };
+    if (query.role) {
+      where.role = query.role;
     }
 
-    if (skillId) {
-      where.skills = {
-        some: { skillId },
+    if (query.institutionId) {
+      where.institutionId = query.institutionId;
+    }
+
+    if (query.department) {
+      where.profile = {
+        department: { contains: query.department, mode: "insensitive" },
       };
     }
 
-    if (search) {
+    if (query.academicYear) {
+      where.profile = {
+        ...where.profile,
+        academicYear: { contains: query.academicYear, mode: "insensitive" },
+      };
+    }
+
+    if (query.skillId) {
+      where.userSkills = {
+        some: {
+          skillId: query.skillId,
+        },
+      };
+    }
+
+    if (query.search) {
       where.OR = [
-        { firstName: { contains: search, mode: "insensitive" } },
-        { lastName: { contains: search, mode: "insensitive" } },
-        { institution: { name: { contains: search, mode: "insensitive" } } },
-        { profile: { department: { contains: search, mode: "insensitive" } } },
-        { profile: { headline: { contains: search, mode: "insensitive" } } },
-        { skills: { some: { skill: { name: { contains: search, mode: "insensitive" } } } } },
+        { firstName: { contains: query.search, mode: "insensitive" } },
+        { lastName: { contains: query.search, mode: "insensitive" } },
+        { email: { contains: query.search, mode: "insensitive" } },
+        { profile: { headline: { contains: query.search, mode: "insensitive" } } },
+        { profile: { department: { contains: query.search, mode: "insensitive" } } },
       ];
     }
 
@@ -261,18 +228,18 @@ export class UserService {
         where,
         skip,
         take: limit,
-        orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+        orderBy: { createdAt: "desc" },
         include: {
           institution: true,
           profile: true,
-          skills: {
+          userSkills: {
             include: { skill: true },
           },
         },
       }),
     ]);
 
-    const items = users.map((u) => ({
+    const items = users.map((u: any) => ({
       id: u.id,
       firstName: u.firstName,
       lastName: u.lastName,
@@ -293,8 +260,8 @@ export class UserService {
       avatarUrl: u.profile?.avatarUrl || "",
       availability: u.profile?.availability || "Available for collaboration",
       preferredCollaborationMode: u.profile?.preferredCollaborationMode || "HYBRID",
-      skills: u.skills.map((us) => us.skill.name),
-      skillsDetail: u.skills.map((us) => ({
+      skills: u.userSkills.map((us: any) => us.skill.name),
+      skillsDetail: u.userSkills.map((us: any) => ({
         id: us.skill.id,
         name: us.skill.name,
         proficiency: us.proficiency,
@@ -318,7 +285,7 @@ export class UserService {
       include: {
         institution: true,
         profile: true,
-        skills: {
+        userSkills: {
           include: { skill: true },
         },
       },
@@ -354,8 +321,8 @@ export class UserService {
       preferredCollaborationMode: u.profile?.preferredCollaborationMode || "HYBRID",
       city: u.profile?.city || u.institution.city,
       state: u.profile?.state || u.institution.state,
-      skills: u.skills.map((us) => us.skill.name),
-      skillsDetail: u.skills.map((us) => ({
+      skills: u.userSkills.map((us: any) => us.skill.name),
+      skillsDetail: u.userSkills.map((us: any) => ({
         id: us.skill.id,
         name: us.skill.name,
         category: us.skill.category || "General",

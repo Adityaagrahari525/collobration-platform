@@ -168,7 +168,7 @@ export class AuthService {
       include: {
         institution: true,
         profile: true,
-        skills: {
+        userSkills: {
           include: { skill: true },
         },
       },
@@ -176,7 +176,7 @@ export class AuthService {
 
     if (!user) {
       const error: any = new Error("User record not found.");
-      error.statusCode = 444;
+      error.statusCode = 404;
       throw error;
     }
 
@@ -194,7 +194,7 @@ export class AuthService {
       degree: user.profile?.academicYear || "",
       bio: user.profile?.bio || "",
       avatar: user.profile?.avatarUrl || "",
-      skills: user.skills.map((s) => s.skill.name),
+      skills: user.userSkills.map((s: any) => s.skill.name),
       profile: user.profile,
     };
   }

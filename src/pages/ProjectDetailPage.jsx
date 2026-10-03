@@ -1,19 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { apiService } from "../services/apiService";
 import { CodeEditorModal } from "../components/CodeEditorModal";
 
 export const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { projects, requestJoinProject, deleteProject, currentUser } = useApp();
+  const { projects, deleteProject, currentUser } = useApp();
 
-  const project = projects.find((p) => p.id === id) || projects[0];
+  const [projectDetails, setProjectDetails] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [applyModalRole, setApplyModalRole] = useState(null);
+  const [pitchText, setPitchText] = useState("");
+  const [isApplying, setIsApplying] = useState(false);
+  const [actionSuccess, setActionSuccess] = useState("");
+
+  const project = projectDetails || projects.find((p) => p.id === id) || projects[0] || {};
   const [activeTab, setActiveTab] = useState("overview");
   const [copiedCite, setCopiedCite] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const isProjectLead = currentUser?.id === project?.leadId || currentUser?.role === "admin" || currentUser?.rawRole === "ADMIN";
+  useEffect(() => {
+    if (id) {
+      apiService.getProjectById(id).then((res) => {
+        if (res.success && res.data) {
+          setProjectDetails(res.data);
+          if (res.data.applications) {
+            setApplications(res.data.applications);
+          }
+        }
+      }).catch(() => {});
+    }
+  }, [id]);
+
+  const isProjectLead =
+    currentUser?.id === project?.leadId ||
+    currentUser?.id === project?.ownerId ||
+    currentUser?.role === "admin" ||
+    currentUser?.rawRole === "ADMIN";
+
+  const userMembership = project?.members?.find((m) => m.userId === currentUser?.id);
+  const userApplication = applications?.find((a) => a.applicantId === currentUser?.id);
+  const pendingCount = applications.filter((a) => a.status === "PENDING").length;
+
+  const handleOpenApplyModal = (role) => {
+    const targetRole = role || project?.roles?.[0] || {
+      id: project?.roles?.[0]?.id || "default",
+      title: "Core Contributor",
+      requiredSkills: project?.requiredSkills || [],
+    };
+    setApplyModalRole(targetRole);
+    setPitchText("");
+  };
+
+  const handleReviewApplication = async (appId, status) => {
+    try {
+      await apiService.updateApplicationStatus(appId, status);
+      setActionSuccess(`Application status updated to ${status}!`);
+      const refreshed = await apiService.getProjectById(id);
+      if (refreshed.success && refreshed.data) {
+        setProjectDetails(refreshed.data);
+        setApplications(refreshed.data.applications || []);
+      }
+      setTimeout(() => setActionSuccess(""), 4000);
+    } catch (err) {
+      alert(err.message || "Failed to update application status.");
+    }
+  };
+
+  const handleApplySubmit = async (e) => {
+    e?.preventDefault();
+    if (!applyModalRole) return;
+    setIsApplying(true);
+    try {
+      await apiService.applyToProject(project.id, {
+        roleId: applyModalRole.id,
+        pitch: pitchText || "I would love to contribute my technical skills and research background to this project.",
+      });
+      setActionSuccess("Your application was submitted to the project lead!");
+      setApplyModalRole(null);
+      setPitchText("");
+      setTimeout(() => setActionSuccess(""), 4000);
+    } catch (err) {
+      alert(err.message || "Failed to submit application.");
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
   const handleDeleteProject = async () => {
     if (window.confirm("Are you sure you want to delete this research project workspace from the database?")) {
@@ -119,21 +193,31 @@ export const ProjectDetailPage = () => {
           </div>
           {/* Action Panel */}
           <div className="flex flex-col sm:flex-row lg:flex-col gap-space-xs shrink-0 lg:w-56">
-            <button
-              onClick={() => requestJoinProject(project.id)}
-              disabled={project.requestSent}
-              className={`w-full inline-flex items-center justify-center gap-2 font-title-sm text-title-sm px-4 py-2.5 rounded-lg transition-all ${
-                project.requestSent
-                  ? "bg-secondary-container text-on-secondary-container opacity-90 cursor-default"
-                  : "bg-primary-container text-on-primary hover:bg-primary shadow-sm"
-              }`}
-              type="button"
-            >
-              <span className="material-symbols-outlined text-[18px]">
-                {project.requestSent ? "check_circle" : "group_add"}
-              </span>
-              <span>{project.requestSent ? "Request Sent (+20 pts)" : "Request to Join"}</span>
-            </button>
+            {isProjectLead ? (
+              <div className="w-full py-2.5 px-3 bg-primary/10 border border-primary/20 text-primary rounded-lg font-title-sm text-center flex items-center justify-center gap-1.5 font-semibold">
+                <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                <span>You are Project Lead</span>
+              </div>
+            ) : userMembership ? (
+              <div className="w-full py-2.5 px-3 bg-secondary-container text-on-secondary-container rounded-lg font-title-sm text-center flex items-center justify-center gap-1.5 font-semibold">
+                <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                <span>Active Team Member</span>
+              </div>
+            ) : userApplication ? (
+              <div className="w-full py-2.5 px-3 bg-surface-container-high text-primary rounded-lg font-title-sm text-center flex items-center justify-center gap-1.5 font-medium border border-outline-variant/60">
+                <span className="material-symbols-outlined text-[18px]">hourglass_top</span>
+                <span>Application {userApplication.status}</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => handleOpenApplyModal()}
+                className="w-full inline-flex items-center justify-center gap-2 font-title-sm text-title-sm px-4 py-2.5 rounded-lg transition-all bg-primary-container text-on-primary hover:bg-primary shadow-sm"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[18px]">group_add</span>
+                <span>Request to Join</span>
+              </button>
+            )}
             <button
               onClick={() => navigate("/messages")}
               className="w-full inline-flex items-center justify-center gap-2 bg-surface-container-low text-on-surface font-title-sm text-title-sm px-4 py-2 rounded-lg hover:bg-surface-container-high transition-colors"
@@ -174,6 +258,13 @@ export const ProjectDetailPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-space-lg">
         {/* Left Column: Scientific Specification & Collaboration (7 Columns) */}
         <div className="lg:col-span-7 space-y-space-lg">
+          {actionSuccess && (
+            <div className="p-3.5 bg-secondary-container text-on-secondary-container rounded-xl flex items-center gap-2 text-title-sm font-medium shadow-sm animate-fade-in">
+              <span className="material-symbols-outlined text-[20px]">check_circle</span>
+              <span>{actionSuccess}</span>
+            </div>
+          )}
+
           {/* Navigation Document Tabs */}
           <div className="bg-surface-container-lowest rounded-xl p-space-xs shadow-sm">
             <div className="flex items-center gap-1 overflow-x-auto text-body-md font-body-md">
@@ -196,7 +287,9 @@ export const ProjectDetailPage = () => {
               >
                 <span className="material-symbols-outlined text-[18px]">badge</span>
                 <span>Open Roles</span>
-                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-tertiary-container text-white text-[10px] font-mono leading-tight">2</span>
+                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-tertiary-container text-white text-[10px] font-mono leading-tight">
+                  {project.roles?.length || 2}
+                </span>
               </button>
               <button
                 onClick={() => setActiveTab("milestones")}
@@ -229,8 +322,156 @@ export const ProjectDetailPage = () => {
                 <span>Discussions</span>
                 <span className="ml-1 px-1.5 py-0.2 rounded bg-surface-container text-outline text-[10px] font-mono">19</span>
               </button>
+              {isProjectLead && (
+                <button
+                  onClick={() => setActiveTab("applications")}
+                  className={`flex items-center gap-2 px-space-md py-2 rounded-lg text-title-sm whitespace-nowrap transition-colors ${
+                    activeTab === "applications" ? "bg-primary text-on-primary font-semibold" : "text-on-surface-variant hover:bg-surface-container-low"
+                  }`}
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
+                  <span>Review Applications</span>
+                  {pendingCount > 0 ? (
+                    <span className="ml-1 px-1.5 py-0.2 rounded-full bg-error text-white text-[10px] font-mono leading-tight font-bold">
+                      {pendingCount}
+                    </span>
+                  ) : (
+                    <span className="ml-1 px-1.5 py-0.2 rounded bg-surface-container text-outline text-[10px] font-mono">
+                      {applications.length}
+                    </span>
+                  )}
+                </button>
+              )}
             </div>
           </div>
+
+          {/* Applications Review Section (Rendered when activeTab === 'applications') */}
+          {activeTab === "applications" && (
+            <section className="bg-surface-container-lowest rounded-xl p-space-lg space-y-space-md shadow-sm border border-outline-variant/60">
+              <div className="flex items-center justify-between pb-3 border-b border-surface-container">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[24px]">how_to_reg</span>
+                  <div>
+                    <h2 className="font-headline-md text-headline-md text-on-surface font-semibold">
+                      Candidate Applications & Peer Review
+                    </h2>
+                    <p className="text-body-sm text-on-surface-variant">
+                      Review applicant backgrounds, pitch statements, and academic qualifications. Accepting adds candidate to PostgreSQL project membership.
+                    </p>
+                  </div>
+                </div>
+                <span className="font-mono text-label-sm px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-semibold">
+                  {applications.length} Received
+                </span>
+              </div>
+
+              {applications.length === 0 ? (
+                <div className="p-8 text-center bg-surface-container-low rounded-xl text-on-surface-variant">
+                  <span className="material-symbols-outlined text-4xl text-outline mb-2">inbox</span>
+                  <p className="font-medium">No candidate applications currently pending review.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {applications.map((app) => {
+                    const applicantName = app.applicant ? `${app.applicant.firstName} ${app.applicant.lastName}` : "Applicant";
+                    const institutionName = app.applicant?.institution?.name || "Academic Institution";
+                    const skills = app.applicant?.userSkills?.map((us) => us.skill?.name).filter(Boolean) || [];
+                    const isPending = app.status === "PENDING";
+                    const isAccepted = app.status === "ACCEPTED";
+                    const isRejected = app.status === "REJECTED";
+
+                    return (
+                      <div key={app.id} className="p-5 rounded-xl bg-surface border border-outline-variant/60 flex flex-col gap-4">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div className="flex items-start gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-lg">
+                              {applicantName[0]}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-title-md font-bold text-on-surface">{applicantName}</h3>
+                                <span className="text-xs px-2 py-0.5 rounded font-mono font-semibold bg-surface-container text-on-surface-variant">
+                                  {institutionName}
+                                </span>
+                                {app.matchScore && (
+                                  <span className="text-xs px-2 py-0.5 rounded-full font-mono font-bold bg-secondary-fixed text-on-secondary-fixed">
+                                    {app.matchScore}% Match
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-body-sm text-on-surface-variant mt-0.5">
+                                Applied for: <span className="font-semibold text-primary">{app.role?.title || "Project Role"}</span> · {new Date(app.createdAt).toLocaleDateString()}
+                              </p>
+                              <span className="text-xs text-outline font-mono">{app.applicant?.email}</span>
+                            </div>
+                          </div>
+                          <div>
+                            {isPending && (
+                              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-100 text-amber-800 flex items-center gap-1 border border-amber-300">
+                                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                Pending Review
+                              </span>
+                            )}
+                            {isAccepted && (
+                              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1 border border-emerald-300">
+                                <span className="material-symbols-outlined text-xs">check_circle</span>
+                                Accepted & Joined
+                              </span>
+                            )}
+                            {isRejected && (
+                              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-red-100 text-red-800 border border-red-300">
+                                Declined
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Pitch Statement */}
+                        <div className="p-3.5 bg-surface-container-low rounded-lg border border-surface-container text-body-sm">
+                          <span className="text-xs font-mono uppercase text-outline font-semibold block mb-1">Scholar Statement / Pitch:</span>
+                          <p className="text-on-surface leading-relaxed italic">"{app.pitch}"</p>
+                        </div>
+
+                        {/* Applicant Skills */}
+                        {skills.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs font-mono uppercase text-outline font-semibold">Verified Skills:</span>
+                            {skills.map((s, idx) => (
+                              <span key={idx} className="px-2 py-0.5 rounded bg-surface-container font-mono text-[11px] text-primary font-medium">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Review Actions if PENDING */}
+                        {isPending && (
+                          <div className="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+                            <button
+                              onClick={() => handleReviewApplication(app.id, "REJECTED")}
+                              className="px-4 py-1.5 rounded-lg border border-error/40 text-error hover:bg-error/10 text-title-sm font-medium transition-colors"
+                              type="button"
+                            >
+                              Decline
+                            </button>
+                            <button
+                              onClick={() => handleReviewApplication(app.id, "ACCEPTED")}
+                              className="px-5 py-1.5 rounded-lg bg-secondary text-on-secondary hover:bg-secondary/90 text-title-sm font-semibold shadow-xs flex items-center gap-1.5 transition-colors"
+                              type="button"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">check</span>
+                              <span>Accept into Project</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Section 1: Problem Statement & Catchment Modeling */}
           <section className="bg-surface-container-lowest rounded-xl p-space-lg space-y-space-md shadow-sm">
@@ -471,63 +712,94 @@ export const ProjectDetailPage = () => {
                   <span className="material-symbols-outlined text-secondary text-[22px]">group_add</span>
                   <h2 className="font-headline-md text-headline-md text-on-surface">4. Open Consortium Roles</h2>
                 </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2 verified positions open for student researchers and engineers across Indian academic institutions</p>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Verified positions open for student researchers and engineers across Indian academic institutions
+                </p>
               </div>
-              <span className="px-2 py-1 rounded bg-secondary-container/40 text-on-secondary-container font-mono font-semibold text-label-sm">2 Vacancies</span>
+              <span className="px-2 py-1 rounded bg-secondary-container/40 text-on-secondary-container font-mono font-semibold text-label-sm">
+                {project.roles?.length || 2} Vacancies
+              </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-              {/* Role 1 Card */}
-              <div className="p-space-md rounded-lg bg-surface flex flex-col justify-between space-y-space-sm border border-surface-container-high">
-                <div className="space-y-space-xs">
-                  <div className="flex items-start justify-between">
-                    <span className="px-2 py-0.5 rounded bg-primary-fixed text-primary font-mono text-[10px] font-bold uppercase">Role #1 · Firmware</span>
-                    <span className="text-secondary font-mono text-[11px] font-semibold">Active Recruitment</span>
+              {(project.roles && project.roles.length > 0
+                ? project.roles
+                : [
+                    {
+                      id: "firmware-eng",
+                      title: "Embedded Firmware Engineer",
+                      description:
+                        "Design and optimize low-power deep sleep cycles (<15μA) on ESP32-S3 units. Implement adaptive data rate (ADR) algorithms for the 865-867 MHz band.",
+                      requiredSkills: ["C / C++", "FreeRTOS", "LoRaWAN", "Power Profiling"],
+                    },
+                    {
+                      id: "ml-researcher",
+                      title: "Hydrological ML Researcher",
+                      description:
+                        "Formulate physics-informed loss functions enforcing conservation of mass in graph neural networks. Map topological sewer culverts into PyTorch Geometric.",
+                      requiredSkills: ["PyTorch Geometric", "GNNs", "GIS / QGIS", "PINNs"],
+                    },
+                  ]
+              ).map((role, idx) => {
+                const hasApplied = applications.some(
+                  (a) => (a.roleId === role.id || a.role?.title === role.title) && a.applicantId === currentUser?.id
+                );
+
+                return (
+                  <div key={role.id || idx} className="p-space-md rounded-lg bg-surface flex flex-col justify-between space-y-space-sm border border-surface-container-high">
+                    <div className="space-y-space-xs">
+                      <div className="flex items-start justify-between">
+                        <span className="px-2 py-0.5 rounded bg-primary-fixed text-primary font-mono text-[10px] font-bold uppercase">
+                          Role #{idx + 1}
+                        </span>
+                        <span className="text-secondary font-mono text-[11px] font-semibold">Active Recruitment</span>
+                      </div>
+                      <h3 className="font-title-md text-title-md text-on-surface font-bold">{role.title}</h3>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                        {role.description}
+                      </p>
+                      {role.requiredSkills && role.requiredSkills.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pt-1">
+                          {role.requiredSkills.map((sk, sIdx) => (
+                            <span key={sIdx} className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">
+                              {sk}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="pt-space-xs flex items-center justify-between">
+                      <span className="font-label-sm text-label-sm text-outline">12–15 hrs/wk · Co-Authorship</span>
+                      {isProjectLead ? (
+                        <button
+                          onClick={() => setActiveTab("applications")}
+                          className="px-3 py-1.5 rounded bg-surface-container text-primary font-label-lg hover:bg-surface-container-high transition-colors flex items-center gap-1"
+                          type="button"
+                        >
+                          <span>Review Candidates</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
+                      ) : userMembership ? (
+                        <span className="px-3 py-1.5 rounded bg-secondary-container text-on-secondary-container font-mono text-xs font-semibold">
+                          Active Member
+                        </span>
+                      ) : hasApplied ? (
+                        <span className="px-3 py-1.5 rounded bg-surface-container-high text-primary font-mono text-xs font-semibold">
+                          Application Pending
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleOpenApplyModal(role)}
+                          className="px-3 py-1.5 rounded bg-primary-container text-on-primary font-label-lg text-label-lg hover:bg-primary transition-colors flex items-center gap-1"
+                          type="button"
+                        >
+                          <span>Apply for Role</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <h3 className="font-title-md text-title-md text-on-surface font-bold">Embedded Firmware Engineer</h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    Design and optimize low-power deep sleep cycles (&lt;15μA) on ESP32-S3 units. Implement adaptive data rate (ADR) algorithms for the 865-867 MHz band, antenna tuning for urban concrete attenuation, and sensor power management over FreeRTOS.
-                  </p>
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">C / C++</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">FreeRTOS</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">LoRaWAN</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">Power Profiling</span>
-                  </div>
-                </div>
-                <div className="pt-space-xs flex items-center justify-between">
-                  <span className="font-label-sm text-label-sm text-outline">12–15 hrs/wk · Co-Authorship</span>
-                  <button onClick={() => requestJoinProject(project.id)} className="px-3 py-1.5 rounded bg-primary-container text-on-primary font-label-lg text-label-lg hover:bg-primary transition-colors flex items-center gap-1" type="button">
-                    <span>Apply for Role</span>
-                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                  </button>
-                </div>
-              </div>
-              {/* Role 2 Card */}
-              <div className="p-space-md rounded-lg bg-surface flex flex-col justify-between space-y-space-sm border border-surface-container-high">
-                <div className="space-y-space-xs">
-                  <div className="flex items-start justify-between">
-                    <span className="px-2 py-0.5 rounded bg-surface-container-high text-primary font-mono text-[10px] font-bold uppercase">Role #2 · AI Modeling</span>
-                    <span className="text-secondary font-mono text-[11px] font-semibold">Active Recruitment</span>
-                  </div>
-                  <h3 className="font-title-md text-title-md text-on-surface font-bold">Hydrological ML Researcher</h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    Formulate physics-informed loss functions enforcing conservation of mass in graph neural networks. Map topological sewer culverts and street grids into PyTorch Geometric spatial graphs for sub-hourly watershed flow predictions.
-                  </p>
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">PyTorch Geometric</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">GNNs</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">GIS / QGIS</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono text-[10px]">PINNs</span>
-                  </div>
-                </div>
-                <div className="pt-space-xs flex items-center justify-between">
-                  <span className="font-label-sm text-label-sm text-outline">15 hrs/wk · IEEE Publication</span>
-                  <button onClick={() => requestJoinProject(project.id)} className="px-3 py-1.5 rounded bg-primary-container text-on-primary font-label-lg text-label-lg hover:bg-primary transition-colors flex items-center gap-1" type="button">
-                    <span>Apply for Role</span>
-                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                  </button>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </section>
 
@@ -773,7 +1045,7 @@ export const ProjectDetailPage = () => {
                     <p className="font-body-sm text-body-sm text-on-surface-variant">Focus: Low-power LoRa firmware & antenna calibration</p>
                   </div>
                 </div>
-                <button onClick={() => requestJoinProject(project.id)} className="px-3 py-1 bg-surface-container-lowest text-primary rounded font-label-sm text-label-sm hover:bg-surface-container transition-colors" type="button">
+                <button onClick={() => handleOpenApplyModal(project.roles?.[0])} className="px-3 py-1 bg-surface-container-lowest text-primary rounded font-label-sm text-label-sm hover:bg-surface-container transition-colors" type="button">
                   Review Role
                 </button>
               </div>
@@ -790,7 +1062,7 @@ export const ProjectDetailPage = () => {
                     <p className="font-body-sm text-body-sm text-on-surface-variant">Focus: Physics-informed loss & catchment spatial graph design</p>
                   </div>
                 </div>
-                <button onClick={() => requestJoinProject(project.id)} className="px-3 py-1 bg-surface-container-lowest text-primary rounded font-label-sm text-label-sm hover:bg-surface-container transition-colors" type="button">
+                <button onClick={() => handleOpenApplyModal(project.roles?.[1])} className="px-3 py-1 bg-surface-container-lowest text-primary rounded font-label-sm text-label-sm hover:bg-surface-container transition-colors" type="button">
                   Review Role
                 </button>
               </div>
@@ -946,6 +1218,79 @@ export const ProjectDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Apply for Role Modal Dialog */}
+      {applyModalRole && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button
+              onClick={() => setApplyModalRole(null)}
+              className="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-primary text-[22px]">assignment_ind</span>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                Apply for {applyModalRole.title}
+              </h3>
+            </div>
+            <p className="text-body-sm text-on-surface-variant mb-4">
+              Project: <span className="font-semibold text-primary">{project.title}</span>
+            </p>
+
+            {applyModalRole.requiredSkills && applyModalRole.requiredSkills.length > 0 && (
+              <div className="mb-4 p-3 bg-surface-container-low rounded-lg border border-surface-container">
+                <span className="text-label-sm font-semibold uppercase text-outline block mb-1">
+                  Required Role Skills:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {applyModalRole.requiredSkills.map((sk, idx) => (
+                    <span key={idx} className="px-2 py-0.5 rounded bg-surface-container font-mono text-xs text-primary font-medium">
+                      {sk}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleApplySubmit} className="space-y-4">
+              <div>
+                <label className="block text-label-sm font-semibold text-on-surface mb-1">
+                  Academic Pitch & Relevant Background
+                </label>
+                <textarea
+                  rows={4}
+                  value={pitchText}
+                  onChange={(e) => setPitchText(e.target.value)}
+                  placeholder="Describe your technical skills, relevant coursework, lab experience, or GitHub repos that make you a great fit..."
+                  className="w-full p-3 rounded-lg border border-outline-variant bg-surface text-on-surface font-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+                <button
+                  type="button"
+                  onClick={() => setApplyModalRole(null)}
+                  className="px-4 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isApplying}
+                  className="px-5 py-2 rounded-lg bg-primary text-on-primary hover:bg-primary/90 font-semibold text-label-md flex items-center gap-1.5 shadow-sm transition-colors"
+                >
+                  {isApplying ? "Submitting..." : "Submit Application"}
+                  <span className="material-symbols-outlined text-[16px]">send</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Monaco Code Workspace Modal */}
       <CodeEditorModal

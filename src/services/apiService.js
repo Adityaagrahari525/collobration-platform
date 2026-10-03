@@ -1,8 +1,6 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
-    ? "/api"
-    : "http://localhost:5000/api");
+  (typeof window !== "undefined" ? "/api" : "http://localhost:5000/api");
 
 let isRefreshing = false;
 
@@ -11,10 +9,14 @@ async function request(endpoint, options = {}, isRetry = false) {
     "Content-Type": "application/json",
   };
 
+  const token = typeof window !== "undefined" ? localStorage.getItem("campuslink_token") : null;
+  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+
   const config = {
     ...options,
     headers: {
       ...defaultHeaders,
+      ...authHeaders,
       ...options.headers,
     },
     credentials: "include", // Transmit HttpOnly cookies automatically
@@ -42,13 +44,18 @@ async function request(endpoint, options = {}, isRetry = false) {
           }
         } catch (refreshErr) {
           isRefreshing = false;
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("campuslink_token");
+          }
           throw new Error("Session expired. Please sign in again.");
         }
       }
     }
-
     if (!response.ok || !data.success) {
-      throw new Error(data.message || `HTTP error ${response.status}`);
+      const err = new Error(data.error?.message || data.message || `HTTP error ${response.status}`);
+      err.code = data.error?.code;
+      err.requestId = data.requestId;
+      throw err;
     }
 
     return data;
@@ -58,7 +65,7 @@ async function request(endpoint, options = {}, isRetry = false) {
 }
 
 export const apiService = {
-  // Institutions
+  // ─── INSTITUTIONS ──────────────────────────────────────────
   getInstitutions: async (search) => {
     const query = search ? `?search=${encodeURIComponent(search)}` : "";
     return request(`/institutions${query}`);
@@ -68,19 +75,29 @@ export const apiService = {
     return request(`/institutions/${id}`);
   },
 
-  // Auth
+  // ─── AUTHENTICATION ────────────────────────────────────────
   register: async (registerData) => {
-    return request("/auth/register", {
+    const res = await request("/auth/register", {
       method: "POST",
       body: JSON.stringify(registerData),
     });
+    const token = res?.data?.accessToken || res?.data?.token;
+    if (token && typeof window !== "undefined") {
+      localStorage.setItem("campuslink_token", token);
+    }
+    return res;
   },
 
   login: async (email, password) => {
-    return request("/auth/login", {
+    const res = await request("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
+    const token = res?.data?.accessToken || res?.data?.token;
+    if (token && typeof window !== "undefined") {
+      localStorage.setItem("campuslink_token", token);
+    }
+    return res;
   },
 
   getMe: async () => {
@@ -92,6 +109,10 @@ export const apiService = {
       await request("/auth/logout", { method: "POST" });
     } catch (e) {
       // Ignore network errors on logout
+    } finally {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("campuslink_token");
+      }
     }
   },
 
@@ -99,7 +120,7 @@ export const apiService = {
     return request("/auth/refresh", { method: "POST" });
   },
 
-  // User Profile & Account Management
+  // ─── USER PROFILE & DIRECTORY ──────────────────────────────
   getCurrentUser: async () => {
     return request("/users/me");
   },
@@ -123,7 +144,27 @@ export const apiService = {
     });
   },
 
-  // Skills
+  getPeople: async (params = {}) => {
+    const queryParams = new URLSearchParams();
+    if (params.search) queryParams.append("search", params.search);
+    if (params.role) queryParams.append("role", params.role);
+    if (params.institutionId) queryParams.append("institutionId", params.institutionId);
+    if (params.department) queryParams.append("department", params.department);
+    if (params.academicYear) queryParams.append("academicYear", params.academicYear);
+    if (params.skillId) queryParams.append("skillId", params.skillId);
+    if (params.availability) queryParams.append("availability", params.availability);
+    if (params.page) queryParams.append("page", params.page);
+    if (params.limit) queryParams.append("limit", params.limit);
+
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+    return request(`/users${queryString}`);
+  },
+
+  getPersonById: async (id) => {
+    return request(`/users/${id}`);
+  },
+
+  // ─── SKILLS ────────────────────────────────────────────────
   getSkills: async (search) => {
     const query = search ? `?search=${encodeURIComponent(search)}` : "";
     return request(`/skills${query}`);
@@ -146,28 +187,64 @@ export const apiService = {
     });
   },
 
-  // Directory / People
-  getPeople: async (params = {}) => {
-    const queryParams = new URLSearchParams();
-    if (params.search) queryParams.append("search", params.search);
-    if (params.role) queryParams.append("role", params.role);
-    if (params.institutionId) queryParams.append("institutionId", params.institutionId);
-    if (params.department) queryParams.append("department", params.department);
-    if (params.academicYear) queryParams.append("academicYear", params.academicYear);
-    if (params.skillId) queryParams.append("skillId", params.skillId);
-    if (params.availability) queryParams.append("availability", params.availability);
-    if (params.page) queryParams.append("page", params.page);
-    if (params.limit) queryParams.append("limit", params.limit);
-
-    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
-    return request(`/users${queryString}`);
+  // ─── PROJECTS & WORKSPACES ─────────────────────────────────
+  getProjects: async (search, domain, status) => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (domain) params.append("domain", domain);
+    if (status) params.append("status", status);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    return request(`/projects${queryString}`);
   },
 
-  getPersonById: async (id) => {
-    return request(`/users/${id}`);
+  getProjectById: async (id) => {
+    return request(`/projects/${id}`);
   },
 
-  // Questions & Answers Q&A
+  createProject: async (projectData) => {
+    return request("/projects", {
+      method: "POST",
+      body: JSON.stringify(projectData),
+    });
+  },
+
+  updateProject: async (id, projectData) => {
+    return request(`/projects/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(projectData),
+    });
+  },
+
+  deleteProject: async (id) => {
+    return request(`/projects/${id}`, {
+      method: "DELETE",
+    });
+  },
+
+  // ─── PROJECT APPLICATIONS & COLLABORATION ──────────────────
+  applyToProject: async (projectId, applicationData) => {
+    return request(`/projects/${projectId}/applications`, {
+      method: "POST",
+      body: JSON.stringify(applicationData),
+    });
+  },
+
+  getProjectApplications: async (projectId) => {
+    return request(`/projects/${projectId}/applications`);
+  },
+
+  updateApplicationStatus: async (applicationId, status) => {
+    return request(`/applications/${applicationId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  },
+
+  getMyApplications: async () => {
+    return request("/applications/me");
+  },
+
+  // ─── Q&A KNOWLEDGE EXCHANGE ────────────────────────────────
   getQuestions: async (search, department, tag) => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
@@ -207,6 +284,12 @@ export const apiService = {
     });
   },
 
+  bookmarkQuestion: async (id) => {
+    return request(`/questions/${id}/bookmark`, {
+      method: "POST",
+    });
+  },
+
   submitAnswer: async (questionId, content, proofDetails) => {
     return request(`/questions/${questionId}/answers`, {
       method: "POST",
@@ -214,16 +297,9 @@ export const apiService = {
     });
   },
 
-  updateAnswer: async (answerId, content) => {
-    return request(`/questions/answers/${answerId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ content }),
-    });
-  },
-
-  deleteAnswer: async (answerId) => {
-    return request(`/questions/answers/${answerId}`, {
-      method: "DELETE",
+  voteAnswer: async (answerId) => {
+    return request(`/questions/answers/${answerId}/vote`, {
+      method: "POST",
     });
   },
 
@@ -233,37 +309,147 @@ export const apiService = {
     });
   },
 
-  // Projects Workspace
-  getProjects: async (search, domain, status) => {
+  endorseAnswer: async (answerId) => {
+    return request(`/questions/answers/${answerId}/endorse`, {
+      method: "POST",
+    });
+  },
+
+  // ─── FACULTY MENTORSHIP ────────────────────────────────────
+  getMentorshipSlots: async (params = {}) => {
+    const query = new URLSearchParams();
+    if (params.mentorId) query.append("mentorId", params.mentorId);
+    if (params.status) query.append("status", params.status);
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    return request(`/mentorship/slots${qs}`);
+  },
+
+  createMentorshipSlot: async (slotData) => {
+    return request("/mentorship/slots", {
+      method: "POST",
+      body: JSON.stringify(slotData),
+    });
+  },
+
+  bookMentorshipSlot: async (slotId, purpose) => {
+    return request(`/mentorship/slots/${slotId}/book`, {
+      method: "POST",
+      body: JSON.stringify({ purpose }),
+    });
+  },
+
+  getMyMentorshipBookings: async () => {
+    return request("/mentorship/bookings");
+  },
+
+  updateMentorshipBookingStatus: async (bookingId, status) => {
+    return request(`/mentorship/bookings/${bookingId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  },
+
+  // ─── NOTIFICATIONS ─────────────────────────────────────────
+  getNotifications: async () => {
+    return request("/notifications");
+  },
+
+  markNotificationRead: async (id) => {
+    return request(`/notifications/${id}/read`, {
+      method: "PATCH",
+    });
+  },
+
+  markAllNotificationsRead: async () => {
+    return request("/notifications/read-all", {
+      method: "PATCH",
+    });
+  },
+
+  // ─── COMMUNITIES ───────────────────────────────────────────
+  getCommunities: async (search, category) => {
     const params = new URLSearchParams();
     if (search) params.append("search", search);
-    if (domain) params.append("domain", domain);
-    if (status) params.append("status", status);
-    const queryString = params.toString() ? `?${params.toString()}` : "";
-    return request(`/projects${queryString}`);
+    if (category) params.append("category", category);
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    return request(`/communities${qs}`);
   },
 
-  getProjectById: async (id) => {
-    return request(`/projects/${id}`);
+  getCommunityById: async (id) => {
+    return request(`/communities/${id}`);
   },
 
-  createProject: async (projectData) => {
-    return request("/projects", {
+  createCommunity: async (communityData) => {
+    return request("/communities", {
       method: "POST",
-      body: JSON.stringify(projectData),
+      body: JSON.stringify(communityData),
     });
   },
 
-  updateProject: async (id, projectData) => {
-    return request(`/projects/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(projectData),
+  joinCommunity: async (communityId) => {
+    return request(`/communities/${communityId}/join`, {
+      method: "POST",
     });
   },
 
-  deleteProject: async (id) => {
-    return request(`/projects/${id}`, {
+  leaveCommunity: async (communityId) => {
+    return request(`/communities/${communityId}/leave`, {
       method: "DELETE",
     });
+  },
+
+  // ─── MESSAGES & CHAT ───────────────────────────────────────
+  getConversations: async () => {
+    return request("/messages/conversations");
+  },
+
+  getMessages: async (conversationId) => {
+    return request(`/messages/conversations/${conversationId}`);
+  },
+
+  sendMessage: async (messageData) => {
+    return request("/messages/send", {
+      method: "POST",
+      body: JSON.stringify(messageData),
+    });
+  },
+
+  // ─── MATCHING & RECOMMENDATIONS ────────────────────────────
+  getRecommendedProjects: async () => {
+    return request("/matching/projects");
+  },
+
+  getRecommendedPeers: async () => {
+    return request("/matching/people");
+  },
+
+  getProjectCandidates: async (projectId) => {
+    return request(`/matching/projects/${projectId}/candidates`);
+  },
+
+  // ─── AI ASSISTANT & RAG ────────────────────────────────────
+  askAssistant: async (message) => {
+    return request("/assistant/chat", {
+      method: "POST",
+      body: JSON.stringify({ message }),
+    });
+  },
+
+  analyzeSkillGap: async (targetRole, currentSkills = []) => {
+    return request("/ai/skill-gap", {
+      method: "POST",
+      body: JSON.stringify({ targetRole, currentSkills }),
+    });
+  },
+
+  // ─── AUDIT OBSERVABILITY (ADMIN) ───────────────────────────
+  getAuditLogs: async (params = {}) => {
+    const q = new URLSearchParams();
+    if (params.page) q.append("page", params.page);
+    if (params.limit) q.append("limit", params.limit);
+    if (params.actorId) q.append("actorId", params.actorId);
+    if (params.action) q.append("action", params.action);
+    const qs = q.toString() ? `?${q.toString()}` : "";
+    return request(`/admin/audit-logs${qs}`);
   },
 };

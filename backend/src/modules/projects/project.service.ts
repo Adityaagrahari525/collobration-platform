@@ -1,5 +1,6 @@
-import { prisma } from "../../config/database";
+import prisma from "../../config/database";
 import { CreateProjectInput, UpdateProjectInput } from "../../validators/project.validator";
+import { ProjectStatus, MembershipStatus } from "@prisma/client";
 
 export class ProjectService {
   static async getProjects(search?: string, domain?: string, status?: string) {
@@ -10,7 +11,7 @@ export class ProjectService {
     }
 
     if (status) {
-      where.status = { contains: status, mode: "insensitive" };
+      where.status = status as ProjectStatus;
     }
 
     if (search) {
@@ -25,49 +26,105 @@ export class ProjectService {
       where,
       orderBy: { createdAt: "desc" },
       include: {
-        lead: {
+        owner: {
           include: {
             institution: true,
             profile: true,
           },
         },
         institution: true,
+        roles: true,
+        members: {
+          include: {
+            user: {
+              include: {
+                profile: true,
+              },
+            },
+            role: true,
+          },
+        },
       },
     });
 
-    return projects.map((p) => ({
-      id: p.id,
-      title: p.title,
-      description: p.description,
-      leadId: p.leadId,
-      leadName: p.lead ? `${p.lead.firstName} ${p.lead.lastName}` : "Lead Researcher",
-      leadRole: p.lead ? `${p.lead.profile?.academicYear || p.lead.role}, ${p.lead.institution.name}` : "IIT Delhi Researcher",
-      leadAvatar: p.lead?.profile?.avatarUrl || null,
-      institution: p.institution?.name || p.lead?.institution?.name || "IIT Delhi",
-      collaboratingInstitutions: p.collaboratingInstitutions || [p.institution?.name || "IIT Delhi"],
-      status: p.status || "Recruiting",
-      sprintPhase: p.sprintPhase || "Phase 1: Architecture",
-      domain: p.domain || "Research & Engineering",
-      openRoles: p.recruitingRoles || [],
-      recruitingRoles: p.recruitingRoles || [],
-      requiredSkills: p.requiredSkills || [],
-      teamMemberCount: p.teamMemberCount || 1,
-      createdAt: p.createdAt,
-      updatedAt: p.updatedAt,
-    }));
+    return projects.map((p) => {
+      const allRequiredSkills = Array.from(
+        new Set(p.roles.flatMap((r) => r.requiredSkills))
+      );
+
+      return {
+        id: p.id,
+        title: p.title,
+        description: p.description,
+        leadId: p.ownerId,
+        ownerId: p.ownerId,
+        leadName: p.owner ? `${p.owner.firstName} ${p.owner.lastName}` : "Lead Researcher",
+        leadRole: p.owner ? `${p.owner.profile?.academicYear || p.owner.role}, ${p.owner.institution?.name || "IIT Delhi"}` : "IIT Delhi Researcher",
+        leadAvatar: p.owner?.profile?.avatarUrl || null,
+        institution: p.institution?.name || p.owner?.institution?.name || "IIT Delhi",
+        collaboratingInstitutions: p.collaboratingInstitutions || [p.institution?.name || "IIT Delhi"],
+        status: p.status,
+        sprintPhase: p.sprintPhase || "Phase 1: Architecture",
+        domain: p.domain || "Research & Engineering",
+        roles: p.roles,
+        openRoles: p.roles.map((r) => r.title),
+        recruitingRoles: p.roles.map((r) => r.title),
+        requiredSkills: allRequiredSkills,
+        teamMemberCount: p.members.length || 1,
+        members: p.members,
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+      };
+    });
   }
 
   static async getProjectById(id: string) {
     const p = await prisma.project.findUnique({
       where: { id },
       include: {
-        lead: {
+        owner: {
           include: {
             institution: true,
             profile: true,
           },
         },
         institution: true,
+        roles: {
+          include: {
+            applications: {
+              include: {
+                applicant: {
+                  include: {
+                    profile: true,
+                    userSkills: { include: { skill: true } },
+                  },
+                },
+              },
+            },
+          },
+        },
+        members: {
+          include: {
+            user: {
+              include: {
+                profile: true,
+                institution: true,
+              },
+            },
+            role: true,
+          },
+        },
+        applications: {
+          include: {
+            role: true,
+            applicant: {
+              include: {
+                profile: true,
+                userSkills: { include: { skill: true } },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -77,23 +134,31 @@ export class ProjectService {
       throw error;
     }
 
+    const allRequiredSkills = Array.from(
+      new Set(p.roles.flatMap((r) => r.requiredSkills))
+    );
+
     return {
       id: p.id,
       title: p.title,
       description: p.description,
-      leadId: p.leadId,
-      leadName: p.lead ? `${p.lead.firstName} ${p.lead.lastName}` : "Lead Researcher",
-      leadRole: p.lead ? `${p.lead.profile?.academicYear || p.lead.role}, ${p.lead.institution.name}` : "IIT Delhi Researcher",
-      leadAvatar: p.lead?.profile?.avatarUrl || null,
-      institution: p.institution?.name || p.lead?.institution?.name || "IIT Delhi",
+      leadId: p.ownerId,
+      ownerId: p.ownerId,
+      leadName: p.owner ? `${p.owner.firstName} ${p.owner.lastName}` : "Lead Researcher",
+      leadRole: p.owner ? `${p.owner.profile?.academicYear || p.owner.role}, ${p.owner.institution?.name || "IIT Delhi"}` : "IIT Delhi Researcher",
+      leadAvatar: p.owner?.profile?.avatarUrl || null,
+      institution: p.institution?.name || p.owner?.institution?.name || "IIT Delhi",
       collaboratingInstitutions: p.collaboratingInstitutions || [p.institution?.name || "IIT Delhi"],
-      status: p.status || "Recruiting",
+      status: p.status,
       sprintPhase: p.sprintPhase || "Phase 1: Architecture",
       domain: p.domain || "Research & Engineering",
-      openRoles: p.recruitingRoles || [],
-      recruitingRoles: p.recruitingRoles || [],
-      requiredSkills: p.requiredSkills || [],
-      teamMemberCount: p.teamMemberCount || 1,
+      roles: p.roles,
+      openRoles: p.roles.map((r) => r.title),
+      recruitingRoles: p.roles.map((r) => r.title),
+      requiredSkills: allRequiredSkills,
+      teamMemberCount: p.members.length || 1,
+      members: p.members,
+      applications: p.applications,
       createdAt: p.createdAt,
       updatedAt: p.updatedAt,
     };
@@ -111,19 +176,49 @@ export class ProjectService {
       throw error;
     }
 
+    const statusValue = (input.status as ProjectStatus) || ProjectStatus.RECRUITING;
+
+    // Create roles array from recruitingRoles and requiredSkills
+    const initialRoles = (input.recruitingRoles && input.recruitingRoles.length > 0)
+      ? input.recruitingRoles.map((roleTitle) => ({
+          title: roleTitle,
+          description: `Collaborator role for ${roleTitle}`,
+          requiredSkills: input.requiredSkills || [],
+          slots: 1,
+        }))
+      : [
+          {
+            title: "Core Contributor",
+            description: "Lead developer and researcher",
+            requiredSkills: input.requiredSkills || [],
+            slots: 1,
+          },
+        ];
+
     const newProject = await prisma.project.create({
       data: {
         title: input.title,
         description: input.description,
-        leadId: userId,
+        ownerId: userId,
         institutionId: user.institutionId,
         domain: input.domain || "Research & Engineering",
         sprintPhase: input.sprintPhase || "Phase 1: Architecture",
-        status: input.status || "Recruiting",
-        recruitingRoles: input.recruitingRoles || [],
-        requiredSkills: input.requiredSkills || [],
-        collaboratingInstitutions: input.collaboratingInstitutions.length > 0 ? input.collaboratingInstitutions : [user.institution.name],
-        teamMemberCount: 1,
+        status: statusValue,
+        collaboratingInstitutions:
+          input.collaboratingInstitutions && input.collaboratingInstitutions.length > 0
+            ? input.collaboratingInstitutions
+            : [user.institution.name],
+        roles: {
+          create: initialRoles,
+        },
+        members: {
+          create: [
+            {
+              userId,
+              status: MembershipStatus.ACTIVE,
+            },
+          ],
+        },
       },
     });
 
@@ -133,7 +228,7 @@ export class ProjectService {
         userId,
         type: "PROJECT_CREATED",
         description: `Initiated research project: '${input.title.slice(0, 40)}'`,
-        points: 15,
+        points: 25,
       },
     }).catch(() => {});
 
@@ -148,7 +243,7 @@ export class ProjectService {
       throw error;
     }
 
-    if (existing.leadId !== userId && userRole !== "ADMIN") {
+    if (existing.ownerId !== userId && userRole !== "ADMIN") {
       const error: any = new Error("Permission denied to edit this project.");
       error.statusCode = 403;
       throw error;
@@ -161,9 +256,7 @@ export class ProjectService {
         ...(input.description && { description: input.description }),
         ...(input.domain && { domain: input.domain }),
         ...(input.sprintPhase && { sprintPhase: input.sprintPhase }),
-        ...(input.status && { status: input.status }),
-        ...(input.recruitingRoles && { recruitingRoles: input.recruitingRoles }),
-        ...(input.requiredSkills && { requiredSkills: input.requiredSkills }),
+        ...(input.status && { status: input.status as ProjectStatus }),
         ...(input.collaboratingInstitutions && { collaboratingInstitutions: input.collaboratingInstitutions }),
       },
     });
@@ -179,7 +272,7 @@ export class ProjectService {
       throw error;
     }
 
-    if (existing.leadId !== userId && userRole !== "ADMIN") {
+    if (existing.ownerId !== userId && userRole !== "ADMIN") {
       const error: any = new Error("Permission denied to delete this project.");
       error.statusCode = 403;
       throw error;

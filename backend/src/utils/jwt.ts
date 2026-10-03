@@ -7,6 +7,7 @@ export interface JwtPayload {
   userId: string;
   email: string;
   role: Role;
+  institutionId?: string;
 }
 
 export const generateAccessToken = (payload: JwtPayload): string => {

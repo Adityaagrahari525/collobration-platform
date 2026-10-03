@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 
 export interface CustomError extends Error {
   statusCode?: number;
+  code?: string;
 }
 
 export const errorHandler = (
@@ -12,10 +13,14 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (err instanceof ZodError) {
-    const message = err.errors.map((e) => e.message).join(", ");
+    const errorMessages = err.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
     return res.status(400).json({
       success: false,
-      message: `Validation Error: ${message}`,
+      error: {
+        code: "VALIDATION_ERROR",
+        message: `Validation Error: ${errorMessages}`,
+      },
+      requestId: req.id,
     });
   }
 
@@ -28,6 +33,10 @@ export const errorHandler = (
 
   return res.status(statusCode).json({
     success: false,
-    message,
+    error: {
+      code: err.code || "INTERNAL_SERVER_ERROR",
+      message,
+    },
+    requestId: req.id,
   });
 };

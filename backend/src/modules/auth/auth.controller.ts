@@ -34,6 +34,8 @@ export class AuthController {
         success: true,
         data: {
           user: result.user,
+          accessToken: result.accessToken,
+          token: result.accessToken,
           verificationDevToken: result.verificationDevToken,
         },
       });
@@ -55,6 +57,8 @@ export class AuthController {
         success: true,
         data: {
           user: result.user,
+          accessToken: result.accessToken,
+          token: result.accessToken,
         },
       });
     } catch (error) {

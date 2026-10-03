@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 
 export const Topbar = () => {
   const navigate = useNavigate();
+  const searchInputRef = useRef(null);
   const {
     currentUser,
     notifications,
@@ -30,6 +31,22 @@ export const Topbar = () => {
     }
     localStorage.setItem("campuslink_text_size", textSize);
   }, [textSize]);
+
+  // Global Keyboard Shortcuts (Cmd/Ctrl + K to focus search, Esc to close)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      } else if (e.key === "Escape") {
+        setSearchOpen(false);
+        setShowNotifications(false);
+        setShowProfileMenu(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -70,7 +87,7 @@ export const Topbar = () => {
     filteredCommunities.length > 0;
 
   return (
-    <header className="fixed top-0 left-[250px] right-0 h-16 bg-surface-container-lowest z-40 px-space-lg flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-surface-container-low">
+    <header className="fixed top-0 left-[250px] right-0 h-16 bg-surface-container-lowest/85 backdrop-blur-md z-40 px-space-lg flex items-center justify-between shadow-xs border-b border-surface-container-high/40 transition-all">
       {/* Global Search Bar */}
       <div className="flex-1 max-w-xl pr-space-md relative">
         <div className="relative flex items-center w-full">
@@ -78,7 +95,8 @@ export const Topbar = () => {
             search
           </span>
           <input
-            className="w-full h-10 pl-10 pr-20 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 transition-all"
+            ref={searchInputRef}
+            className="w-full h-10 pl-10 pr-20 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
             placeholder="Search questions, projects, people or skills..."
             type="text"
             value={searchTerm}
@@ -89,7 +107,7 @@ export const Topbar = () => {
             onFocus={() => setSearchOpen(true)}
           />
           <div className="absolute right-2.5 flex items-center">
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-label-sm font-label-sm text-on-surface-variant bg-surface-container-lowest rounded shadow-[0_1px_2px_rgba(0,0,0,0.08)] font-mono">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-label-sm font-label-sm text-on-surface-variant bg-surface-container-lowest border border-surface-container-high rounded shadow-xs font-mono">
               <span className="text-[11px]">⌘</span>K
             </kbd>
           </div>

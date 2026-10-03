@@ -1,4 +1,7 @@
-// Prisma Schema for CampusLink Academic Network
+// ============================================================================
+// CampusLink Academic Collaboration Network - Canonical Schema
+// Single Source of Truth: PostgreSQL / Supabase
+// ============================================================================
 
 generator client {
   provider = "prisma-client-js"
@@ -8,6 +11,8 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// ─── ENUMS ─────────────────────────────────────────────────────────────────
 
 enum Role {
   STUDENT
@@ -27,9 +32,62 @@ enum CollaborationMode {
   ON_CAMPUS
 }
 
+enum ProjectStatus {
+  DRAFT
+  RECRUITING
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  FORMER
+}
+
+enum MentorshipSlotStatus {
+  AVAILABLE
+  BOOKED
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum NotificationType {
+  PROJECT_APPLICATION
+  APPLICATION_ACCEPTED
+  APPLICATION_REJECTED
+  PROJECT_INVITATION
+  MENTORSHIP_BOOKED
+  MENTORSHIP_CANCELLED
+  QUESTION_ANSWERED
+  ANSWER_ACCEPTED
+  ANSWER_ENDORSED
+  NEW_MESSAGE
+  SYSTEM_ALERT
+}
+
+// ─── 1. INSTITUTIONS & CORE IDENTITY ──────────────────────────────────────
+
 model Institution {
   id          String   @id @default(uuid())
   name        String
+  code        String   @unique
   emailDomain String   @unique
   city        String
   state       String
@@ -39,8 +97,8 @@ model Institution {
   updatedAt   DateTime @updatedAt
 
   users       User[]
-  questions   Question[]
   projects    Project[]
+  questions   Question[]
   communities Community[]
 
   @@map("institutions")
@@ -59,42 +117,69 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  institution             Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institution             Institution              @relation(fields: [institutionId], references: [id], onDelete: Restrict)
   profile                 UserProfile?
-  skills                  UserSkill[]
+  userSkills              UserSkill[]
   refreshTokens           RefreshToken[]
   emailVerificationTokens EmailVerificationToken[]
+
+  // Projects
+  ownedProjects           Project[]                @relation("ProjectOwner")
+  projectApplications     ProjectApplication[]     @relation("ApplicantApplications")
+  projectMemberships      ProjectMember[]          @relation("UserProjectMemberships")
+
+  // Q&A
   questionsPosted         Question[]               @relation("QuestionAuthor")
   answersGiven            Answer[]                 @relation("AnswerAuthor")
-  facultyAnswersEndorsed  Answer[]                 @relation("AnswerFacultyEndorser")
-  projectsLed             Project[]                @relation("ProjectLead")
-  sentMessages            Message[]                @relation("MessageSender")
-  receivedMessages        Message[]                @relation("MessageReceiver")
+  facultyAnswersEndorsed  Answer[]                 @relation("FacultyEndorser")
+  questionVotes           QuestionVote[]
+  answerVotes             AnswerVote[]
+  questionBookmarks       QuestionBookmark[]
+
+  // Mentorship
+  mentorshipSlots         MentorshipSlot[]         @relation("MentorSlots")
+  mentorshipBookings      MentorshipBooking[]      @relation("StudentBookings")
+
+  // Social & Community
+  communityMemberships    CommunityMember[]
+  sentMessages            Message[]                @relation("SentMessages")
+  receivedMessages        Message[]                @relation("ReceivedMessages")
+  conversationMemberships ConversationMember[]
   notifications           Notification[]
   contributions           Contribution[]
+  badges                  UserBadge[]
+
+  // Observability & Auditing
+  auditLogs               AuditLog[]               @relation("ActorAuditLogs")
+  aiRequests              AIRequest[]
 
   @@index([email])
   @@index([institutionId])
   @@index([role])
   @@index([lastName, firstName])
+  @@index([createdAt])
   @@map("users")
 }
 
 model UserProfile {
-  id                        String             @id @default(uuid())
-  userId                    String             @unique
-  headline                  String?
-  department                String?
-  academicYear              String?
-  bio                       String?
-  avatarUrl                 String?
-  availability              String?
-  city                      String?
-  state                     String?
+  id                         String             @id @default(uuid())
+  userId                     String             @unique
+  headline                   String?
+  department                 String?
+  academicYear               String?
+  degree                     String?
+  bio                        String?
+  avatarUrl                  String?
+  availability               String?            @default("Weekends")
+  city                       String?
+  state                      String?
   preferredCollaborationMode CollaborationMode? @default(HYBRID)
-  isProfileComplete         Boolean            @default(false)
-  createdAt                 DateTime           @default(now())
-  updatedAt                 DateTime           @updatedAt
+  contributionScore          Int                @default(0)
+  xpPoints                   Int                @default(0)
+  currentStreak              Int                @default(0)
+  isProfileComplete          Boolean            @default(false)
+  createdAt                  DateTime           @default(now())
+  updatedAt                  DateTime           @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -159,122 +244,437 @@ model EmailVerificationToken {
   @@map("email_verification_tokens")
 }
 
+// ─── 2. PROJECTS & COLLABORATION WORKFLOW ───────────────────────────────────
+
+model Project {
+  id                        String        @id @default(uuid())
+  title                     String
+  description               String
+  ownerId                   String
+  institutionId             String
+  collaboratingInstitutions String[]      @default([])
+  status                    ProjectStatus @default(RECRUITING)
+  sprintPhase               String?
+  domain                    String?
+  teamSizeLimit             Int           @default(5)
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+
+  owner        User                 @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  institution  Institution          @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  roles        ProjectRole[]
+  applications ProjectApplication[]
+  members      ProjectMember[]
+
+  @@index([ownerId])
+  @@index([institutionId])
+  @@index([status])
+  @@index([domain])
+  @@index([createdAt])
+  @@map("projects")
+}
+
+model ProjectRole {
+  id             String   @id @default(uuid())
+  projectId      String
+  title          String
+  description    String?
+  requiredSkills String[] @default([])
+  slots          Int      @default(1)
+  createdAt      DateTime @default(now())
+
+  project      Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  applications ProjectApplication[]
+  members      ProjectMember[]
+
+  @@index([projectId])
+  @@map("project_roles")
+}
+
+model ProjectApplication {
+  id          String            @id @default(uuid())
+  projectId   String
+  roleId      String
+  applicantId String
+  pitch       String
+  status      ApplicationStatus @default(PENDING)
+  matchScore  Float?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  role      ProjectRole @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  applicant User        @relation("ApplicantApplications", fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, applicantId])
+  @@index([projectId])
+  @@index([applicantId])
+  @@index([roleId])
+  @@index([status])
+  @@map("project_applications")
+}
+
+model ProjectMember {
+  id        String           @id @default(uuid())
+  projectId String
+  userId    String
+  roleId    String?
+  status    MembershipStatus @default(ACTIVE)
+  joinedAt  DateTime         @default(now())
+
+  project Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User         @relation("UserProjectMemberships", fields: [userId], references: [id], onDelete: Cascade)
+  role    ProjectRole? @relation(fields: [roleId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+  @@map("project_members")
+}
+
+// ─── 3. Q&A KNOWLEDGE EXCHANGE ──────────────────────────────────────────────
+
 model Question {
   id            String   @id @default(uuid())
   title         String
   description   String
-  authorId      String?
-  institutionId String?
+  authorId      String
+  institutionId String
   department    String?
   subject       String?
   academicYear  String?
-  isAnonymous   Boolean? @default(false)
-  votes         Int?     @default(0)
-  viewsCount    Int?     @default(0)
-  tags          String[]
+  isAnonymous   Boolean  @default(false)
+  isResolved    Boolean  @default(false)
+  viewsCount    Int      @default(0)
+  tags          String[] @default([])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  author      User?        @relation("QuestionAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  author      User               @relation("QuestionAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  institution Institution        @relation(fields: [institutionId], references: [id], onDelete: Restrict)
   answers     Answer[]
+  votes       QuestionVote[]
+  bookmarks   QuestionBookmark[]
 
+  @@index([authorId])
+  @@index([institutionId])
+  @@index([department])
+  @@index([isResolved])
+  @@index([createdAt])
   @@map("questions")
 }
 
 model Answer {
   id                  String   @id @default(uuid())
   questionId          String
-  authorId            String?
+  authorId            String
   content             String
-  isFacultyEndorsed   Boolean? @default(false)
+  isFacultyEndorsed   Boolean  @default(false)
   endorsedByFacultyId String?
-  isAccepted          Boolean? @default(false)
-  upvotes             Int?     @default(0)
+  isAccepted          Boolean  @default(false)
   proofDetails        String?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
-  question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  author            User?    @relation("AnswerAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  endorsedByFaculty User?    @relation("AnswerFacultyEndorser", fields: [endorsedByFacultyId], references: [id], onDelete: Cascade)
+  question          Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  author            User         @relation("AnswerAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  endorsedByFaculty User?        @relation("FacultyEndorser", fields: [endorsedByFacultyId], references: [id], onDelete: SetNull)
+  votes             AnswerVote[]
 
+  @@index([questionId])
+  @@index([authorId])
+  @@index([isAccepted])
+  @@index([isFacultyEndorsed])
   @@map("answers")
 }
 
-model Project {
-  id                        String   @id @default(uuid())
-  title                     String
-  description               String
-  leadId                    String?
-  institutionId             String?
-  collaboratingInstitutions String[]
-  status                    String?  @default("Recruiting")
-  sprintPhase               String?
-  domain                    String?
-  recruitingRoles           String[]
-  requiredSkills            String[]
-  teamMemberCount           Int?     @default(1)
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+model QuestionVote {
+  id         String   @id @default(uuid())
+  questionId String
+  userId     String
+  createdAt  DateTime @default(now())
 
-  lead        User?        @relation("ProjectLead", fields: [leadId], references: [id], onDelete: Cascade)
-  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("projects")
+  @@unique([questionId, userId])
+  @@index([questionId])
+  @@index([userId])
+  @@map("question_votes")
 }
+
+model AnswerVote {
+  id        String   @id @default(uuid())
+  answerId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  answer Answer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([answerId, userId])
+  @@index([answerId])
+  @@index([userId])
+  @@map("answer_votes")
+}
+
+model QuestionBookmark {
+  id         String   @id @default(uuid())
+  questionId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, userId])
+  @@index([questionId])
+  @@index([userId])
+  @@map("question_bookmarks")
+}
+
+// ─── 4. MENTORSHIP & OFFICE HOURS ──────────────────────────────────────────
+
+model MentorshipSlot {
+  id              String               @id @default(uuid())
+  mentorId        String
+  topic           String
+  startAt         DateTime
+  endAt           DateTime
+  durationMinutes Int                  @default(30)
+  capacity        Int                  @default(1)
+  status          MentorshipSlotStatus @default(AVAILABLE)
+  meetingLink     String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  mentor   User                @relation("MentorSlots", fields: [mentorId], references: [id], onDelete: Cascade)
+  bookings MentorshipBooking[]
+
+  @@index([mentorId])
+  @@index([startAt])
+  @@index([status])
+  @@map("mentorship_slots")
+}
+
+model MentorshipBooking {
+  id        String        @id @default(uuid())
+  slotId    String
+  studentId String
+  purpose   String
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  slot    MentorshipSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  student User           @relation("StudentBookings", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([slotId, studentId])
+  @@index([slotId])
+  @@index([studentId])
+  @@index([status])
+  @@map("mentorship_bookings")
+}
+
+// ─── 5. COMMUNITIES & SOCIAL CHANNELS ──────────────────────────────────────
 
 model Community {
   id            String   @id @default(uuid())
   name          String
   description   String
   institutionId String?
-  memberCount   Int?     @default(1)
   category      String?
+  avatarUrl     String?
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  institution Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institution Institution?      @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  members     CommunityMember[]
 
+  @@index([institutionId])
+  @@index([category])
   @@map("communities")
 }
 
-model Notification {
+model CommunityMember {
+  id          String   @id @default(uuid())
+  communityId String
+  userId      String
+  role        String   @default("MEMBER") // OWNER, MODERATOR, MEMBER
+  joinedAt    DateTime @default(now())
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, userId])
+  @@index([communityId])
+  @@index([userId])
+  @@map("community_members")
+}
+
+// ─── 6. MESSAGING & CONVERSATIONS ──────────────────────────────────────────
+
+model Conversation {
   id        String   @id @default(uuid())
-  userId    String
-  title     String
-  message   String
-  type      String?
-  link      String?
-  read      Boolean  @default(false)
+  title     String?
+  isGroup   Boolean  @default(false)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members  ConversationMember[]
+  messages Message[]
 
-  @@map("notifications")
+  @@map("conversations")
+}
+
+model ConversationMember {
+  id             String    @id @default(uuid())
+  conversationId String
+  userId         String
+  lastReadAt     DateTime?
+  joinedAt       DateTime  @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([conversationId])
+  @@index([userId])
+  @@map("conversation_members")
 }
 
 model Message {
-  id         String   @id @default(uuid())
-  senderId   String
-  receiverId String
-  text       String
-  createdAt  DateTime @default(now())
+  id             String   @id @default(uuid())
+  conversationId String?
+  senderId       String
+  receiverId     String?
+  text           String
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
 
-  sender   User @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User?         @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: SetNull)
 
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
   @@map("messages")
 }
+
+// ─── 7. NOTIFICATIONS ──────────────────────────────────────────────────────
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  type       NotificationType
+  title      String
+  message    String
+  link       String?
+  entityType String?
+  entityId   String?
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+  createdAt  DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// ─── 8. REPUTATION, BADGES & CONTRIBUTIONS ─────────────────────────────────
 
 model Contribution {
   id          String   @id @default(uuid())
   userId      String
   type        String
   description String
-  points      Int
+  points      Int      @default(0)
   createdAt   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([createdAt])
   @@map("contributions")
+}
+
+model Badge {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String
+  icon        String?
+  createdAt   DateTime @default(now())
+
+  users UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String
+  badgeId   String
+  awardedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+  @@map("user_badges")
+}
+
+// ─── 9. AUDIT & AI OBSERVABILITY ───────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  requestId  String
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  ipHash     String?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation("ActorAuditLogs", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([requestId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model AIRequest {
+  id           String    @id @default(uuid())
+  userId       String?
+  requestId    String
+  provider     String    @default("GEMINI")
+  model        String
+  requestType  String    // CHAT, SKILL_GAP, MATCH_EXPLANATION
+  status       String    // SUCCESS, FAILED, RATE_LIMITED
+  inputTokens  Int       @default(0)
+  outputTokens Int       @default(0)
+  latencyMs    Int       @default(0)
+  retryCount   Int       @default(0)
+  errorCode    String?
+  createdAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([requestId])
+  @@index([requestType])
+  @@index([createdAt])
+  @@map("ai_requests")
 }

@@ -1,12 +1,28 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import {
+  GraduationCap,
+  LayoutDashboard,
+  HelpCircle,
+  FolderGit2,
+  Users,
+  MessageSquare,
+  Bookmark,
+  Trophy,
+  BarChart3,
+  Settings,
+  BookOpen,
+  BadgeCheck,
+  MessagesSquare,
+  Network
+} from "lucide-react";
 import { useApp } from "../context/AppContext";
 
 export const Sidebar = () => {
   const { currentUser } = useApp();
 
   const getNavLinkClass = ({ isActive }) =>
-    `flex items-center justify-between px-3 py-2 rounded-lg transition-all font-body-md text-body-md ${
+    `flex items-center justify-between px-3 py-2 rounded-lg transition-all font-body-md text-body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
       isActive
         ? "bg-primary-container text-on-primary font-semibold shadow-xs"
         : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
@@ -18,16 +34,14 @@ export const Sidebar = () => {
       <div className="h-16 px-4 flex items-center justify-between bg-surface-container-lowest border-b border-surface-container-low shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shrink-0 shadow-xs">
-            <span className="material-symbols-outlined text-[20px]">account_balance</span>
+            <GraduationCap className="w-5 h-5 text-on-primary" />
           </div>
           <div className="flex flex-col justify-center min-w-0">
             <span className="text-[18px] font-bold text-primary tracking-tight leading-snug">CampusLink</span>
             <span className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider leading-tight">Academic Consortium</span>
           </div>
         </div>
-        <span className="material-symbols-outlined text-[18px] text-secondary shrink-0" title="Verified Academic Consortium Node">
-          verified
-        </span>
+        <BadgeCheck className="w-4 h-4 text-secondary shrink-0" title="Verified Academic Consortium Node" />
       </div>
 
       {/* Mesh Status */}
@@ -52,31 +66,31 @@ export const Sidebar = () => {
           <nav className="space-y-0.5">
             <NavLink to="/dashboard" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">dashboard</span>
+                <LayoutDashboard className="w-4 h-4" />
                 <span>Dashboard</span>
               </div>
             </NavLink>
             <NavLink to="/questions" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">quiz</span>
+                <HelpCircle className="w-4 h-4" />
                 <span>Questions</span>
               </div>
             </NavLink>
             <NavLink to="/projects" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">menu_book</span>
+                <FolderGit2 className="w-4 h-4" />
                 <span>Projects</span>
               </div>
             </NavLink>
             <NavLink to="/people" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">groups</span>
+                <Users className="w-4 h-4" />
                 <span>Peers &amp; Mentors</span>
               </div>
             </NavLink>
             <NavLink to="/communities" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">forum</span>
+                <MessagesSquare className="w-4 h-4" />
                 <span>Communities</span>
               </div>
             </NavLink>
@@ -93,19 +107,19 @@ export const Sidebar = () => {
           <nav className="space-y-0.5">
             <NavLink to="/profile" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">help_center</span>
+                <HelpCircle className="w-4 h-4" />
                 <span>My Q&amp;A</span>
               </div>
             </NavLink>
             <NavLink to="/profile" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">bookmark</span>
+                <Bookmark className="w-4 h-4" />
                 <span>Saved References</span>
               </div>
             </NavLink>
             <NavLink to="/mentorship" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">hub</span>
+                <Network className="w-4 h-4" />
                 <span>Collaboration Teams</span>
               </div>
             </NavLink>
@@ -113,7 +127,7 @@ export const Sidebar = () => {
               {({ isActive }) => (
                 <>
                   <div className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[19px]">chat_bubble</span>
+                    <MessageSquare className="w-4 h-4" />
                     <span>Messages</span>
                   </div>
                   {isActive && <span className="w-2 h-2 rounded-full bg-secondary shrink-0"></span>}
@@ -122,13 +136,13 @@ export const Sidebar = () => {
             </NavLink>
             <NavLink to="/recognition" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">military_tech</span>
+                <Trophy className="w-4 h-4" />
                 <span>Recognition</span>
               </div>
             </NavLink>
             <NavLink to="/contribution" className={getNavLinkClass}>
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[19px]">analytics</span>
+                <BarChart3 className="w-4 h-4" />
                 <span>My Contribution</span>
               </div>
             </NavLink>
@@ -143,9 +157,7 @@ export const Sidebar = () => {
             <span className="font-label-sm text-[11px] font-bold uppercase tracking-wider text-primary">
               IIT Delhi Node
             </span>
-            <span className="material-symbols-outlined text-[15px] text-secondary" title="Authenticated via .ac.in">
-              verified
-            </span>
+            <BadgeCheck className="w-3.5 h-3.5 text-secondary" title="Authenticated via .ac.in" />
           </div>
           <p className="font-label-sm text-[11px] text-on-surface-variant mt-0.5">
             Authenticated via .ac.in credentials
@@ -156,27 +168,27 @@ export const Sidebar = () => {
           <NavLink
             to="/settings"
             className={({ isActive }) =>
-              `flex items-center gap-2.5 px-3 py-1.5 rounded-lg transition-colors font-body-sm text-body-sm ${
+              `flex items-center gap-2.5 px-3 py-1.5 rounded-lg transition-colors font-body-sm text-body-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                 isActive
                   ? "bg-primary-container text-on-primary font-semibold"
                   : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`
             }
           >
-            <span className="material-symbols-outlined text-[18px]">settings</span>
+            <Settings className="w-4 h-4" />
             <span>Institutional Settings</span>
           </NavLink>
           <NavLink
             to="/help"
             className={({ isActive }) =>
-              `flex items-center gap-2.5 px-3 py-1.5 rounded-lg transition-colors font-body-sm text-body-sm ${
+              `flex items-center gap-2.5 px-3 py-1.5 rounded-lg transition-colors font-body-sm text-body-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                 isActive
                   ? "bg-primary-container text-on-primary font-semibold"
                   : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`
             }
           >
-            <span className="material-symbols-outlined text-[18px]">help_center</span>
+            <BookOpen className="w-4 h-4" />
             <span>Scholarly Guidelines</span>
           </NavLink>
         </nav>
@@ -184,4 +196,5 @@ export const Sidebar = () => {
     </aside>
   );
 };
+
 

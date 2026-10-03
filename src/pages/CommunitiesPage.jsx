@@ -4,10 +4,9 @@ import { useApp } from "../context/AppContext";
 
 export const CommunitiesPage = () => {
   const navigate = useNavigate();
-  const { communities, joinCommunity } = useApp();
+  const { communities, joinCommunity, leaveCommunity } = useApp();
   const [selectedDiscipline, setSelectedDiscipline] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [joinedHubs, setJoinedHubs] = useState({});
 
   const disciplines = [
     "1. All Communities",
@@ -23,10 +22,30 @@ export const CommunitiesPage = () => {
     "11. Civil"
   ];
 
-  const handleJoin = (id) => {
-    setJoinedHubs((prev) => ({ ...prev, [id]: !prev[id] }));
-    if (joinCommunity) {
-      joinCommunity(id);
+  const safeCommunities = Array.isArray(communities) ? communities : [];
+  const filteredCommunities = safeCommunities.filter((c) => {
+    if (selectedDiscipline > 0) {
+      const discRaw = disciplines[selectedDiscipline].replace(/^\d+\.\s*/, "").toLowerCase();
+      const cat = (c.category || "").toLowerCase();
+      if (!cat.includes(discRaw) && !discRaw.includes(cat)) {
+        return false;
+      }
+    }
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (c.name && c.name.toLowerCase().includes(q)) ||
+      (c.description && c.description.toLowerCase().includes(q)) ||
+      (c.category && c.category.toLowerCase().includes(q)) ||
+      (c.institution && typeof c.institution === "string" && c.institution.toLowerCase().includes(q))
+    );
+  });
+
+  const handleToggleJoin = async (c) => {
+    if (c.isMember) {
+      if (leaveCommunity) await leaveCommunity(c.id);
+    } else {
+      if (joinCommunity) await joinCommunity(c.id);
     }
   };
 
@@ -142,233 +161,85 @@ export const CommunitiesPage = () => {
       {/* Communities Card Catalog */}
       <section className="w-full bg-surface max-w-[1280px] mx-auto px-space-lg pb-space-xl">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
-          {/* Card 1: AI / ML */}
-          <article className="bg-surface-container-lowest rounded shadow-sm p-space-md flex flex-col justify-between hover:shadow-md transition-shadow border border-surface-container-high">
-            <div className="space-y-space-sm">
-              <div className="flex items-center justify-between gap-space-xs">
-                <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider bg-surface-container px-2 py-0.5 rounded">AI / ML</span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[13px] text-secondary">update</span>
-                  Active 12m ago
-                </span>
-              </div>
-              <div>
-                <h2 className="font-headline-sm text-headline-sm text-on-surface leading-snug">AI / ML & Neural Systems</h2>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
-                  Theoretical foundations of deep representations, efficient model quantization, foundational diffusion mechanics, and alignment research.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-2 bg-surface-container-low p-space-sm rounded">
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Scholars Active</div>
-                  <div className="font-title-sm text-title-sm text-primary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">groups</span>
-                    1,420 Verified
-                  </div>
-                </div>
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Open Inquiries</div>
-                  <div className="font-title-sm text-title-sm text-tertiary-container flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">help_center</span>
-                    14 Pending Review
-                  </div>
-                </div>
-              </div>
-              <div className="bg-surface-container-highest/60 p-2 rounded flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px] mt-0.5">science</span>
-                <div className="min-w-0">
-                  <div className="font-label-sm text-label-sm font-semibold text-primary uppercase tracking-wide">Hot Topic</div>
-                  <div className="font-body-sm text-body-sm text-on-surface truncate">Quantized LoRA on Edge GPUs for Edge Deployments</div>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <div className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Lead Investigators</div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-primary-container text-surface-container-lowest font-label-sm text-label-sm flex items-center justify-center shrink-0">RR</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Dr. R. Ramanathan</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">IISc</span>
-                    </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">4,180 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-primary text-surface-container-lowest font-label-sm text-label-sm flex items-center justify-center shrink-0">AS</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Aditya Sharma</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">IIT Delhi</span>
-                    </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">2,840 pts</span>
-                  </div>
-                </div>
-              </div>
+          {filteredCommunities.length === 0 ? (
+            <div className="col-span-full bg-surface-container-lowest p-space-xl rounded text-center border border-surface-container-high shadow-sm space-y-2">
+              <span className="material-symbols-outlined text-4xl text-outline">hub</span>
+              <h3 className="font-title-lg text-title-lg text-on-surface font-semibold">No communities found</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Try selecting "All Communities" or adjust your search term.
+              </p>
             </div>
-            <div className="pt-space-md mt-space-md bg-surface-container-lowest flex items-center justify-between gap-space-sm border-t border-surface-container-low">
-              <button
-                onClick={() => handleJoin("aiml")}
-                className={`px-space-md py-1.5 rounded font-label-md text-label-md transition-colors shadow-sm ${
-                  joinedHubs["aiml"] ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary hover:bg-primary-container"
-                }`}
-              >
-                {joinedHubs["aiml"] ? "Joined Hub ✓" : "Join Hub"}
-              </button>
-              <a onClick={(e) => { e.preventDefault(); navigate("/questions"); }} className="font-label-md text-label-md text-primary hover:text-primary-container flex items-center gap-1 font-semibold cursor-pointer" href="#discourse">
-                Explore Discourse <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
-            </div>
-          </article>
+          ) : (
+            filteredCommunities.map((c) => {
+              const institutionName = typeof c.institution === "string" ? c.institution : (c.institution?.name || "Academic Consortium");
 
-          {/* Card 2: Cybersecurity */}
-          <article className="bg-surface-container-lowest rounded shadow-sm p-space-md flex flex-col justify-between hover:shadow-md transition-shadow border border-surface-container-high">
-            <div className="space-y-space-sm">
-              <div className="flex items-center justify-between gap-space-xs">
-                <span className="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider bg-surface-container px-2 py-0.5 rounded">Cybersecurity</span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[13px] text-secondary">update</span>
-                  Active 35m ago
-                </span>
-              </div>
-              <div>
-                <h2 className="font-headline-sm text-headline-sm text-on-surface leading-snug">Cybersecurity & Cryptographic Verification</h2>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
-                  Post-quantum lattice primitives, formal software verification, zero-knowledge systems, and hardware-enforced isolation.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-2 bg-surface-container-low p-space-sm rounded">
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Scholars Active</div>
-                  <div className="font-title-sm text-title-sm text-primary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">groups</span>
-                    890 Researchers
-                  </div>
-                </div>
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Open Inquiries</div>
-                  <div className="font-title-sm text-title-sm text-secondary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                    6 Awaiting Review
-                  </div>
-                </div>
-              </div>
-              <div className="bg-surface-container-highest/60 p-2 rounded flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px] mt-0.5">terminal</span>
-                <div className="min-w-0">
-                  <div className="font-label-sm text-label-sm font-semibold text-primary uppercase tracking-wide">Recent RFC</div>
-                  <div className="font-body-sm text-body-sm text-on-surface truncate">Post-Quantum TLS 1.3 Key Exchange Benchmark Audit</div>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <div className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Lead Investigators</div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-primary text-surface-container-lowest font-label-sm text-label-sm flex items-center justify-center shrink-0">VK</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Prof. V. Krishna</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">IIT Madras</span>
+              return (
+                <article
+                  key={c.id}
+                  className="bg-surface-container-lowest rounded shadow-sm p-space-md flex flex-col justify-between hover:shadow-md transition-shadow border border-surface-container-high"
+                >
+                  <div className="space-y-space-sm">
+                    <div className="flex items-center justify-between gap-space-xs">
+                      <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider bg-surface-container px-2 py-0.5 rounded">
+                        {c.category || "General Academic"}
+                      </span>
+                      <span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[13px] text-secondary">verified</span>
+                        {institutionName}
+                      </span>
                     </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">5,310 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center justify-center shrink-0">PV</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Priya V.</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">BITS Pilani</span>
-                    </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">1,920 pts</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="pt-space-md mt-space-md bg-surface-container-lowest flex items-center justify-between gap-space-sm border-t border-surface-container-low">
-              <button
-                onClick={() => handleJoin("cyber")}
-                className={`px-space-md py-1.5 rounded font-label-md text-label-md transition-colors shadow-sm ${
-                  joinedHubs["cyber"] ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary hover:bg-primary-container"
-                }`}
-              >
-                {joinedHubs["cyber"] ? "Joined Hub ✓" : "Join Hub"}
-              </button>
-              <a onClick={(e) => { e.preventDefault(); navigate("/questions"); }} className="font-label-md text-label-md text-primary hover:text-primary-container flex items-center gap-1 font-semibold cursor-pointer" href="#discourse">
-                Explore Discourse <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
-            </div>
-          </article>
 
-          {/* Card 3: Embedded Systems & Hardware */}
-          <article className="bg-surface-container-lowest rounded shadow-sm p-space-md flex flex-col justify-between hover:shadow-md transition-shadow border border-surface-container-high">
-            <div className="space-y-space-sm">
-              <div className="flex items-center justify-between gap-space-xs">
-                <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider bg-surface-container px-2 py-0.5 rounded">Electronics</span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[13px] text-secondary">update</span>
-                  Active 1h ago
-                </span>
-              </div>
-              <div>
-                <h2 className="font-headline-sm text-headline-sm text-on-surface leading-snug">Embedded Systems & IoT Hardware</h2>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
-                  RISC-V silicon architectures, real-time operating systems (RTOS), ultra-low power sensor nets, and industrial FPGA synthesis.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-2 bg-surface-container-low p-space-sm rounded">
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Scholars Active</div>
-                  <div className="font-title-sm text-title-sm text-primary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">groups</span>
-                    760 Engineers
-                  </div>
-                </div>
-                <div className="space-y-0.5">
-                  <div className="font-label-sm text-label-sm text-on-surface-variant">Open Inquiries</div>
-                  <div className="font-title-sm text-title-sm text-tertiary-container flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">help_center</span>
-                    19 Queries
-                  </div>
-                </div>
-              </div>
-              <div className="bg-surface-container-highest/60 p-2 rounded flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px] mt-0.5">memory</span>
-                <div className="min-w-0">
-                  <div className="font-label-sm text-label-sm font-semibold text-primary uppercase tracking-wide">Hot Circuit</div>
-                  <div className="font-body-sm text-body-sm text-on-surface truncate">Custom SHAKTI RISC-V SoC for Agritech Telemetry</div>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <div className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Lead Investigators</div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-primary-container text-surface-container-lowest font-label-sm text-label-sm flex items-center justify-center shrink-0">NM</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Dr. N. Mukhopadhyay</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">IIT Bombay</span>
+                    <div>
+                      <h2 className="font-headline-sm text-headline-sm text-on-surface leading-snug">{c.name}</h2>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-3">
+                        {c.description}
+                      </p>
                     </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">3,490 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between text-body-sm">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center justify-center shrink-0">AK</div>
-                      <span className="font-body-sm text-body-sm text-on-surface truncate">Anand K. Rao</span>
-                      <span className="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-1 rounded">IIT Roorkee</span>
+
+                    <div className="grid grid-cols-2 gap-2 bg-surface-container-low p-space-sm rounded">
+                      <div className="space-y-0.5">
+                        <div className="font-label-sm text-label-sm text-on-surface-variant">Scholars Enrolled</div>
+                        <div className="font-title-sm text-title-sm text-primary flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[16px]">groups</span>
+                          {c.memberCount || 1} Verified
+                        </div>
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="font-label-sm text-label-sm text-on-surface-variant">Consortium Node</div>
+                        <div className="font-title-sm text-title-sm text-secondary truncate flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[16px]">school</span>
+                          {institutionName}
+                        </div>
+                      </div>
                     </div>
-                    <span className="font-label-sm text-label-sm font-semibold text-primary shrink-0">2,110 pts</span>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="pt-space-md mt-space-md bg-surface-container-lowest flex items-center justify-between gap-space-sm border-t border-surface-container-low">
-              <button
-                onClick={() => handleJoin("embed")}
-                className={`px-space-md py-1.5 rounded font-label-md text-label-md transition-colors shadow-sm ${
-                  joinedHubs["embed"] ? "bg-secondary-container text-on-secondary-container" : "bg-primary text-on-primary hover:bg-primary-container"
-                }`}
-              >
-                {joinedHubs["embed"] ? "Joined Hub ✓" : "Join Hub"}
-              </button>
-              <a onClick={(e) => { e.preventDefault(); navigate("/questions"); }} className="font-label-md text-label-md text-primary hover:text-primary-container flex items-center gap-1 font-semibold cursor-pointer" href="#discourse">
-                Explore Discourse <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
-            </div>
-          </article>
+
+                  <div className="pt-space-md mt-space-md bg-surface-container-lowest flex items-center justify-between gap-space-sm border-t border-surface-container-low">
+                    <button
+                      onClick={() => handleToggleJoin(c)}
+                      className={`px-space-md py-1.5 rounded font-label-md text-label-md transition-colors shadow-sm ${
+                        c.isMember
+                          ? "bg-secondary-container text-on-secondary-container font-semibold"
+                          : "bg-primary text-on-primary hover:bg-primary-container font-semibold"
+                      }`}
+                    >
+                      {c.isMember ? "Joined Hub ✓" : "Join Hub"}
+                    </button>
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/questions");
+                      }}
+                      className="font-label-md text-label-md text-primary hover:text-primary-container flex items-center gap-1 font-semibold cursor-pointer"
+                      href="#discourse"
+                    >
+                      Explore Q&A <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
+                  </div>
+                </article>
+              );
+            })
+          )}
         </div>
 
         {/* Paginated Navigation & Archival Pagination */}

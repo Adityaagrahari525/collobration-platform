@@ -7,14 +7,14 @@ export const RegisterPage = () => {
   const navigate = useNavigate();
   const { register } = useApp();
 
-  const [fullName, setFullName] = useState("Aarav Sharma");
-  const [email, setEmail] = useState("scholar@iitd.ac.in");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [institutionId, setInstitutionId] = useState("");
   const [institutionsList, setInstitutionsList] = useState([]);
   const [department, setDepartment] = useState("Department of Computer Science & Engineering");
   const [role, setRole] = useState("student");
-  const [password, setPassword] = useState("password123");
-  const [confirmPassword, setConfirmPassword] = useState("password123");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

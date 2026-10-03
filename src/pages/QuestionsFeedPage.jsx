@@ -10,12 +10,17 @@ export const QuestionsFeedPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredQuestions = questions.filter((q) => {
+    if (activeTab === "unanswered" && ((q.answersCount || 0) > 0 || (q.answers && q.answers.length > 0))) return false;
+    if (activeTab === "endorsed" && !q.isFacultyEndorsed) return false;
     if (!searchQuery) return true;
     return (
-      q.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      q.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       q.tags?.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+  }).sort((a, b) => {
+    if (activeTab === "trending") return (b.votes || 0) - (a.votes || 0);
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
   });
 
   return (
@@ -223,301 +228,112 @@ export const QuestionsFeedPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
         {/* Questions List (9 Columns) */}
         <div className="lg:col-span-9 space-y-space-sm">
-          {/* Question Item 1 */}
-          <article className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high">
-            <div className="flex flex-col sm:flex-row gap-space-md">
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
-                <div className="flex sm:flex-col items-center sm:items-end gap-1">
-                  <span className="font-title-md text-title-md text-on-surface font-bold">48</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
-                </div>
-                <div className="bg-secondary text-on-secondary px-2 py-1 rounded text-center sm:w-full">
-                  <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">verified</span>
-                    6
-                  </div>
-                  <div className="font-label-sm text-label-sm leading-none text-white/90">Faculty Endorsed</div>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant">1.4k views</div>
-              </div>
-
-              <div className="flex-1 space-y-2 min-w-0">
-                <div>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/questions/q1");
-                    }}
-                    className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
-                    href="#"
-                  >
-                    How does Raft handle leader partition during uncommitted log replication under high network jitter?
-                  </a>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
-                    In our lab implementation of Raft consensus in Rust, when the leader network is partitioned after appending log entries to a minority of nodes but before receiving the quorum ack, split-vote cycles occur repeatedly...
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">distributed-systems</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">raft-consensus</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">rust</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">fault-tolerance</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
-                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
-                    <span className="material-symbols-outlined text-[16px]">stars</span>
-                    <span>Endorsed by Prof. R. Ramanathan (IIT Madras)</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                    <div className="w-5 h-5 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-[10px]">DS</div>
-                    <span className="font-semibold text-on-surface">Devavrat Saxena</span>
-                    <span>•</span>
-                    <span className="bg-surface-container px-1 rounded text-primary">Ph.D. Scholar @ IIT Delhi</span>
-                    <span>•</span>
-                    <span>asked 3 hours ago</span>
-                  </div>
-                </div>
-              </div>
+          {filteredQuestions.length === 0 ? (
+            <div className="bg-surface-container-lowest rounded-lg p-space-xl text-center border border-surface-container-high shadow-sm space-y-3">
+              <span className="material-symbols-outlined text-4xl text-outline">help_outline</span>
+              <h3 className="font-title-lg text-title-lg text-on-surface font-semibold">No questions found</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+                No academic inquiries match your current filters. Post a question to start a consortium discussion!
+              </p>
+              <button
+                onClick={() => navigate("/questions/ask")}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded font-title-sm shadow-sm hover:bg-primary-container"
+              >
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                <span>Ask Question</span>
+              </button>
             </div>
-          </article>
+          ) : (
+            filteredQuestions.map((q) => {
+              const answersCount = q.answersCount !== undefined ? q.answersCount : (q.answers?.length || 0);
+              const authorName = q.isAnonymous ? "Anonymous Scholar" : (q.author?.name || `${q.author?.firstName || ""} ${q.author?.lastName || ""}`.trim() || q.authorName || "Consortium Scholar");
+              const authorInstitution = q.author?.institution || q.author?.institutionDetail?.name || q.department || "Academic Consortium";
 
-          {/* Question Item 2 */}
-          <article className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high">
-            <div className="flex flex-col sm:flex-row gap-space-md">
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
-                <div className="flex sm:flex-col items-center sm:items-end gap-1">
-                  <span className="font-title-md text-title-md text-on-surface font-bold">31</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
-                </div>
-                <div className="bg-surface-container text-secondary px-2 py-1 rounded text-center sm:w-full">
-                  <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">verified</span>
-                    4
+              return (
+                <article
+                  key={q.id}
+                  className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high"
+                >
+                  <div className="flex flex-col sm:flex-row gap-space-md">
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          voteQuestion(q.id);
+                        }}
+                        className={`flex sm:flex-col items-center sm:items-end gap-1 px-2.5 py-1 rounded transition-colors ${
+                          q.userVoted ? "bg-primary text-on-primary font-bold" : "hover:bg-surface-container-low text-on-surface"
+                        }`}
+                        title="Upvote inquiry"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">thumb_up</span>
+                        <span className="font-title-md text-title-md font-bold">{q.votes || 0}</span>
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
+                      </button>
+
+                      {q.isFacultyEndorsed && (
+                        <div className="bg-secondary text-on-secondary px-2 py-1 rounded text-center sm:w-full">
+                          <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">
+                            <span className="material-symbols-outlined text-[15px]">verified</span>
+                          </div>
+                          <div className="font-label-sm text-label-sm leading-none text-white/90">Faculty Endorsed</div>
+                        </div>
+                      )}
+
+                      <div className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                        <span>{answersCount} ans</span>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <div>
+                        <h2
+                          onClick={() => navigate(`/questions/${q.id}`)}
+                          className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
+                        >
+                          {q.title}
+                        </h2>
+                        <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
+                          {q.description}
+                        </p>
+                      </div>
+
+                      {q.tags && q.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {q.tags.map((t, idx) => (
+                            <span
+                              key={idx}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSearchQuery(t);
+                              }}
+                              className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono"
+                            >
+                              #{t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
+                        <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+                          <span className="material-symbols-outlined text-[16px] text-primary">school</span>
+                          <span>{q.subject || q.department || "Academic Network"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+                          <span className="font-semibold text-on-surface">{authorName}</span>
+                          <span>•</span>
+                          <span className="bg-surface-container px-1 rounded text-primary">{authorInstitution}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="font-label-sm text-label-sm leading-none">Verified Solution</div>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant">890 views</div>
-              </div>
-
-              <div className="flex-1 space-y-2 min-w-0">
-                <div>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/questions/q2");
-                    }}
-                    className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
-                    href="#"
-                  >
-                    Optimizing 2D Fourier Transform decomposition on FPGA systolic arrays for medical imaging
-                  </a>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
-                    We are profiling memory bandwidth bottlenecks during row-column matrix transpose on Xilinx UltraScale+. What pipelining strategies minimize BRAM stalls for 1024x1024 float32 matrices?
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">fpga</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">vlsi-design</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">dsp</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">verilog</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">medical-imaging</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
-                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[16px]">lock</span>
-                    <span>Peer review blind evaluation enabled</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[16px] text-on-surface-variant">visibility_off</span>
-                    <span className="font-semibold text-on-surface">Anonymous Scholar</span>
-                    <span>•</span>
-                    <span className="bg-surface-container px-1 rounded text-on-surface-variant">M.Tech Scholar @ BITS Pilani</span>
-                    <span>•</span>
-                    <span>asked 5 hours ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          {/* Question Item 3 */}
-          <article className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high">
-            <div className="flex flex-col sm:flex-row gap-space-md">
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
-                <div className="flex sm:flex-col items-center sm:items-end gap-1">
-                  <span className="font-title-md text-title-md text-on-surface font-bold">19</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
-                </div>
-                <div className="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-center sm:w-full">
-                  <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">0</div>
-                  <div className="font-label-sm text-label-sm leading-none text-tertiary-container font-semibold">150 Bounty pts</div>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant">340 views</div>
-              </div>
-
-              <div className="flex-1 space-y-2 min-w-0">
-                <div>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/questions/q3");
-                    }}
-                    className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
-                    href="#"
-                  >
-                    Proving convergence bounds for asynchronous SGD with delayed gradient compensation on non-IID datasets
-                  </a>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
-                    Existing proofs assume bounded gradient delays τ &lt; τ_max. In edge federated clusters with extreme stragglers, delays follow a heavy-tailed Pareto distribution. How do we reformulate the Lipschitz smoothness condition?
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">federated-learning</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">optimization</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">mathematics</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">stochastic-calculus</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
-                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-tertiary-container font-semibold">
-                    <span className="material-symbols-outlined text-[16px]">token</span>
-                    <span>150 Research Credits Offered for Rigorous Proof</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                    <div className="w-5 h-5 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-[10px]">PV</div>
-                    <span className="font-semibold text-on-surface">Pooja Varma</span>
-                    <span>•</span>
-                    <span className="bg-surface-container px-1 rounded text-primary">Senior UG @ IISc Bangalore</span>
-                    <span>•</span>
-                    <span>asked 11 hours ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          {/* Question Item 4 */}
-          <article className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high">
-            <div className="flex flex-col sm:flex-row gap-space-md">
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
-                <div className="flex sm:flex-col items-center sm:items-end gap-1">
-                  <span className="font-title-md text-title-md text-on-surface font-bold">64</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
-                </div>
-                <div className="bg-secondary text-on-secondary px-2 py-1 rounded text-center sm:w-full">
-                  <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                    12
-                  </div>
-                  <div className="font-label-sm text-label-sm leading-none text-white/90">2 Staff Answers</div>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant">3.2k views</div>
-              </div>
-
-              <div className="flex-1 space-y-2 min-w-0">
-                <div>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/questions/q1");
-                    }}
-                    className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
-                    href="#"
-                  >
-                    What are the exact computational differences between FlashAttention-2 and standard multi-head self-attention tiled kernels?
-                  </a>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
-                    Tracing through CUDA register allocations and shared memory tile ping-ponging. Does the online softmax normalization require multiple passes over SRAM in warp-level primitives?
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">deep-learning</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">cuda</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">gpu-architecture</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">transformer-models</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
-                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-secondary">
-                    <span className="material-symbols-outlined text-[16px]">code</span>
-                    <span>Includes CUDA Profiling Kernel Benchmark Trace</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                    <div className="w-5 h-5 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-[10px]">AN</div>
-                    <span className="font-semibold text-on-surface">Arjun Nair</span>
-                    <span>•</span>
-                    <span className="bg-surface-container px-1 rounded text-primary">Adjunct Fellow @ IIT Bombay</span>
-                    <span>•</span>
-                    <span>asked 1 day ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          {/* Question Item 5 */}
-          <article className="bg-surface-container-lowest rounded-lg p-space-md shadow-sm hover:bg-surface-bright transition-all border border-surface-container-high">
-            <div className="flex flex-col sm:flex-row gap-space-md">
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:w-28 shrink-0 text-right">
-                <div className="flex sm:flex-col items-center sm:items-end gap-1">
-                  <span className="font-title-md text-title-md text-on-surface font-bold">14</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
-                </div>
-                <div className="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-center sm:w-full">
-                  <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">2</div>
-                  <div className="font-label-sm text-label-sm leading-none">Peer Answers</div>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant">510 views</div>
-              </div>
-
-              <div className="flex-1 space-y-2 min-w-0">
-                <div>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate("/questions/q1");
-                    }}
-                    className="font-title-md text-title-md text-primary font-bold hover:underline line-clamp-2 cursor-pointer"
-                    href="#"
-                  >
-                    Inter-college laboratory resource sharing protocols: How to authenticate via Eduroam across INFLIBNET nodes?
-                  </a>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-1">
-                    Our team from NIT Trichy needs remote access to the high-performance computing cluster at IIT Kanpur for molecular dynamics simulations. What is the institutional token handshake requirement?
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">consortium-policy</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">eduroam</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">inflibnet</span>
-                  <span className="bg-surface-container-low text-primary px-2 py-0.5 rounded font-label-sm text-label-sm hover:bg-surface-container cursor-pointer font-mono">hpc-access</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
-                  <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[16px]">account_balance</span>
-                    <span>Consortium MoU #718 Applicable</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                    <div className="w-5 h-5 rounded-full bg-surface-container-high text-primary flex items-center justify-center font-bold text-[10px]">KS</div>
-                    <span className="font-semibold text-on-surface">Karthik Subramanian</span>
-                    <span>•</span>
-                    <span className="bg-surface-container px-1 rounded text-primary">Lab Admin @ NIT Trichy</span>
-                    <span>•</span>
-                    <span>asked 2 days ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
+                </article>
+              );
+            })
+          )}
+          
           {/* Pagination & Page Size Control */}
           <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm border border-surface-container-high">
             <div className="font-body-sm text-body-sm text-on-surface-variant">
