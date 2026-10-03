@@ -2,6 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { apiService } from "../services/apiService";
+import {
+  Landmark,
+  KeyRound,
+  LogIn,
+  AlertCircle,
+  BadgeCheck,
+  CheckCircle2,
+  GitBranch,
+  Check,
+  Scale,
+  ShieldCheck,
+  ArrowRight,
+  Shield
+} from "lucide-react";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -99,8 +113,8 @@ export const RegisterPage = () => {
         <div className="max-w-[1360px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div onClick={() => navigate("/")} className="flex items-center gap-2.5 cursor-pointer">
-              <div className="w-9 h-9 bg-[#1e3a8a] text-white flex items-center justify-center rounded-lg shadow-xs">
-                <span className="material-symbols-outlined text-[20px]">account_balance</span>
+              <div className="w-9 h-9 bg-[#00236f] text-white flex items-center justify-center rounded-lg shadow-xs">
+                <Landmark className="w-5 h-5" />
               </div>
               <div className="flex flex-col text-left">
                 <span className="font-serif text-xl font-bold tracking-tight text-[#0f172a] leading-none">
@@ -193,8 +207,8 @@ export const RegisterPage = () => {
           {/* Eduroam / Shibboleth SSO Banner */}
           <div className="bg-[#f0f4ff] p-4 rounded-lg border border-[#dbeafe] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white text-[#1e3a8a] flex items-center justify-center shrink-0 shadow-xs border border-[#cbd5e1] mt-0.5 sm:mt-0">
-                <span className="material-symbols-outlined text-[18px]">key</span>
+              <div className="w-8 h-8 rounded-lg bg-white text-[#00236f] flex items-center justify-center shrink-0 shadow-xs border border-[#cbd5e1] mt-0.5 sm:mt-0">
+                <KeyRound className="w-4 h-4" />
               </div>
               <div>
                 <h4 className="text-[13px] font-bold text-[#0f172a]">Have an active Eduroam or Shibboleth / SAML ID?</h4>
@@ -206,9 +220,9 @@ export const RegisterPage = () => {
             <button
               onClick={() => alert("Redirecting to INFLIBNET Eduroam SAML Single Sign-On gateway...")}
               type="button"
-              className="px-4 py-2 rounded-md bg-white border border-[#cbd5e1] hover:bg-[#f8fafc] text-[#1e3a8a] text-[13px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs shrink-0"
+              className="px-4 py-2 rounded-md bg-white border border-[#cbd5e1] hover:bg-[#f8fafc] text-[#00236f] text-[13px] font-semibold transition-colors flex items-center gap-1.5 shadow-2xs shrink-0"
             >
-              <span className="material-symbols-outlined text-[16px]">login</span>
+              <LogIn className="w-4 h-4" />
               <span>Authenticate via Campus SSO</span>
             </button>
           </div>
@@ -217,13 +231,13 @@ export const RegisterPage = () => {
           <div className="space-y-4 text-left">
             {errorMsg && (
               <div className="p-3 bg-[#fef2f2] border border-[#fecaca] rounded-lg text-[13px] text-[#b91c1c] font-medium flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">error</span>
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
             <div className="bg-[#f8fafc] px-4 py-2.5 rounded-lg border border-[#e2e8f0] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-[#1e3a8a]">badge</span>
+                <BadgeCheck className="w-5 h-5 text-[#00236f]" />
                 <h3 className="font-serif text-[17px] font-bold text-[#0f172a]">1. Institutional Identity &amp; Clearance</h3>
               </div>
               <span className="text-[11px] font-mono font-semibold text-[#64748b] uppercase tracking-wider">STEP 01</span>
@@ -250,7 +264,7 @@ export const RegisterPage = () => {
                 <div className="flex items-center justify-between">
                   <label className="text-[13px] font-bold text-[#1e293b]">Institutional Email Address</label>
                   <span className="text-[11px] font-semibold text-[#006c4a] bg-[#ecfdf5] px-1.5 py-0.2 rounded border border-[#a7f3d0] flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[13px]">verified</span> Verified Domain Node
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#006c4a]" /> Verified Domain Node
                   </span>
                 </div>
                 <input
@@ -259,7 +273,7 @@ export const RegisterPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="scholar@iitd.ac.in"
-                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a] outline-none transition-all"
+                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] outline-none transition-all"
                 />
                 <p className="text-[11px] text-[#64748b]">Must end with .ac.in, .edu.in, or affiliated college subdomain.</p>
               </div>
@@ -270,7 +284,7 @@ export const RegisterPage = () => {
                 <select
                   value={institutionId}
                   onChange={(e) => setInstitutionId(e.target.value)}
-                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a] outline-none transition-all"
+                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] outline-none transition-all"
                 >
                   {institutionsList.length > 0 ? (
                     institutionsList.map((inst) => (
@@ -293,7 +307,7 @@ export const RegisterPage = () => {
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="e.g., Department of Computer Science & Engineering"
-                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a] outline-none transition-all"
+                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] outline-none transition-all"
                 />
               </div>
             </div>
@@ -306,10 +320,10 @@ export const RegisterPage = () => {
                   type="button"
                   onClick={() => setRole("student")}
                   className={`px-3 py-2 rounded-md text-[13px] font-semibold transition-all flex items-center justify-center gap-2 ${
-                    role === "student" ? "bg-white text-[#1e3a8a] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
+                    role === "student" ? "bg-white text-[#00236f] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
                   }`}
                 >
-                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "student" ? "border-[#1e3a8a] bg-[#1e3a8a]" : "border-[#94a3b8]"}`}>
+                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "student" ? "border-[#00236f] bg-[#00236f]" : "border-[#94a3b8]"}`}>
                     {role === "student" && <span className="w-1.5 h-1.5 rounded-full bg-white"></span>}
                   </span>
                   <span>Student Researcher</span>
@@ -319,10 +333,10 @@ export const RegisterPage = () => {
                   type="button"
                   onClick={() => setRole("phd")}
                   className={`px-3 py-2 rounded-md text-[13px] font-semibold transition-all flex items-center justify-center gap-2 ${
-                    role === "phd" ? "bg-white text-[#1e3a8a] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
+                    role === "phd" ? "bg-white text-[#00236f] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
                   }`}
                 >
-                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "phd" ? "border-[#1e3a8a] bg-[#1e3a8a]" : "border-[#94a3b8]"}`}>
+                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "phd" ? "border-[#00236f] bg-[#00236f]" : "border-[#94a3b8]"}`}>
                     {role === "phd" && <span className="w-1.5 h-1.5 rounded-full bg-white"></span>}
                   </span>
                   <span>Doctoral / Ph.D.</span>
@@ -332,10 +346,10 @@ export const RegisterPage = () => {
                   type="button"
                   onClick={() => setRole("faculty")}
                   className={`px-3 py-2 rounded-md text-[13px] font-semibold transition-all flex items-center justify-center gap-2 ${
-                    role === "faculty" ? "bg-white text-[#1e3a8a] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
+                    role === "faculty" ? "bg-white text-[#00236f] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
                   }`}
                 >
-                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "faculty" ? "border-[#1e3a8a] bg-[#1e3a8a]" : "border-[#94a3b8]"}`}>
+                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "faculty" ? "border-[#00236f] bg-[#00236f]" : "border-[#94a3b8]"}`}>
                     {role === "faculty" && <span className="w-1.5 h-1.5 rounded-full bg-white"></span>}
                   </span>
                   <span>Faculty / PI</span>
@@ -345,10 +359,10 @@ export const RegisterPage = () => {
                   type="button"
                   onClick={() => setRole("postdoc")}
                   className={`px-3 py-2 rounded-md text-[13px] font-semibold transition-all flex items-center justify-center gap-2 ${
-                    role === "postdoc" ? "bg-white text-[#1e3a8a] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
+                    role === "postdoc" ? "bg-white text-[#00236f] shadow-xs border border-[#cbd5e1]" : "text-[#475569] hover:text-[#0f172a]"
                   }`}
                 >
-                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "postdoc" ? "border-[#1e3a8a] bg-[#1e3a8a]" : "border-[#94a3b8]"}`}>
+                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${role === "postdoc" ? "border-[#00236f] bg-[#00236f]" : "border-[#94a3b8]"}`}>
                     {role === "postdoc" && <span className="w-1.5 h-1.5 rounded-full bg-white"></span>}
                   </span>
                   <span>Postdoc Fellow</span>
@@ -366,7 +380,7 @@ export const RegisterPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="............"
-                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a] outline-none transition-all"
+                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] outline-none transition-all"
                 />
                 <p className="text-[11px] text-[#64748b]">Minimum 12 characters, uppercase letter, digit &amp; symbol.</p>
               </div>
@@ -379,7 +393,7 @@ export const RegisterPage = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="............"
-                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a] outline-none transition-all"
+                  className="w-full h-10 px-3 bg-white border border-[#cbd5e1] rounded-md text-[13px] text-[#0f172a] placeholder:text-[#94a3b8] focus:border-[#00236f] focus:ring-1 focus:ring-[#00236f] outline-none transition-all"
                 />
                 <p className="text-[11px] text-[#64748b]">Must match institutional password specification.</p>
               </div>
@@ -390,7 +404,7 @@ export const RegisterPage = () => {
           <div className="space-y-4 text-left">
             <div className="bg-[#f8fafc] px-4 py-2.5 rounded-lg border border-[#e2e8f0] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-[#1e3a8a]">hub</span>
+                <GitBranch className="w-5 h-5 text-[#00236f]" />
                 <h3 className="font-serif text-[17px] font-bold text-[#0f172a]">2. Research Domains &amp; Collaboration Focus</h3>
               </div>
               <span className="text-[11px] font-mono font-semibold text-[#64748b] uppercase tracking-wider">STEP 02</span>
@@ -411,7 +425,7 @@ export const RegisterPage = () => {
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#006c4a]"></span>
                   <span>{domain}</span>
-                  <span className="material-symbols-outlined text-[14px] text-[#006c4a]">check</span>
+                  <Check className="w-3.5 h-3.5 text-[#006c4a]" />
                 </button>
               ))}
             </div>
@@ -442,7 +456,7 @@ export const RegisterPage = () => {
           <div className="space-y-4 text-left">
             <div className="bg-[#f8fafc] px-4 py-2.5 rounded-lg border border-[#e2e8f0] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-[#1e3a8a]">gavel</span>
+                <Scale className="w-5 h-5 text-[#00236f]" />
                 <h3 className="font-serif text-[17px] font-bold text-[#0f172a]">3. Academic Conduct &amp; Open Access Declaration</h3>
               </div>
               <span className="text-[11px] font-mono font-semibold text-[#64748b] uppercase tracking-wider">STEP 03</span>
@@ -454,7 +468,7 @@ export const RegisterPage = () => {
                   type="checkbox"
                   checked={checkbox1}
                   onChange={(e) => setCheckbox1(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-[#1e3a8a] rounded border-[#cbd5e1] focus:ring-[#1e3a8a]"
+                  className="mt-0.5 w-4 h-4 text-[#00236f] rounded border-[#cbd5e1] focus:ring-[#00236f]"
                 />
                 <span className="text-[12px] text-[#334155] leading-relaxed">
                   <strong className="font-semibold text-[#0f172a]">Institutional Identity Verification Authorization:</strong> I authorize CampusLink to cryptographically verify my academic enrollment/employment with the affiliated NREN node via INFLIBNET or Eduroam SAML metadata.
@@ -466,7 +480,7 @@ export const RegisterPage = () => {
                   type="checkbox"
                   checked={checkbox2}
                   onChange={(e) => setCheckbox2(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-[#1e3a8a] rounded border-[#cbd5e1] focus:ring-[#1e3a8a]"
+                  className="mt-0.5 w-4 h-4 text-[#00236f] rounded border-[#cbd5e1] focus:ring-[#00236f]"
                 />
                 <span className="text-[12px] text-[#334155] leading-relaxed">
                   <strong className="font-semibold text-[#0f172a]">Academic Integrity &amp; Non-Commercial Code:</strong> I agree to uphold the National Knowledge Network (NKN) scholarly code of ethics. All computational artifacts shared across nodes remain strictly non-commercial and open-access.
@@ -479,7 +493,7 @@ export const RegisterPage = () => {
           <div className="pt-4 border-t border-[#e2e8f0] space-y-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-1.5 text-[12px] font-medium text-[#006c4a]">
-                <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                <ShieldCheck className="w-4 h-4" />
                 <span>256-bit federated clearance active</span>
               </div>
 
@@ -488,12 +502,12 @@ export const RegisterPage = () => {
                 className="w-full sm:w-auto px-6 py-3 rounded-md bg-[#00236f] hover:bg-[#1e3a8a] text-white font-semibold text-[14px] flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
               >
                 <span>Verify Institutional Identity &amp; Register</span>
-                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
 
             <div className="bg-[#f1f5f9] p-3 rounded-lg border border-[#e2e8f0] flex items-center justify-center gap-2 text-center">
-              <span className="material-symbols-outlined text-[16px] text-[#64748b]">shield</span>
+              <Shield className="w-4 h-4 text-[#64748b]" />
               <span className="text-[12px] text-[#64748b]">
                 CampusLink operates under INFLIBNET / NKN governance. Strict zero-commercialization guarantee. No commercial crawling or advertising profiling
               </span>
@@ -507,7 +521,7 @@ export const RegisterPage = () => {
         <div className="max-w-[1360px] mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-[#64748b]">
           <div className="flex items-center gap-2 flex-wrap justify-center md:justify-start">
             <span className="flex items-center gap-1 font-medium text-[#006c4a]">
-              <span className="material-symbols-outlined text-[13px]">check_circle</span> FedRAMP High In-Process
+              <CheckCircle2 className="w-3.5 h-3.5" /> FedRAMP High In-Process
             </span>
             <span>-</span>
             <span>NIRF Accredited Cluster</span>

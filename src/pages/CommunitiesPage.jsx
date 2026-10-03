@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import {
+  CheckCircle2,
+  Lock,
+  Clock,
+  Search,
+  ChevronDown,
+  LayoutGrid,
+  GitBranch,
+  Users,
+  GraduationCap,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight
+} from "lucide-react";
 
 export const CommunitiesPage = () => {
   const navigate = useNavigate();

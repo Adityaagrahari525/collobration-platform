@@ -1,6 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import {
+  CheckCircle2,
+  ShieldCheck,
+  BarChart2,
+  TrendingUp,
+  HelpCircle,
+  Terminal,
+  Rss,
+  ArrowUp,
+  Bookmark,
+  FileText,
+  Share2,
+  FolderOpen,
+  UserPlus,
+  MessageSquare,
+  Download,
+  Eye,
+  GitFork,
+  Users,
+  ArrowRight,
+  Sparkles,
+  Award
+} from "lucide-react";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -31,7 +54,7 @@ export const DashboardPage = () => {
             <div className="flex items-center gap-1.5">
               <span className="font-title-sm text-title-sm text-on-surface font-semibold">{currentUser?.name || "Aditya Sharma"}</span>
               <span className="inline-flex items-center gap-0.5 px-1 py-0.2 bg-secondary-container/40 text-on-secondary-container rounded font-label-sm text-[10px] uppercase font-mono font-medium">
-                <span className="material-symbols-outlined text-[13px] text-secondary">verified</span>
+                <CheckCircle2 className="w-3 h-3 text-secondary" />
                 .ac.in Verified
               </span>
             </div>
@@ -54,14 +77,14 @@ export const DashboardPage = () => {
         <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm flex flex-col justify-between hover:bg-surface-container-lowest/90 transition-all border border-surface-container-high">
           <div className="flex items-center justify-between text-on-surface-variant">
             <span className="font-label-md text-label-md uppercase tracking-wider font-semibold">Contribution Score</span>
-            <span className="material-symbols-outlined text-[18px] text-primary">analytics</span>
+            <BarChart2 className="w-4 h-4 text-primary" />
           </div>
           <div className="my-space-xs flex items-baseline gap-2">
             <span className="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight font-serif">
               {currentUser?.contributionScore?.toLocaleString() || "1,420"}
             </span>
-            <span className="font-label-sm text-label-sm text-secondary font-mono flex items-center font-semibold">
-              <span className="material-symbols-outlined text-[14px]">trending_up</span>+48 this wk
+            <span className="font-label-sm text-label-sm text-secondary font-mono flex items-center font-semibold gap-0.5">
+              <TrendingUp className="w-3.5 h-3.5" />+48 this wk
             </span>
           </div>
           <div className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
@@ -74,7 +97,7 @@ export const DashboardPage = () => {
         <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm flex flex-col justify-between hover:bg-surface-container-lowest/90 transition-all border border-surface-container-high">
           <div className="flex items-center justify-between text-on-surface-variant">
             <span className="font-label-md text-label-md uppercase tracking-wider font-semibold">Answers Given</span>
-            <span className="material-symbols-outlined text-[18px] text-primary">quiz</span>
+            <HelpCircle className="w-4 h-4 text-primary" />
           </div>
           <div className="my-space-xs flex items-baseline gap-2">
             <span className="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight font-serif">
@@ -91,7 +114,7 @@ export const DashboardPage = () => {
         <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm flex flex-col justify-between hover:bg-surface-container-lowest/90 transition-all border border-surface-container-high">
           <div className="flex items-center justify-between text-on-surface-variant">
             <span className="font-label-md text-label-md uppercase tracking-wider font-semibold">Acceptance Rate</span>
-            <span className="material-symbols-outlined text-[18px] text-secondary">check_circle</span>
+            <CheckCircle2 className="w-4 h-4 text-secondary" />
           </div>
           <div className="my-space-xs flex items-baseline gap-2">
             <span className="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight font-serif">82.3%</span>
@@ -104,7 +127,7 @@ export const DashboardPage = () => {
         <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm flex flex-col justify-between hover:bg-surface-container-lowest/90 transition-all border border-surface-container-high">
           <div className="flex items-center justify-between text-on-surface-variant">
             <span className="font-label-md text-label-md uppercase tracking-wider font-semibold">Research Projects</span>
-            <span className="material-symbols-outlined text-[18px] text-primary">terminal</span>
+            <Terminal className="w-4 h-4 text-primary" />
           </div>
           <div className="my-space-xs flex items-baseline gap-2">
             <span className="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight font-serif">5</span>
@@ -125,11 +148,11 @@ export const DashboardPage = () => {
             <div className="flex items-center gap-1 font-title-sm text-title-sm">
               <button
                 onClick={() => setActiveTab("pulse")}
-                className={`px-space-sm py-1.5 rounded font-medium flex items-center gap-1 transition shadow-sm ${
+                className={`px-space-sm py-1.5 rounded font-medium flex items-center gap-1.5 transition shadow-sm ${
                   activeTab === "pulse" ? "bg-primary text-on-primary font-semibold" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px]">dynamic_feed</span>
+                <Rss className="w-4 h-4" />
                 Network Pulse
               </button>
               <button
@@ -201,27 +224,27 @@ export const DashboardPage = () => {
               <div className="flex items-center gap-space-md text-body-sm text-on-surface-variant font-mono">
                 <button
                   onClick={() => voteQuestion("q1")}
-                  className="flex items-center gap-1 px-2 py-1 bg-surface-container-low hover:bg-surface-container rounded text-primary font-semibold transition"
+                  className="flex items-center gap-1 px-2.5 py-1 bg-surface-container-low hover:bg-surface-container rounded text-primary font-semibold transition"
                 >
-                  <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                  <ArrowUp className="w-4 h-4" />
                   <span>24 Upvotes</span>
                 </button>
                 <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+                  <ShieldCheck className="w-4 h-4 text-secondary" />
                   <span className="text-on-surface font-medium">6 answers</span>
                   <span className="text-secondary">(1 faculty-verified by Prof. R. Raman)</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button className="px-2.5 py-1 text-on-surface-variant hover:text-primary text-label-sm font-medium flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">bookmark_border</span>
+                  <Bookmark className="w-4 h-4" />
                   Follow
                 </button>
                 <button
                   onClick={() => navigate("/questions/q1")}
                   className="px-3.5 py-1.5 bg-primary text-on-primary rounded text-label-sm font-medium hover:bg-primary-container transition flex items-center gap-1 shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-[16px]">rate_review</span>
+                  <FileText className="w-4 h-4" />
                   Answer Question
                 </button>
               </div>
@@ -296,7 +319,7 @@ export const DashboardPage = () => {
             {/* Project Actions */}
             <div className="pt-space-xs flex items-center justify-between">
               <div className="flex items-center gap-2 text-on-surface-variant text-body-sm font-mono">
-                <span className="material-symbols-outlined text-[16px]">share</span>
+                <Share2 className="w-4 h-4" />
                 <span>Permit DOI: 10.48550/arXiv.2403.cnmesh</span>
               </div>
               <div className="flex items-center gap-2">
@@ -304,14 +327,14 @@ export const DashboardPage = () => {
                   onClick={() => navigate("/projects/proj-826")}
                   className="px-3.5 py-1.5 bg-surface-container-low text-on-surface rounded text-label-sm font-medium hover:bg-surface-container transition flex items-center gap-1"
                 >
-                  <span className="material-symbols-outlined text-[16px]">folder_open</span>
+                  <FolderOpen className="w-4 h-4" />
                   View Research Repo
                 </button>
                 <button
                   onClick={() => navigate("/projects/proj-826")}
                   className="px-3.5 py-1.5 bg-primary text-on-primary rounded text-label-sm font-medium hover:bg-primary-container transition flex items-center gap-1 shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-[16px]">group_add</span>
+                  <UserPlus className="w-4 h-4" />
                   Request to Join Team
                 </button>
               </div>
@@ -351,27 +374,27 @@ export const DashboardPage = () => {
               <div className="flex items-center gap-space-md text-body-sm text-on-surface-variant font-mono">
                 <button
                   onClick={() => voteQuestion("q-robotics")}
-                  className="flex items-center gap-1 px-2 py-1 bg-surface-container-low hover:bg-surface-container rounded text-primary font-semibold transition"
+                  className="flex items-center gap-1 px-2.5 py-1 bg-surface-container-low hover:bg-surface-container rounded text-primary font-semibold transition"
                 >
-                  <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                  <ArrowUp className="w-4 h-4" />
                   <span>41 Upvotes</span>
                 </button>
                 <div className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">comment</span>
+                  <MessageSquare className="w-4 h-4 text-on-surface-variant" />
                   <span>9 answers</span>
                   <span className="text-secondary font-medium ml-1">· Raw .bag dataset verified</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button className="px-3.5 py-1.5 bg-surface-container-low text-on-surface rounded text-label-sm font-medium hover:bg-surface-container transition flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">download</span>
+                  <Download className="w-4 h-4" />
                   ROSbag (420 MB)
                 </button>
                 <button
                   onClick={() => navigate("/questions/q-robotics")}
                   className="px-3.5 py-1.5 bg-primary text-on-primary rounded text-label-sm font-medium hover:bg-primary-container transition flex items-center gap-1 shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-[16px]">visibility</span>
+                  <Eye className="w-4 h-4" />
                   View Solutions
                 </button>
               </div>
@@ -409,17 +432,17 @@ export const DashboardPage = () => {
             {/* Access Footprint & Download Actions */}
             <div className="pt-space-xs flex flex-wrap items-center justify-between gap-space-sm">
               <div className="flex items-center gap-1.5 text-body-sm text-on-surface-variant font-mono">
-                <span className="material-symbols-outlined text-[16px] text-secondary">hub</span>
+                <GitFork className="w-4 h-4 text-secondary" />
                 <span className="text-on-surface font-semibold">640 scholars</span>
                 <span>accessing across 18 Indian consortium colleges</span>
               </div>
               <div className="flex items-center gap-2">
                 <button className="px-3 py-1.5 bg-surface-container-low text-on-surface rounded text-label-sm font-medium hover:bg-surface-container transition flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">fork_right</span>
+                  <GitFork className="w-4 h-4" />
                   Fork on Git
                 </button>
                 <button className="px-3.5 py-1.5 bg-primary text-on-primary rounded text-label-sm font-medium hover:bg-primary-container transition flex items-center gap-1 shadow-sm">
-                  <span className="material-symbols-outlined text-[16px]">file_download</span>
+                  <Download className="w-4 h-4" />
                   Download Manual (PDF · 12MB)
                 </button>
               </div>
@@ -433,7 +456,7 @@ export const DashboardPage = () => {
           <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm space-y-space-md border border-surface-container-high">
             <div className="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[18px] text-primary">person_search</span>
+                <Users className="w-4 h-4 text-primary" />
                 <h3 className="font-title-sm text-title-sm text-on-surface font-semibold">Academic Connections</h3>
               </div>
               <span className="font-label-sm text-label-sm text-outline font-mono">Auto-Matched</span>
@@ -448,9 +471,7 @@ export const DashboardPage = () => {
                     </span>
                     <div className="flex items-center gap-1 mt-0.5">
                       <h4 className="font-title-sm text-title-sm text-on-surface font-bold">Dr. Arvind Sundaram</h4>
-                      <span className="material-symbols-outlined text-[14px] text-secondary" title="Verified Faculty">
-                        verified
-                      </span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-secondary" title="Verified Faculty" />
                     </div>
                     <p className="font-body-sm text-body-sm text-on-surface-variant">Associate Professor, IIT Madras</p>
                     <p className="font-body-sm text-body-sm text-outline font-mono text-[11px]">Research: Formal Methods &amp; Consensus</p>
@@ -477,7 +498,7 @@ export const DashboardPage = () => {
                   </span>
                   <div className="flex items-center gap-1 mt-0.5">
                     <h4 className="font-title-sm text-title-sm text-on-surface font-bold">Neha Deshmukh</h4>
-                    <span className="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-secondary" />
                   </div>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">M.Tech AI/ML, IIIT Hyderabad</p>
                   <p className="font-body-sm text-body-sm text-outline font-mono text-[11px]">Shared: PyTorch, Sensor Fusion</p>
@@ -501,7 +522,7 @@ export const DashboardPage = () => {
                   </span>
                   <div className="flex items-center gap-1 mt-0.5">
                     <h4 className="font-title-sm text-title-sm text-on-surface font-bold">Kabir Sen</h4>
-                    <span className="material-symbols-outlined text-[14px] text-secondary">verified</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-secondary" />
                   </div>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">4th Year, BITS Pilani (Goa Campus)</p>
                   <p className="font-body-sm text-body-sm text-outline font-mono text-[11px]">Focus: P2P Network Protocols</p>
@@ -523,7 +544,7 @@ export const DashboardPage = () => {
           <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm space-y-space-md border border-surface-container-high">
             <div className="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[18px] text-primary">hub</span>
+                <Sparkles className="w-4 h-4 text-primary" />
                 <h3 className="font-title-sm text-title-sm text-on-surface font-semibold">Recommended Sprints</h3>
               </div>
               <span className="font-mono text-label-sm text-secondary font-semibold">OPEN CALLS</span>
@@ -553,7 +574,7 @@ export const DashboardPage = () => {
                     className="text-primary font-label-sm text-label-sm font-semibold hover:underline flex items-center gap-0.5 cursor-pointer"
                     href="#"
                   >
-                    Apply <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    Apply <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
               </div>
@@ -582,7 +603,7 @@ export const DashboardPage = () => {
                     className="text-primary font-label-sm text-label-sm font-semibold hover:underline flex items-center gap-0.5 cursor-pointer"
                     href="#"
                   >
-                    Apply <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    Apply <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
               </div>
@@ -590,10 +611,10 @@ export const DashboardPage = () => {
           </div>
 
           {/* WIDGET 3: Trending Topics across Indian Consortium */}
-          <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm space-y-space-sm border border-surface-container-high">
+          <div className="p-space-md bg-surface-container-lowest rounded-lg shadow-sm space-y-space-md border border-surface-container-high">
             <div className="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[18px] text-secondary">trending_up</span>
+                <TrendingUp className="w-4 h-4 text-secondary" />
                 <h3 className="font-title-sm text-title-sm text-on-surface font-semibold">Consortium Trends</h3>
               </div>
               <span className="font-mono text-label-sm text-outline">NKN Mesh</span>
@@ -658,7 +679,7 @@ export const DashboardPage = () => {
                 href="#"
               >
                 Explore All Consortium Channels
-                <span className="material-symbols-outlined text-[14px]">arrow_right_alt</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>

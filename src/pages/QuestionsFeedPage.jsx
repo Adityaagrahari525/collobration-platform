@@ -1,6 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import {
+  ChevronRight,
+  Plus,
+  Search,
+  Database,
+  TrendingUp,
+  CheckCircle2,
+  SlidersHorizontal,
+  RotateCcw,
+  Award,
+  HelpCircle,
+  ThumbsUp,
+  MessageSquare,
+  GraduationCap,
+  ShieldCheck,
+  CornerUpLeft
+} from "lucide-react";
 
 export const QuestionsFeedPage = () => {
   const navigate = useNavigate();
@@ -30,9 +47,9 @@ export const QuestionsFeedPage = () => {
         <div className="space-y-1">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
             <span>Academic Network</span>
-            <span className="material-symbols-outlined text-[13px]">chevron_right</span>
+            <ChevronRight className="w-3.5 h-3.5" />
             <span>Knowledge Exchange</span>
-            <span className="material-symbols-outlined text-[13px]">chevron_right</span>
+            <ChevronRight className="w-3.5 h-3.5" />
             <span className="text-primary font-semibold">Questions</span>
           </nav>
           <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight font-serif">Questions</h1>
@@ -46,7 +63,7 @@ export const QuestionsFeedPage = () => {
             className="flex items-center gap-1.5 bg-primary text-on-primary hover:bg-primary-container px-space-md py-2 rounded font-title-sm text-title-sm shadow-sm transition-all"
             id="ask-btn"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <Plus className="w-4 h-4" />
             <span>Ask Question</span>
           </button>
         </div>
@@ -56,7 +73,7 @@ export const QuestionsFeedPage = () => {
       <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-sm border border-surface-container-high">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-space-sm">
           <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+            <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
             <input
               className="w-full pl-10 pr-24 py-2.5 rounded bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest shadow-inner transition-all border border-surface-container-high"
               id="q-search"
@@ -72,7 +89,7 @@ export const QuestionsFeedPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 px-space-sm py-1.5 bg-surface-container-low rounded shrink-0 border border-surface-container-high">
-            <span className="material-symbols-outlined text-primary text-[18px]">database</span>
+            <Database className="w-4 h-4 text-primary" />
             <span className="font-label-md text-label-md text-on-surface">
               <strong className="text-primary font-bold">4,829</strong> Academic Questions indexed across consortium
             </span>
@@ -105,7 +122,7 @@ export const QuestionsFeedPage = () => {
                 activeTab === "trending" ? "bg-primary text-on-primary font-semibold shadow-sm" : "bg-surface-container-low hover:bg-surface-container text-on-surface-variant"
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">trending_up</span>
+              <TrendingUp className="w-4 h-4" />
               <span>Trending</span>
             </button>
             <button
@@ -122,7 +139,7 @@ export const QuestionsFeedPage = () => {
                 activeTab === "endorsed" ? "bg-primary text-on-primary font-semibold shadow-sm" : "bg-surface-container-low hover:bg-surface-container text-secondary font-medium"
               }`}
             >
-              <span className="material-symbols-outlined text-[16px] text-secondary">verified</span>
+              <CheckCircle2 className="w-4 h-4 text-secondary" />
               <span>Faculty Endorsed</span>
             </button>
           </div>
@@ -142,11 +159,11 @@ export const QuestionsFeedPage = () => {
       <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-sm border border-surface-container-high">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">
-            <span className="material-symbols-outlined text-[18px]">tune</span>
+            <SlidersHorizontal className="w-4 h-4" />
             <span>Institutional Filters &amp; Cohort Criteria</span>
           </div>
           <button className="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1" id="reset-filters">
-            <span className="material-symbols-outlined text-[14px]">refresh</span>
+            <RotateCcw className="w-3.5 h-3.5" />
             Reset Filters
           </button>
         </div>
@@ -200,7 +217,7 @@ export const QuestionsFeedPage = () => {
             <label className="flex items-center gap-1.5 cursor-pointer bg-surface-container-low px-2 py-1 rounded">
               <input defaultChecked className="accent-primary rounded" type="checkbox" />
               <span className="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-secondary text-[14px]">verified</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-secondary" />
                 Staff Verified Solutions
               </span>
             </label>
@@ -211,7 +228,7 @@ export const QuestionsFeedPage = () => {
             <label className="flex items-center gap-1.5 cursor-pointer bg-surface-container-low px-2 py-1 rounded">
               <input className="accent-primary rounded" type="checkbox" />
               <span className="font-label-sm text-label-sm text-tertiary-container font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">monetization_on</span>
+                <Award className="w-3.5 h-3.5" />
                 Bounty / Research Credits Active
               </span>
             </label>
@@ -230,7 +247,7 @@ export const QuestionsFeedPage = () => {
         <div className="lg:col-span-9 space-y-space-sm">
           {filteredQuestions.length === 0 ? (
             <div className="bg-surface-container-lowest rounded-lg p-space-xl text-center border border-surface-container-high shadow-sm space-y-3">
-              <span className="material-symbols-outlined text-4xl text-outline">help_outline</span>
+              <HelpCircle className="w-10 h-10 text-outline" />
               <h3 className="font-title-lg text-title-lg text-on-surface font-semibold">No questions found</h3>
               <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
                 No academic inquiries match your current filters. Post a question to start a consortium discussion!
@@ -239,7 +256,7 @@ export const QuestionsFeedPage = () => {
                 onClick={() => navigate("/questions/ask")}
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded font-title-sm shadow-sm hover:bg-primary-container"
               >
-                <span className="material-symbols-outlined text-[18px]">add</span>
+                <Plus className="w-4 h-4" />
                 <span>Ask Question</span>
               </button>
             </div>
@@ -266,7 +283,7 @@ export const QuestionsFeedPage = () => {
                         }`}
                         title="Upvote inquiry"
                       >
-                        <span className="material-symbols-outlined text-[18px]">thumb_up</span>
+                        <ThumbsUp className="w-4 h-4" />
                         <span className="font-title-md text-title-md font-bold">{q.votes || 0}</span>
                         <span className="font-label-sm text-label-sm text-on-surface-variant">votes</span>
                       </button>
@@ -274,14 +291,14 @@ export const QuestionsFeedPage = () => {
                       {q.isFacultyEndorsed && (
                         <div className="bg-secondary text-on-secondary px-2 py-1 rounded text-center sm:w-full">
                           <div className="font-title-sm text-title-sm font-bold flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-[15px]">verified</span>
+                            <CheckCircle2 className="w-4 h-4 text-white" />
                           </div>
                           <div className="font-label-sm text-label-sm leading-none text-white/90">Faculty Endorsed</div>
                         </div>
                       )}
 
                       <div className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">chat_bubble_outline</span>
+                        <MessageSquare className="w-3.5 h-3.5" />
                         <span>{answersCount} ans</span>
                       </div>
                     </div>
@@ -318,7 +335,7 @@ export const QuestionsFeedPage = () => {
 
                       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 bg-surface-container-low/50 px-2 py-1.5 rounded">
                         <div className="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
-                          <span className="material-symbols-outlined text-[16px] text-primary">school</span>
+                          <GraduationCap className="w-4 h-4 text-primary" />
                           <span>{q.subject || q.department || "Academic Network"}</span>
                         </div>
                         <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
@@ -362,7 +379,7 @@ export const QuestionsFeedPage = () => {
 
           {/* Consortium Academic Integrity Notice */}
           <div className="bg-surface-container-low p-space-md rounded-lg flex items-start gap-space-sm text-on-surface-variant border border-surface-container-high">
-            <span className="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">policy</span>
+            <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <div className="space-y-1">
               <h4 className="font-title-sm text-title-sm text-on-surface font-semibold">CampusLink Academic Attribution &amp; Quality Mandate</h4>
               <p className="font-body-sm text-body-sm leading-relaxed">
@@ -378,7 +395,7 @@ export const QuestionsFeedPage = () => {
           <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-3 border border-surface-container-high">
             <div className="flex items-center justify-between pb-2 border-b border-surface-container">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">school</span>
+                <GraduationCap className="w-5 h-5 text-primary" />
                 <span className="font-title-sm text-title-sm text-on-surface font-bold">My Consortium Node</span>
               </div>
               <span className="bg-secondary/10 text-secondary font-label-sm text-label-sm px-1.5 py-0.5 rounded font-semibold">Active</span>
@@ -445,7 +462,7 @@ export const QuestionsFeedPage = () => {
           <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-3 border border-surface-container-high">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-primary text-[18px]">quiz</span>
+                <HelpCircle className="w-4 h-4 text-primary" />
                 <h3 className="font-title-sm text-title-sm text-on-surface font-bold">Unanswered in CSE</h3>
               </div>
               <span className="bg-surface-container px-1.5 py-0.5 rounded font-label-sm text-label-sm text-primary font-bold">Open</span>
@@ -458,7 +475,7 @@ export const QuestionsFeedPage = () => {
                 <div className="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
                   <span>IIT Kharagpur • 4h ago</span>
                   <button onClick={() => navigate("/questions/q-101")} className="text-primary hover:underline font-semibold flex items-center gap-0.5">
-                    <span className="material-symbols-outlined text-[13px]">reply</span> Solve
+                    <CornerUpLeft className="w-3.5 h-3.5" /> Solve
                   </button>
                 </div>
               </div>
@@ -469,7 +486,7 @@ export const QuestionsFeedPage = () => {
                 <div className="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
                   <span>IIT Roorkee • 6h ago</span>
                   <button onClick={() => navigate("/questions/q-101")} className="text-primary hover:underline font-semibold flex items-center gap-0.5">
-                    <span className="material-symbols-outlined text-[13px]">reply</span> Solve
+                    <CornerUpLeft className="w-3.5 h-3.5" /> Solve
                   </button>
                 </div>
               </div>
@@ -479,16 +496,16 @@ export const QuestionsFeedPage = () => {
           {/* Academic Integrity Guidelines Widget */}
           <div className="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-2 border border-surface-container-high">
             <div className="flex items-center gap-1.5 text-on-surface font-title-sm text-title-sm font-bold">
-              <span className="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+              <ShieldCheck className="w-4.5 h-4.5 text-secondary" />
               <span>Integrity Standards</span>
             </div>
             <ul className="space-y-1.5 font-body-sm text-body-sm text-on-surface-variant">
               <li className="flex items-start gap-1.5">
-                <span className="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+                <CheckCircle2 className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
                 <span>All equations require LaTeX verification</span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">check_circle</span>
+                <CheckCircle2 className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
                 <span>Code benchmarks must include toolchain metadata</span>
               </li>
             </ul>

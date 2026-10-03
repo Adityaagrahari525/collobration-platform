@@ -7,6 +7,14 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   // Session & Authentication State
   const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlToken = params.get("token");
+      if (urlToken) {
+        localStorage.setItem("campuslink_token", urlToken);
+        localStorage.setItem("campuslink_auth", JSON.stringify(true));
+      }
+    }
     const saved = localStorage.getItem("campuslink_user");
     return saved ? JSON.parse(saved) : null;
   });
@@ -22,6 +30,17 @@ export const AppProvider = ({ children }) => {
   });
 
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Clean up URL token if present after OAuth callback
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has("token")) {
+        url.searchParams.delete("token");
+        window.history.replaceState({}, document.title, url.pathname + (url.search ? url.search : ""));
+      }
+    }
+  }, []);
 
   // Live Database Datasets
   const [users, setUsers] = useState([]);

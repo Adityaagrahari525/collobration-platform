@@ -100,6 +100,10 @@ export const apiService = {
     return res;
   },
 
+  getGoogleAuthUrl: () => {
+    return `${API_BASE_URL}/auth/google`;
+  },
+
   getMe: async () => {
     return request("/auth/me");
   },
