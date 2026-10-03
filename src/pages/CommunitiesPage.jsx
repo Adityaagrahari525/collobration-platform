@@ -15,10 +15,11 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
+import { INITIAL_COMMUNITIES } from "../data/mockData";
 
 export const CommunitiesPage = () => {
   const navigate = useNavigate();
-  const { communities, joinCommunity, leaveCommunity, currentUser } = useApp();
+  const { communities, joinCommunity, leaveCommunity, createCommunity, currentUser } = useApp();
   const [selectedDiscipline, setSelectedDiscipline] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,27 +41,26 @@ export const CommunitiesPage = () => {
     "11. Civil"
   ];
 
-  const handleCreateCommunity = (e) => {
+  const handleCreateCommunity = async (e) => {
     e.preventDefault();
     if (!name.trim()) return;
     const newHub = {
-      id: `comm-${Date.now()}`,
       name,
       category,
       description,
-      membersCount: 1,
-      isMember: true,
       institution: currentUser?.institution || "IIT Delhi Hub",
     };
-    if (safeCommunities) {
-      safeCommunities.unshift(newHub);
+    if (createCommunity) {
+      await createCommunity(newHub);
     }
     setIsModalOpen(false);
     setName("");
     setDescription("");
   };
 
-  const safeCommunities = Array.isArray(communities) ? communities : [];
+  const safeCommunities = (Array.isArray(communities) && communities.length > 0)
+    ? communities
+    : INITIAL_COMMUNITIES;
   const filteredCommunities = safeCommunities.filter((c) => {
     if (selectedDiscipline > 0) {
       const discRaw = disciplines[selectedDiscipline].replace(/^\d+\.\s*/, "").toLowerCase();

@@ -360,13 +360,14 @@ export const PeoplePage = () => {
                           View Profile
                         </button>
                         <button
-                          onClick={() => sendConnectionRequest(u.id)}
+                          onClick={() => sendConnectionRequest(u.id, u.name || `${u.firstName || ""} ${u.lastName || ""}`.trim())}
                           disabled={isConnected}
-                          className={`px-space-md py-1 rounded font-label-md text-label-md transition-colors shadow-sm font-semibold ${
-                            isConnected ? "bg-surface-container text-outline" : "bg-primary text-on-primary hover:bg-primary-container"
+                          className={`px-space-md py-1 rounded font-label-md text-label-md transition-colors shadow-sm font-semibold flex items-center gap-1 ${
+                            isConnected ? "bg-surface-container text-outline cursor-default" : "bg-primary text-on-primary hover:bg-primary-container cursor-pointer"
                           }`}
                         >
-                          {isConnected ? "Connected" : "Connect"}
+                          {isConnected && <span className="material-symbols-outlined text-[14px]">check</span>}
+                          <span>{isConnected ? "Connected" : "Connect"}</span>
                         </button>
                       </div>
                     </div>
@@ -392,24 +393,44 @@ export const PeoplePage = () => {
               <div className="space-y-3 text-xs">
                 <div className="p-2.5 bg-surface-container-low rounded-lg space-y-1 border border-surface-container-high">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-on-surface">Prof. G. Krishnamurthy</span>
+                    <span
+                      onClick={() => navigate("/people/usr-2")}
+                      className="font-semibold text-on-surface hover:text-primary cursor-pointer hover:underline"
+                    >
+                      Prof. G. Krishnamurthy
+                    </span>
                   </div>
                   <div className="text-on-surface-variant text-[11px]">IISc Bangalore · Systems</div>
                   <div className="text-outline text-[10px]">Advising 2 active PhD grants in non-volatile memory architectures.</div>
                   <div className="flex items-center justify-between pt-1">
                     <span className="px-1.5 py-0.5 bg-secondary-container/40 text-on-secondary-container rounded font-mono text-[9px] font-semibold">Open to Mentorship</span>
-                    <button onClick={() => navigate("/mentorship")} className="text-primary font-bold hover:underline">Request</button>
+                    <button
+                      onClick={() => sendConnectionRequest("usr-2", "Prof. G. Krishnamurthy")}
+                      className="text-primary font-bold hover:underline"
+                    >
+                      {connections.includes("usr-2") ? "Connected" : "Connect"}
+                    </button>
                   </div>
                 </div>
                 <div className="p-2.5 bg-surface-container-low rounded-lg space-y-1 border border-surface-container-high">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-on-surface">Dr. Ananya Ganguly</span>
+                    <span
+                      onClick={() => navigate("/people/6f1ed189-5e0d-467b-b683-841d3acad116")}
+                      className="font-semibold text-on-surface hover:text-primary cursor-pointer hover:underline"
+                    >
+                      Dr. Ananya Ganguly
+                    </span>
                   </div>
                   <div className="text-on-surface-variant text-[11px]">IIT Delhi · Comp Bio</div>
                   <div className="text-outline text-[10px]">Open to co-supervising graph neural nets on protein folding.</div>
                   <div className="flex items-center justify-between pt-1">
                     <span className="px-1.5 py-0.5 bg-surface-container-highest text-primary rounded font-mono text-[9px] font-semibold">Sprint Advisor</span>
-                    <button onClick={() => navigate("/mentorship")} className="text-primary font-bold hover:underline">Request</button>
+                    <button
+                      onClick={() => sendConnectionRequest("6f1ed189-5e0d-467b-b683-841d3acad116", "Dr. Ananya Ganguly")}
+                      className="text-primary font-bold hover:underline"
+                    >
+                      {connections.includes("6f1ed189-5e0d-467b-b683-841d3acad116") ? "Connected" : "Connect"}
+                    </button>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { apiService } from "../services/apiService";
+import { INITIAL_USERS } from "../data/mockData";
 
 export const PersonProfilePage = () => {
   const { id } = useParams();
@@ -19,14 +20,31 @@ export const PersonProfilePage = () => {
         const res = await apiService.getPersonById(id);
         if (res.success && res.data && isMounted) {
           setPerson(res.data);
+          setLoading(false);
+          return;
         }
       } catch (err) {
-        // Fallback to local dataset user if available
-        const local = users.find((u) => u.id === id);
-        if (local && isMounted) setPerson(local);
-      } finally {
-        if (isMounted) setLoading(false);
+        // Fallback to local or mock dataset
       }
+
+      // Check users state or INITIAL_USERS
+      const found =
+        users.find((u) => u.id === id) ||
+        INITIAL_USERS.find((u) => u.id === id);
+
+      if (found && isMounted) {
+        setPerson(found);
+      } else if (id === "usr-2" && isMounted) {
+        // Dr. Rohini Ramanathan / Dr. Rajesh K. Varma
+        const facultyFromDb = users.find((u) => (u.role || "").toUpperCase() === "FACULTY");
+        setPerson(facultyFromDb || INITIAL_USERS[1]);
+      } else if (users.length > 0 && isMounted) {
+        setPerson(users[0]);
+      } else if (isMounted) {
+        setPerson(INITIAL_USERS[0]);
+      }
+
+      if (isMounted) setLoading(false);
     }
 
     fetchPerson();
@@ -35,9 +53,10 @@ export const PersonProfilePage = () => {
     };
   }, [id, users]);
 
-  const fallbackUser = users.find((u) => u.id === id) || users[0];
-  const activePerson = person || fallbackUser;
-  const isConnected = connections.includes(activePerson.id);
+  const activePerson = person || INITIAL_USERS.find((u) => u.id === id) || users[0] || INITIAL_USERS[0];
+  const isConnected = activePerson ? connections.includes(activePerson.id) : false;
+  const personName = activePerson.name || `${activePerson.firstName || ""} ${activePerson.lastName || ""}`.trim() || "Scholar";
+  const avatarImage = activePerson.avatarUrl || activePerson.avatar;
 
   if (loading && !activePerson) {
     return (
@@ -48,16 +67,25 @@ export const PersonProfilePage = () => {
   }
 
   return (
-    <div className="space-y-space-lg max-w-4xl mx-auto">
+    <div className="space-y-space-lg max-w-4xl mx-auto pb-12">
+      {/* Top back button */}
+      <button
+        onClick={() => navigate("/people")}
+        className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-label-md text-sm transition-colors"
+      >
+        <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to People Directory</span>
+      </button>
+
       {/* Profile Header Card */}
       <div className="p-space-lg bg-surface-container-lowest rounded-2xl border border-surface-container-high shadow-sm space-y-space-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-serif font-bold text-primary text-xl shadow-xs">
-              {activePerson.avatarUrl ? (
+            <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-serif font-bold text-primary text-xl shadow-xs overflow-hidden">
+              {avatarImage ? (
                 <img
-                  src={activePerson.avatarUrl}
-                  alt={activePerson.name}
+                  src={avatarImage}
+                  alt={personName}
                   className="w-16 h-16 rounded-full object-cover"
                 />
               ) : (
@@ -67,12 +95,12 @@ export const PersonProfilePage = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-headline-md text-headline-md text-primary font-serif font-bold">
-                  {activePerson.name || `${activePerson.firstName} ${activePerson.lastName}`}
+                  {personName}
                 </h1>
                 <span className="material-symbols-outlined text-[20px] text-secondary">verified</span>
               </div>
               <div className="font-title-sm text-title-sm text-on-surface-variant">
-                {activePerson.department || activePerson.degree} · {typeof activePerson.institution === "string" ? activePerson.institution : activePerson.institutionDetail?.name}
+                {activePerson.department || activePerson.degree} · {typeof activePerson.institution === "string" ? activePerson.institution : (activePerson.institutionDetail?.name || "Consortium Node")}
               </div>
               <div className="font-mono text-label-sm text-outline mt-0.5">
                 {activePerson.headline || `${activePerson.role} · ${activePerson.institutionDetail?.city || "India"}`}
@@ -80,17 +108,29 @@ export const PersonProfilePage = () => {
             </div>
           </div>
 
-          <button
-            onClick={() => sendConnectionRequest(activePerson.id)}
-            disabled={isConnected}
-            className={`px-6 py-2.5 rounded-xl font-title-sm font-semibold shadow transition-all ${
-              isConnected
-                ? "bg-secondary-container text-on-secondary-container opacity-80"
-                : "bg-primary text-on-primary hover:bg-primary/90"
-            }`}
-          >
-            {isConnected ? "Request Sent" : "Connect & Collaborate"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => sendConnectionRequest(activePerson.id, personName)}
+              disabled={isConnected}
+              className={`px-5 py-2.5 rounded-xl font-title-sm font-semibold shadow transition-all flex items-center gap-2 ${
+                isConnected
+                  ? "bg-secondary-container text-on-secondary-container opacity-90 cursor-default"
+                  : "bg-primary text-on-primary hover:bg-primary/90 cursor-pointer"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                {isConnected ? "check_circle" : "person_add"}
+              </span>
+              <span>{isConnected ? "Request Sent" : "Connect & Collaborate"}</span>
+            </button>
+            <button
+              onClick={() => navigate("/messages")}
+              className="px-4 py-2.5 rounded-xl font-title-sm font-semibold bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-1.5 border border-surface-container-high"
+            >
+              <span className="material-symbols-outlined text-[18px]">chat</span>
+              <span>Message</span>
+            </button>
+          </div>
         </div>
 
         <p className="font-body-lg text-body-lg text-on-surface leading-relaxed">

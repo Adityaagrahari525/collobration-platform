@@ -1,14 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { analyzeSkillGap } from "../utils/aiService";
 import { calculateLevel } from "../utils/userStats";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { currentUser, deleteUserAccount } = useApp();
-  const [activeTab, setActiveTab] = useState("tab-all");
+
+  const getInitialTab = () => {
+    const t = searchParams.get("tab");
+    if (t === "saved") return "tab-saved";
+    if (t === "solutions") return "tab-solutions";
+    if (t === "projects") return "tab-projects";
+    if (t === "faculty") return "tab-faculty";
+    return "tab-all";
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const [targetRole, setTargetRole] = useState("Full Stack Developer");
+
+  useEffect(() => {
+    const t = searchParams.get("tab");
+    if (t === "saved") setActiveTab("tab-saved");
+    else if (t === "solutions") setActiveTab("tab-solutions");
+    else if (t === "projects") setActiveTab("tab-projects");
+    else if (t === "faculty") setActiveTab("tab-faculty");
+  }, [searchParams]);
 
   const handleDeleteAccount = async () => {
     if (window.confirm("WARNING: Are you sure you want to permanently delete your account and all associated profile, questions, answers, and project records from the database? This action cannot be undone.")) {
@@ -339,32 +358,41 @@ export const ProfilePage = () => {
               <div className="border-b border-outline-variant/40 px-space-md pt-space-sm flex items-center justify-between flex-wrap gap-space-sm">
                 <div className="flex items-center gap-space-sm overflow-x-auto" id="profile-tabs">
                   <button
-                    onClick={() => setActiveTab("tab-all")}
-                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold ${
+                    onClick={() => { setActiveTab("tab-all"); setSearchParams({}); }}
+                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold whitespace-nowrap ${
                       activeTab === "tab-all" ? "border-b-2 border-primary text-primary" : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
                     All Highlights
                   </button>
                   <button
-                    onClick={() => setActiveTab("tab-projects")}
-                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold ${
+                    onClick={() => { setActiveTab("tab-projects"); setSearchParams({ tab: "projects" }); }}
+                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold whitespace-nowrap ${
                       activeTab === "tab-projects" ? "border-b-2 border-primary text-primary" : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
                     Projects Led (4)
                   </button>
                   <button
-                    onClick={() => setActiveTab("tab-solutions")}
-                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold ${
+                    onClick={() => { setActiveTab("tab-solutions"); setSearchParams({ tab: "solutions" }); }}
+                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold whitespace-nowrap ${
                       activeTab === "tab-solutions" ? "border-b-2 border-primary text-primary" : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
-                    Verified Answers (89)
+                    My Q&amp;A &amp; Solutions (89)
                   </button>
                   <button
-                    onClick={() => setActiveTab("tab-faculty")}
-                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold ${
+                    onClick={() => { setActiveTab("tab-saved"); setSearchParams({ tab: "saved" }); }}
+                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold whitespace-nowrap flex items-center gap-1 ${
+                      activeTab === "tab-saved" ? "border-b-2 border-primary text-primary" : "text-on-surface-variant hover:text-on-surface"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">bookmark</span>
+                    <span>Saved References (12)</span>
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab("tab-faculty"); setSearchParams({ tab: "faculty" }); }}
+                    className={`tab-button font-title-sm text-title-sm pb-space-sm px-1 font-semibold whitespace-nowrap ${
                       activeTab === "tab-faculty" ? "border-b-2 border-primary text-primary" : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
@@ -376,118 +404,202 @@ export const ProfilePage = () => {
 
               <div className="p-space-md flex flex-col gap-space-md">
                 {/* Section A: Projects Contributed & Led */}
-                <div className="flex flex-col gap-space-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Institutional Engineering Milestones</span>
-                    <span onClick={() => navigate("/projects")} className="text-label-sm text-primary font-mono cursor-pointer hover:underline">View All in Projects →</span>
-                  </div>
-                  {/* Project Card 1 */}
-                  <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary-container text-[20px]">layers</span>
-                        <h3 className="font-headline-sm text-headline-sm text-primary font-serif font-semibold">FloodSense: IoT-Edge Hydrological Warning Network</h3>
-                      </div>
-                      <span className="inline-flex items-center gap-1 font-mono text-label-sm text-secondary bg-[#ecfdf5] border border-[#a7f3d0] px-2 py-0.5 rounded">
-                        Milestone 3 Delivered
-                      </span>
+                {(activeTab === "tab-all" || activeTab === "tab-projects") && (
+                  <div className="flex flex-col gap-space-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Institutional Engineering Milestones</span>
+                      <span onClick={() => navigate("/projects")} className="text-label-sm text-primary font-mono cursor-pointer hover:underline">View All in Projects →</span>
                     </div>
-                    <p className="font-body-md text-body-md text-on-surface-variant">
-                      Architected telemetry consensus pipeline for low-power edge nodes deployed in Cauvery basin sensors. Prevents split-brain state during flash-flood backhaul cutoffs.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-y-1 gap-x-space-md pt-1 text-body-sm text-on-surface-variant font-mono">
-                      <span>Role: <strong className="text-on-surface">Lead Edge Architect</strong></span>
-                      <span className="text-outline">·</span>
-                      <span>Co-developed: <strong class="text-on-surface">NIT Trichy &amp; IIT Roorkee</strong></span>
-                      <span className="text-outline">·</span>
-                      <span>Verification: <strong className="text-secondary">1,420 lines audited Rust code</strong></span>
-                    </div>
-                  </div>
-                  {/* Project Card 2 */}
-                  <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary-container text-[20px]">terminal</span>
-                        <h3 className="font-headline-sm text-headline-sm text-primary font-serif font-semibold">ConsensusLab: Educational Distributed Key-Value Store</h3>
-                      </div>
-                      <span className="inline-flex items-center gap-1 font-mono text-label-sm text-primary-container bg-surface-container-high border border-outline-variant/60 px-2 py-0.5 rounded">
-                        Core Curriculum Adoption
-                      </span>
-                    </div>
-                    <p className="font-body-md text-body-md text-on-surface-variant">
-                      Deterministic fault-injection harness paired with a simplified Raft state machine, built for university undergraduate OS labs to simulate Byzantine drops and clock skew.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-y-1 gap-x-space-md pt-1 text-body-sm text-on-surface-variant font-mono">
-                      <span>Role: <strong className="text-on-surface">Principal Maintainer</strong></span>
-                      <span className="text-outline">·</span>
-                      <span>Adoption: <strong className="text-on-surface">3 Consortium Universities (Course: CS302)</strong></span>
-                      <span className="text-outline">·</span>
-                      <span>License: <strong className="text-on-surface">Apache-2.0 / CampusLink Academic</strong></span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Section B: Top Accepted Answers */}
-                <div className="flex flex-col gap-space-sm pt-space-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Peer-Reviewed Canonical Solutions</span>
-                    <span onClick={() => navigate("/questions")} className="text-label-sm text-primary font-mono cursor-pointer hover:underline">Explore All Q&amp;A →</span>
-                  </div>
-                  <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
-                    <div className="flex items-start justify-between gap-space-sm">
-                      <div className="flex flex-col gap-1">
+                    {/* Project Card 1 */}
+                    <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded bg-secondary/10 text-secondary text-label-sm font-semibold flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[14px]">check_circle</span> ACCEPTED SOLUTION
-                          </span>
-                          <span className="text-label-sm font-mono text-on-surface-variant font-medium">+48 Peer Endorsements</span>
+                          <span className="material-symbols-outlined text-primary-container text-[20px]">layers</span>
+                          <h3 className="font-headline-sm text-headline-sm text-primary font-serif font-semibold">FloodSense: IoT-Edge Hydrological Warning Network</h3>
                         </div>
-                        <a onClick={(e) => { e.preventDefault(); navigate("/questions/q1"); }} className="font-title-md text-title-md text-primary font-medium hover:underline cursor-pointer" href="#">
-                          Raft consensus split-brain mitigation during uncommitted log replication under high network jitter
-                        </a>
+                        <span className="inline-flex items-center gap-1 font-mono text-label-sm text-secondary bg-[#ecfdf5] border border-[#a7f3d0] px-2 py-0.5 rounded">
+                          Milestone 3 Delivered
+                        </span>
                       </div>
-                      <span className="shrink-0 font-mono text-label-sm text-outline">QID #88219</span>
+                      <p className="font-body-md text-body-md text-on-surface-variant">
+                        Architected telemetry consensus pipeline for low-power edge nodes deployed in Cauvery basin sensors. Prevents split-brain state during flash-flood backhaul cutoffs.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-y-1 gap-x-space-md pt-1 text-body-sm text-on-surface-variant font-mono">
+                        <span>Role: <strong className="text-on-surface">Lead Edge Architect</strong></span>
+                        <span className="text-outline">·</span>
+                        <span>Co-developed: <strong className="text-on-surface">NIT Trichy &amp; IIT Roorkee</strong></span>
+                        <span className="text-outline">·</span>
+                        <span>Verification: <strong className="text-secondary">1,420 lines audited Rust code</strong></span>
+                      </div>
                     </div>
-                    <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2">
-                      "The issue occurs because the leader sends AppendEntries RPCs with prevLogIndex that are stale by exactly one heartbeat timeout tick when the OS socket buffer queues fill up. Introducing the pre-vote phase according to Ongaro's dissertation §9.6 guarantees..."
-                    </p>
-                    <div className="flex items-center justify-between text-body-sm pt-1 border-t border-outline-variant/20">
-                      <div className="flex items-center gap-1.5 text-on-surface font-medium text-[13px]">
-                        <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
-                        <span>Endorsed by Prof. R. Ramanathan, IIT Madras</span>
+                    {/* Project Card 2 */}
+                    <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-primary-container text-[20px]">terminal</span>
+                          <h3 className="font-headline-sm text-headline-sm text-primary font-serif font-semibold">ConsensusLab: Educational Distributed Key-Value Store</h3>
+                        </div>
+                        <span className="inline-flex items-center gap-1 font-mono text-label-sm text-primary-container bg-surface-container-high border border-outline-variant/60 px-2 py-0.5 rounded">
+                          Core Curriculum Adoption
+                        </span>
                       </div>
-                      <span className="text-outline text-label-sm font-mono">Recorded: Oct 14, 2024</span>
+                      <p className="font-body-md text-body-md text-on-surface-variant">
+                        Deterministic fault-injection harness paired with a simplified Raft state machine, built for university undergraduate OS labs to simulate Byzantine drops and clock skew.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-y-1 gap-x-space-md pt-1 text-body-sm text-on-surface-variant font-mono">
+                        <span>Role: <strong className="text-on-surface">Principal Maintainer</strong></span>
+                        <span className="text-outline">·</span>
+                        <span>Adoption: <strong className="text-on-surface">3 Consortium Universities (Course: CS302)</strong></span>
+                        <span className="text-outline">·</span>
+                        <span>License: <strong className="text-on-surface">Apache-2.0 / CampusLink Academic</strong></span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* Section B: Top Accepted Answers & My Q&A */}
+                {(activeTab === "tab-all" || activeTab === "tab-solutions") && (
+                  <div className="flex flex-col gap-space-sm pt-space-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Peer-Reviewed Canonical Solutions &amp; Q&amp;A</span>
+                      <span onClick={() => navigate("/questions")} className="text-label-sm text-primary font-mono cursor-pointer hover:underline">Explore All Q&amp;A →</span>
+                    </div>
+                    <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                      <div className="flex items-start justify-between gap-space-sm">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-secondary/10 text-secondary text-label-sm font-semibold flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">check_circle</span> ACCEPTED SOLUTION
+                            </span>
+                            <span className="text-label-sm font-mono text-on-surface-variant font-medium">+48 Peer Endorsements</span>
+                          </div>
+                          <a onClick={(e) => { e.preventDefault(); navigate("/questions/q1"); }} className="font-title-md text-title-md text-primary font-medium hover:underline cursor-pointer" href="#">
+                            Raft consensus split-brain mitigation during uncommitted log replication under high network jitter
+                          </a>
+                        </div>
+                        <span className="shrink-0 font-mono text-label-sm text-outline">QID #88219</span>
+                      </div>
+                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                        "The issue occurs because the leader sends AppendEntries RPCs with prevLogIndex that are stale by exactly one heartbeat timeout tick when the OS socket buffer queues fill up. Introducing the pre-vote phase according to Ongaro's dissertation §9.6 guarantees..."
+                      </p>
+                      <div className="flex items-center justify-between text-body-sm pt-1 border-t border-outline-variant/20">
+                        <div className="flex items-center gap-1.5 text-on-surface font-medium text-[13px]">
+                          <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+                          <span>Endorsed by Prof. R. Ramanathan, IIT Madras</span>
+                        </div>
+                        <span className="text-outline text-label-sm font-mono">Recorded: Oct 14, 2024</span>
+                      </div>
+                    </div>
+                    {/* Q&A Item 2 */}
+                    <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                      <div className="flex items-start justify-between gap-space-sm">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-label-sm font-semibold flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">help</span> POSTED QUERY
+                            </span>
+                            <span className="text-label-sm font-mono text-on-surface-variant font-medium">3 Peer Responses</span>
+                          </div>
+                          <a onClick={(e) => { e.preventDefault(); navigate("/questions"); }} className="font-title-md text-title-md text-primary font-medium hover:underline cursor-pointer" href="#">
+                            Dynamic Kalman Filter tuning for non-stationary water level readings over low-power LoRaWAN
+                          </a>
+                        </div>
+                        <span className="shrink-0 font-mono text-label-sm text-outline">QID #91042</span>
+                      </div>
+                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                        "Evaluating measurement noise covariance matrix adaptations in ESP32-S3 microcontroller environments with strict 2500mAh battery limits."
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Section D: Saved References & Bookmarks */}
+                {(activeTab === "tab-all" || activeTab === "tab-saved") && (
+                  <div className="flex flex-col gap-space-sm pt-space-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-sm uppercase tracking-wider text-outline font-semibold flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-[16px] text-primary">bookmark</span>
+                        <span>Saved References, Bookmarks &amp; Citations</span>
+                      </span>
+                      <button className="text-label-sm text-primary font-mono hover:underline flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">download</span>
+                        <span>Export BibTeX (.bib)</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {/* Saved Ref 1 */}
+                      <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                        <div className="flex items-start justify-between gap-space-sm">
+                          <div>
+                            <span className="px-2 py-0.5 rounded bg-primary-container/20 text-primary font-mono text-label-sm font-semibold">IEEE TPDS 2024 · DOI: 10.1109/TPDS.2024.338291</span>
+                            <h4 className="font-title-md text-title-md text-on-surface font-semibold mt-1">
+                              "Asymmetric Network Partitions and Provable Safety in Quorum-Based Consensus Engines"
+                            </h4>
+                            <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                              Authors: Dr. Rajesh K. Varma, Prof. G. Krishnamurthy (IISc &amp; IIT Delhi)
+                            </p>
+                          </div>
+                          <span className="px-2 py-1 bg-secondary/10 text-secondary rounded font-mono text-xs font-semibold shrink-0">Saved Paper</span>
+                        </div>
+                        <div className="flex items-center justify-between text-body-sm pt-1 border-t border-outline-variant/20 font-mono text-xs text-outline">
+                          <span>Tagged: #consensus #raft #formal-verification</span>
+                          <span className="text-primary font-semibold cursor-pointer hover:underline">Read Full Text (Open Access) →</span>
+                        </div>
+                      </div>
+
+                      {/* Saved Ref 2 */}
+                      <div className="border border-outline-variant/40 rounded p-space-md bg-surface-bright hover:border-outline transition-colors flex flex-col gap-2">
+                        <div className="flex items-start justify-between gap-space-sm">
+                          <div>
+                            <span className="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-mono text-label-sm font-semibold">Consortium Dataset #DS-9904 · CC BY-NC 4.0</span>
+                            <h4 className="font-title-md text-title-md text-on-surface font-semibold mt-1">
+                              Cauvery River Basin High-Frequency Ultrasonic Depth &amp; Surge Readings (Monsoon 2024)
+                            </h4>
+                            <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                              Source: NIT Trichy &amp; IIT Roorkee Hydrology Testbed (12.4M calibrated telemetry entries)
+                            </p>
+                          </div>
+                          <span className="px-2 py-1 bg-primary/10 text-primary rounded font-mono text-xs font-semibold shrink-0">Saved Dataset</span>
+                        </div>
+                        <div className="flex items-center justify-between text-body-sm pt-1 border-t border-outline-variant/20 font-mono text-xs text-outline">
+                          <span>Format: Parquet / Apache Arrow (1.8 GB)</span>
+                          <span className="text-primary font-semibold cursor-pointer hover:underline">Access Dataset Hub →</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Section C: Faculty Verification & Cryptographic Sign-Offs */}
-                <div className="flex flex-col gap-space-sm pt-space-xs">
-                  <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Faculty Verification &amp; Cryptographic Sign-Offs</span>
-                  <div className="border border-outline-variant/40 rounded p-space-md bg-[#faf8ff] flex flex-col gap-space-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded bg-primary-container text-on-primary flex items-center justify-center font-serif text-[12px] font-bold">
-                          RR
+                {(activeTab === "tab-all" || activeTab === "tab-faculty") && (
+                  <div className="flex flex-col gap-space-sm pt-space-xs">
+                    <span className="font-label-sm uppercase tracking-wider text-outline font-semibold">Faculty Verification &amp; Cryptographic Sign-Offs</span>
+                    <div className="border border-outline-variant/40 rounded p-space-md bg-[#faf8ff] flex flex-col gap-space-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded bg-primary-container text-on-primary flex items-center justify-center font-serif text-[12px] font-bold">
+                            RR
+                          </div>
+                          <div>
+                            <div className="font-title-sm text-title-sm text-primary font-semibold">Prof. R. Ramanathan</div>
+                            <div className="font-label-sm text-label-sm text-on-surface-variant">Professor, Department of CSE, IIT Madras</div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-title-sm text-title-sm text-primary font-semibold">Prof. R. Ramanathan</div>
-                          <div className="font-label-sm text-label-sm text-on-surface-variant">Professor, Department of CSE, IIT Madras</div>
-                        </div>
+                        <span className="font-mono text-label-sm text-secondary bg-[#ecfdf5] border border-[#a7f3d0] px-2 py-0.5 rounded self-start sm:self-auto">
+                          SIG-DIST-VERIFIED #VER-IITM-8821
+                        </span>
                       </div>
-                      <span className="font-mono text-label-sm text-secondary bg-[#ecfdf5] border border-[#a7f3d0] px-2 py-0.5 rounded self-start sm:self-auto">
-                        SIG-DIST-VERIFIED #VER-IITM-8821
-                      </span>
-                    </div>
-                    <blockquote className="font-body-md text-body-md text-on-surface italic border-l-2 border-primary-container pl-3 py-0.5 my-1">
-                      “Aditya's formal proof demonstrating pre-vote protocol liveness under asymmetric partitions was rigorous, reproducible, and adopted in our research group's distributed verification test harness.”
-                    </blockquote>
-                    <div className="flex items-center justify-between font-mono text-[11px] text-outline pt-1">
-                      <span>Sign-off: PGP Key ID 0x3E1B7A49</span>
-                      <span>Date: Oct 14, 2024</span>
+                      <blockquote className="font-body-md text-body-md text-on-surface italic border-l-2 border-primary-container pl-3 py-0.5 my-1">
+                        “Aditya's formal proof demonstrating pre-vote protocol liveness under asymmetric partitions was rigorous, reproducible, and adopted in our research group's distributed verification test harness.”
+                      </blockquote>
+                      <div className="flex items-center justify-between font-mono text-[11px] text-outline pt-1">
+                        <span>Sign-off: PGP Key ID 0x3E1B7A49</span>
+                        <span>Date: Oct 14, 2024</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </section>
           </div>

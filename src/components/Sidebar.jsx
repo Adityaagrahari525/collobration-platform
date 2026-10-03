@@ -105,13 +105,31 @@ export const Sidebar = () => {
             </span>
           </div>
           <nav className="space-y-0.5">
-            <NavLink to="/profile" className={getNavLinkClass}>
+            <NavLink
+              to="/profile?tab=solutions"
+              className={({ isActive }) =>
+                `${getNavLinkClass({ isActive: false })} ${
+                  window.location.pathname === "/profile" && window.location.search.includes("tab=solutions")
+                    ? "bg-surface-container text-primary font-semibold border-l-2 border-primary"
+                    : ""
+                }`
+              }
+            >
               <div className="flex items-center gap-2.5">
                 <HelpCircle className="w-4 h-4" />
                 <span>My Q&amp;A</span>
               </div>
             </NavLink>
-            <NavLink to="/profile" className={getNavLinkClass}>
+            <NavLink
+              to="/profile?tab=saved"
+              className={({ isActive }) =>
+                `${getNavLinkClass({ isActive: false })} ${
+                  window.location.pathname === "/profile" && window.location.search.includes("tab=saved")
+                    ? "bg-surface-container text-primary font-semibold border-l-2 border-primary"
+                    : ""
+                }`
+              }
+            >
               <div className="flex items-center gap-2.5">
                 <Bookmark className="w-4 h-4" />
                 <span>Saved References</span>

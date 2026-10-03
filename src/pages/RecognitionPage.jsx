@@ -214,10 +214,24 @@ export const RecognitionPage = () => {
             <div className="bg-surface-container-lowest rounded shadow-sm overflow-hidden border border-surface-container-high">
               <div className="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-surface-container-high">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-[20px]">neurology</span>
+                  <span className="material-symbols-outlined text-primary text-[20px]">
+                    {activeCategoryTab === "cat-systems" ? "dns" : activeCategoryTab === "cat-research" ? "menu_book" : "neurology"}
+                  </span>
                   <div>
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-serif font-bold">Top AI/ML Contributors</h3>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant">Validated neural architectures, reproducible checkpoints, and algorithmic peer solutions</p>
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-serif font-bold">
+                      {activeCategoryTab === "cat-systems"
+                        ? "Top Web & Distributed Systems Contributors"
+                        : activeCategoryTab === "cat-research"
+                        ? "Top Peer-Reviewed Research Scholars"
+                        : "Top AI/ML Contributors"}
+                    </h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">
+                      {activeCategoryTab === "cat-systems"
+                        ? "Fault-tolerant consensus, low-power LoRaWAN networks, and cloud architecture"
+                        : activeCategoryTab === "cat-research"
+                        ? "Formal verifications, preprints archived, and reproducible laboratory benchmarks"
+                        : "Validated neural architectures, reproducible checkpoints, and algorithmic peer solutions"}
+                    </p>
                   </div>
                 </div>
                 <span className="font-label-sm text-label-sm text-on-surface-variant font-mono">Q2 2024 Cycle</span>
@@ -225,7 +239,7 @@ export const RecognitionPage = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                    <tr className="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
                       <th className="py-2.5 px-space-md w-14 font-semibold">Rank</th>
                       <th className="py-2.5 px-space-md font-semibold">Scholar &amp; Credential</th>
                       <th className="py-2.5 px-space-md font-semibold">Institution</th>
@@ -241,20 +255,24 @@ export const RecognitionPage = () => {
                         <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-primary font-mono">#1</span>
                       </td>
                       <td className="py-3 px-space-md">
-                        <div onClick={() => navigate("/people/usr-2")} className="font-title-sm text-title-sm text-primary font-semibold hover:underline cursor-pointer">Dr. Rohini Ramanathan</div>
-                        <span className="font-label-sm text-label-sm text-on-surface-variant">Faculty PI • Neural Systems</span>
+                        <div onClick={() => navigate("/people/usr-2")} className="font-title-sm text-title-sm text-primary font-semibold hover:underline cursor-pointer">
+                          {activeCategoryTab === "cat-systems" ? "Dr. Rajesh K. Varma" : "Dr. Rohini Ramanathan"}
+                        </div>
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">Faculty PI • Systems &amp; AI</span>
                       </td>
                       <td className="py-3 px-space-md">
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Delhi</span>
                       </td>
-                      <td className="py-3 px-space-md text-on-surface-variant">Physics-informed GNNs</td>
+                      <td className="py-3 px-space-md text-on-surface-variant">
+                        {activeCategoryTab === "cat-systems" ? "Distributed Consensus" : "Physics-informed GNNs"}
+                      </td>
                       <td className="py-3 px-space-md text-right font-semibold text-primary font-label-md font-mono">4,180</td>
                       <td className="py-3 px-space-md">
                         <div className="font-label-sm text-label-sm text-secondary font-medium">54 accepted • 9 papers</div>
                         <span className="text-[11px] text-on-surface-variant font-mono">54 citations indexed</span>
                       </td>
                       <td className="py-3 px-space-md text-right">
-                        <button onClick={() => navigate("/people/usr-2")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+                        <button onClick={() => navigate("/people/usr-2")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline cursor-pointer">Profile</button>
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-low/50 transition-colors">
@@ -275,7 +293,7 @@ export const RecognitionPage = () => {
                         <span className="text-[11px] text-on-surface-variant font-mono">HuggingFace verified node</span>
                       </td>
                       <td className="py-3 px-space-md text-right">
-                        <button onClick={() => navigate("/people/usr-1")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+                        <button onClick={() => navigate("/people/usr-1")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline cursor-pointer">Profile</button>
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-low/50 transition-colors">
@@ -283,20 +301,22 @@ export const RecognitionPage = () => {
                         <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container font-semibold text-on-surface font-mono">#3</span>
                       </td>
                       <td className="py-3 px-space-md">
-                        <div className="font-title-sm text-title-sm text-on-surface font-semibold">Ananya Chakraborty</div>
-                        <span className="font-label-sm text-label-sm text-on-surface-variant">Postdoc Fellow • NLP Group</span>
+                        <div onClick={() => navigate("/people/5bd56243-ac60-4b69-8412-5ad8e20862fe")} className="font-title-sm text-title-sm text-on-surface font-semibold hover:text-primary cursor-pointer">
+                          Ananya Iyer
+                        </div>
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">M.Tech AI Candidate • Edge Systems</span>
                       </td>
                       <td className="py-3 px-space-md">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IISc Bangalore</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIT Bombay</span>
                       </td>
-                      <td className="py-3 px-space-md text-on-surface-variant">Indic Language Low-Resource LLMs</td>
+                      <td className="py-3 px-space-md text-on-surface-variant">Edge Computer Vision &amp; Remote Sensing</td>
                       <td className="py-3 px-space-md text-right font-semibold text-primary font-label-md font-mono">3,110</td>
                       <td className="py-3 px-space-md">
                         <div className="font-label-sm text-label-sm text-secondary font-medium">38 accepted • 12 datasets</div>
-                        <span className="text-[11px] text-on-surface-variant font-mono">Bhashini pipeline integration</span>
+                        <span className="text-[11px] text-on-surface-variant font-mono">Verified Research Node</span>
                       </td>
                       <td className="py-3 px-space-md text-right">
-                        <button className="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+                        <button onClick={() => navigate("/people/5bd56243-ac60-4b69-8412-5ad8e20862fe")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline cursor-pointer">Profile</button>
                       </td>
                     </tr>
                     <tr className="hover:bg-surface-container-low/50 transition-colors">
@@ -304,20 +324,22 @@ export const RecognitionPage = () => {
                         <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-surface-container-low font-semibold text-outline font-mono">#4</span>
                       </td>
                       <td className="py-3 px-space-md">
-                        <div className="font-title-sm text-title-sm text-on-surface font-semibold">Vikramaditya Rao</div>
-                        <span className="font-label-sm text-label-sm text-on-surface-variant">4th Year Dual Degree</span>
+                        <div onClick={() => navigate("/people/4a567a2c-87c1-42ba-a16f-b131e99b9b06")} className="font-title-sm text-title-sm text-on-surface font-semibold hover:text-primary cursor-pointer">
+                          Rohan Verma
+                        </div>
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">Dual Degree Research Fellow</span>
                       </td>
                       <td className="py-3 px-space-md">
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">IIIT Hyderabad</span>
                       </td>
-                      <td className="py-3 px-space-md text-on-surface-variant">Reinforcement Learning with Verifiable Bounds</td>
+                      <td className="py-3 px-space-md text-on-surface-variant">Distributed Consensus &amp; DB Storage</td>
                       <td className="py-3 px-space-md text-right font-semibold text-primary font-label-md font-mono">2,870</td>
                       <td className="py-3 px-space-md">
                         <div className="font-label-sm text-label-sm text-secondary font-medium">29 accepted • 6 notebooks</div>
-                        <span className="text-[11px] text-on-surface-variant font-mono">NeurIPS Artifact Certified</span>
+                        <span className="text-[11px] text-on-surface-variant font-mono">Artifact Certified</span>
                       </td>
                       <td className="py-3 px-space-md text-right">
-                        <button className="text-primary hover:text-primary-container font-label-sm text-label-sm underline">Profile</button>
+                        <button onClick={() => navigate("/people/4a567a2c-87c1-42ba-a16f-b131e99b9b06")} className="text-primary hover:text-primary-container font-label-sm text-label-sm underline cursor-pointer">Profile</button>
                       </td>
                     </tr>
                   </tbody>

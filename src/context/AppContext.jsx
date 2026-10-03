@@ -50,6 +50,15 @@ export const AppProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [messages, setMessages] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [connections, setConnections] = useState(() => {
+    try {
+      const saved = localStorage.getItem("campuslink_connections");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [connectionToast, setConnectionToast] = useState(null);
 
   // Synchronize authenticated user state with backend /api/users/me on mount
   const checkAuthStatus = useCallback(async () => {
@@ -430,11 +439,52 @@ export const AppProvider = ({ children }) => {
   };
 
   // Communities
+  const createCommunity = async (communityData) => {
+    try {
+      const res = await apiService.createCommunity(communityData);
+      if (res && res.success) {
+        refreshDatabaseContent();
+        return res.data;
+      }
+    } catch {
+      const fallbackComm = {
+        id: `comm-${Date.now()}`,
+        ...communityData,
+        memberCount: 1,
+        isMember: true,
+      };
+      setCommunities((prev) => [fallbackComm, ...prev]);
+      return fallbackComm;
+    }
+  };
+
   const joinCommunity = async (communityId) => {
     const res = await apiService.joinCommunity(communityId);
     if (res && res.success) {
       refreshDatabaseContent();
       return res.data;
+    }
+  };
+
+  // Connection Requests
+  const sendConnectionRequest = async (userId, userName = "Scholar") => {
+    if (!userId) return;
+    if (connections.includes(userId)) return;
+
+    try {
+      const updated = [...connections, userId];
+      setConnections(updated);
+      try {
+        localStorage.setItem("campuslink_connections", JSON.stringify(updated));
+      } catch {}
+
+      setConnectionToast(`Connection request dispatched to ${userName} via NKN Mesh`);
+      setTimeout(() => setConnectionToast(null), 4000);
+
+      // Attempt backend call (graceful if endpoint doesn't exist)
+      await apiService.sendConnectionRequest?.(userId);
+    } catch {
+      // Keep optimistic update even if backend call fails
     }
   };
 
@@ -485,6 +535,11 @@ export const AppProvider = ({ children }) => {
         updateApplicationStatus,
         bookMentorshipSlot,
         sendMessage,
+        sendConnectionRequest,
+        connections,
+        connectionToast,
+        setConnectionToast,
+        createCommunity,
         joinCommunity,
         leaveCommunity,
         refreshDatabaseContent,
