@@ -1,188 +1,122 @@
-# CampusLink — Academic Network Mobile Application (Android)
+# 📱 CampusLink — Academic Network Mobile Application
 
-> **Official Android Mobile Application for the CampusLink Academic Network (PS004)**  
-> Developed using React Native, Expo SDK, TypeScript, and Native Bottom Tab Navigation.
+[![React Native](https://img.shields.io/badge/React_Native-0.86.3-61DAFB?logo=react&logoColor=black)](https://reactnative.dev/)
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK_57-000000?logo=expo&logoColor=white)](https://expo.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
+[![OTA Updates](https://img.shields.io/badge/OTA_Updates-Enabled-006c4a.svg)](https://docs.expo.dev/eas-update/introduction/)
 
----
-
-## 1. Project Overview
-
-CampusLink is an academic collaboration and peer-learning network designed for university students, faculty researchers, and institutional labs. It bridges inter-institutional research gaps across leading institutions (IIT Delhi, IISc Bangalore, IIT Bombay, IIIT Hyderabad, BITS Pilani, NIT Trichy).
-
-This mobile application provides a purpose-built, responsive Android experience with:
-- **Heuristic Skill-Matching Engine:** Calculates candidate-to-project compatibility scores (0–100%).
-- **Rule-Based AI Skill Gap & Learning Roadmap:** 4-phase structured milestone roadmap for 7 target career tracks.
-- **Jaccard Duplicate Detection:** Real-time duplicate question detection and warning banners.
-- **Academic Reputation & Scorecard:** Level milestones, badges, daily streaks, and digital certificates.
-- **Faculty Mentorship:** 1-on-1 office hours booking and research advisory scheduling.
-- **Collaborative Research Labs:** Inter-campus project workspaces, milestones, telemetry metrics, and Monaco code inspection.
+Welcome to the **CampusLink Academic Network Mobile Application** — a cross-platform React Native / Expo application for inter-institutional academic collaboration, research matching, peer Q&A, faculty mentorship, and gamified scholar progression.
 
 ---
 
-## 2. Directory Architecture
+## 📥 Direct APK Download & Installation
 
-```
-mobile-app/
-├── App.tsx                          # Root App Shell (Providers & Navigation)
-├── app.json                         # Expo application configuration & Android permissions
-├── eas.json                         # EAS Build configuration (APK & AAB profiles)
-├── package.json                     # Dependencies, scripts (start, test, typecheck)
-├── tsconfig.json                    # Strict TypeScript compiler options
-├── .env.example                     # Environment configuration reference
-├── assets/                          # App icons, splash screens, and adaptive assets
-├── docs/                            # Architectural & test documentation
-│   ├── PROJECT_AUDIT.md             # Codebase audit & architecture summary
-│   ├── MOBILE_FEATURE_MAPPING.md    # Feature mapping matrix & navigation plan
-│   └── TESTING_REPORT.md            # Automated testing execution report
-├── tests/                           # Automated test suites & test runner
-│   └── algorithms.test.ts           # 23 automated tests for algorithms & stats
-└── src/
-    ├── components/                  # Reusable UI components
-    │   ├── common/                  # Header, Button, Input, Badge, Card, SkillTag, SearchBar, SkeletonLoader
-    │   ├── gamification/            # XPProgressBar, StreakBadge, BadgeGrid, LearningPathWidget
-    │   ├── questions/               # QuestionCard, AnswerItem, DuplicateWarningBanner
-    │   ├── projects/                # ProjectCard, ApplyModal, CodePreviewModal
-    │   ├── people/                  # ScholarCard
-    │   ├── mentorship/              # MentorSlotCard, BookSlotModal
-    │   └── communities/             # CommunityCard
-    ├── context/                     # Global state providers
-    │   ├── AuthContext.tsx          # User session, login, register, demo user switcher
-    │   └── AppContext.tsx           # Questions, projects, mentorship, notifications
-    ├── navigation/                  # Navigation hierarchy
-    │   ├── RootNavigator.tsx        # Native stack navigator & modal routing
-    │   └── BottomTabNavigator.tsx   # Native bottom tab bar (Home, Q&A, Projects, Scholars, Profile)
-    ├── screens/                     # Application screens
-    │   ├── auth/                    # LoginScreen, RegisterScreen
-    │   ├── tabs/                    # HomeScreen, QuestionsScreen, ProjectsScreen, PeopleScreen, ProfileScreen
-    │   └── details/                 # QuestionDetail, AskQuestion, ProjectDetail, CreateProject,
-    │                                # PersonDetail, Mentorship, Communities, Contribution,
-    │                                # Recognition, Messages, Chat, Notifications, Settings, Help
-    ├── services/                    # Database & network integration
-    │   ├── supabaseClient.ts        # Supabase PostgreSQL client with AsyncStorage persistence
-    │   ├── dbService.ts             # Centralized CRUD methods with offline fallback
-    │   ├── mockData.ts              # Seed academic dataset matching web platform
-    │   └── storage.ts               # AsyncStorage local persistence helper
-    ├── theme/                       # Design System tokens
-    │   ├── colors.ts                # Deep Academic Blue (#00236f), Forest Green (#006c4a), Surfaces
-    │   ├── typography.ts            # Standardized typography scale
-    │   ├── spacing.ts               # Spacing, border radius, and elevation tokens
-    │   └── theme.ts                 # Unified theme export
-    ├── types/                       # Core TypeScript interfaces & data models
-    └── utils/                       # Algorithmic engines
-        ├── matchingAlgorithm.ts     # Heuristic Skill-Matching Engine
-        ├── aiService.ts             # Rule-Based Skill Gap & Learning Roadmap Engine
-        ├── duplicateDetector.ts     # Jaccard Token Similarity Engine
-        └── userStats.ts             # Reputation, XP progression & streak calculator
-```
+You can download and install the standalone Android APK directly on your device without using the Google Play Store:
+
+| Release Type | Download Link | File Size | Version |
+| :--- | :--- | :--- | :--- |
+| **🚀 Latest Release APK** | [**Download CampusLink.apk**](https://github.com/Adityaagrahari525/collobration-platform/releases/latest/download/CampusLink.apk) | ~32 MB | `v1.0.0` |
+| **📦 EAS Preview Build** | [**Download via EAS Build Artifacts**](https://expo.dev/accounts/campuslink/projects/campuslink-academic/builds) | ~32 MB | `v1.0.0` |
+
+### How to Install on Android:
+1. Tap the download link above on your Android phone.
+2. Open the downloaded `CampusLink.apk` file.
+3. If prompted, toggle **"Allow installation from unknown sources"** in your device settings.
+4. Tap **Install** and open CampusLink!
 
 ---
 
-## 3. Prerequisites & Development Setup
+## 🔄 Over-The-Air (OTA) Updates (No Re-Installation Needed!)
 
-1. **Node.js:** v18.0 or newer (v24.x recommended)
-2. **npm / yarn:** npm 10+
-3. **Expo Go (on physical phone):** Download from Google Play Store
-4. **Android Studio (optional for local emulator/builds):** Android SDK Platform 34+, Android SDK Build-Tools, ADB
+CampusLink is equipped with **Expo EAS Over-The-Air (OTA) Updates**. This means:
 
----
+* ⚡ **Instant In-App Updates:** Whenever a new feature, bug fix, or UI enhancement is published, your installed app will **automatically update in the background** when launched!
+* 📱 **No Re-Installation Required:** You do **NOT** need to download or install a new `.apk` file every time the project is updated.
+* 🛡️ **Zero Downtime:** Updates load seamlessly on launch via Expo's `checkAutomatically: "ON_LOAD"` mechanism.
 
-## 4. Quick Start: Running the App
-
-### Step 1: Install Dependencies
-
+### How to Push an In-App OTA Update (For Developers):
 ```bash
+# Push an OTA update directly to all user devices instantly
+npm run update:ota
+```
+
+---
+
+## 📌 Versioning Strategy
+
+CampusLink follows **Semantic Versioning (`MAJOR.MINOR.PATCH`)**:
+
+1. **`version` in `app.json` & `package.json`**: Represents user-facing version (e.g., `1.0.0`, `1.0.1`).
+2. **`android.versionCode`**: An incrementing integer (`1`, `2`, `3`...) updated whenever native dependencies change.
+
+### Bump Version Command:
+```bash
+# Increments patch version (e.g., 1.0.0 -> 1.0.1)
+npm run version:bump
+```
+
+---
+
+## ✨ Features & Architecture
+
+* 🧠 **Skill-Matching Engine:** Computes weighted compatibility scores (0–100%) between scholars and inter-institutional research projects.
+* 🔎 **Jaccard Duplicate Inquiry Detection:** Real-time semantic duplicate check to prevent repetitive questions in academic forums.
+* 🎯 **AI Skill Gap & Career Roadmap:** 4-phase milestone generator for target research roles.
+* 🏆 **Gamification & XP Tiering:** 6-tier level progression (Undergraduate → Research Fellow), streaks, and badges.
+* 📅 **Faculty Mentorship & Office Hours:** Real-time booking slots for 1-on-1 academic advisory sessions.
+* 💬 **Consortia Hubs & DMs:** Direct messaging between scholars and inter-institutional research groups.
+
+---
+
+## 🛠️ Local Setup & Development
+
+### 1. Prerequisites
+* Node.js v18 or later
+* npm or yarn
+* Expo Go app on iOS / Android (for physical device testing)
+
+### 2. Installation
+```bash
+# Navigate to mobile-app directory
 cd mobile-app
+
+# Install dependencies
 npm install
 ```
 
-### Step 2: Start Expo Development Server
-
+### 3. Run Development Server
 ```bash
+# Start Expo Metro Bundler
 npm start
+
+# Run in Web Browser
+npm run web
+
+# Run on Android Emulator
+npm run android
 ```
 
-### Step 3: Run on Android Emulator or Physical Device
-
-- **Physical Device (Expo Go):** Open the Expo Go app on your Android phone and scan the QR code displayed in the terminal.
-- **Android Emulator:** Press `a` in the terminal while your Android emulator is running.
-- **Web Preview:** Press `w` in the terminal to inspect in browser.
-
----
-
-## 5. Running Automated Checks & Tests
-
-Execute the automated test suites to verify algorithms, duplicate detection, and TypeScript strict compliance:
-
+### 4. Run Automated Test Suite
 ```bash
-# Run TypeScript compilation check
-npm run typecheck
-
-# Run full algorithmic test suite (23 passing tests)
+# Runs 46 automated unit and E2E integration tests
 npm test
 ```
 
 ---
 
-## 6. Android APK & Production Build Guide
+## 📦 Building a New Standalone APK
 
-### Option A: Cloud APK Build using EAS Build (Recommended)
+If you make native configuration changes or want to generate a new `.apk` file:
 
-1. Install EAS CLI:
-   ```bash
-   npm install -g eas-cli
-   ```
-2. Login to your Expo account:
-   ```bash
-   eas login
-   ```
-3. Generate an installable Android APK:
-   ```bash
-   eas build -p android --profile preview
-   ```
-   *EAS Build will generate a direct download link for the `.apk` file that can be installed on any Android phone.*
-
-4. Generate a Google Play production App Bundle (`.aab`):
-   ```bash
-   eas build -p android --profile production
-   ```
-
-### Option B: Local Android Native Build (with Android Studio & Java)
-
-1. Prebuild native Android project:
-   ```bash
-   npx expo prebuild --platform android
-   ```
-2. Build debug/release APK locally using Gradle:
-   ```bash
-   cd android
-   ./gradlew assembleRelease
-   ```
-   *The generated APK will be available at:*  
-   `android/app/build/outputs/apk/release/app-release.apk`
+```bash
+# Build standalone Android APK using EAS
+npm run build:apk
+```
 
 ---
 
-## 7. Installing the APK on a Physical Android Phone
+## 📄 License
 
-1. Download or copy the generated `.apk` file to your Android phone (via USB or Google Drive).
-2. Open the `.apk` file in your phone's File Manager.
-3. Enable "Install from unknown sources" if prompted by Android Security.
-4. Tap **Install** and launch **CampusLink**.
-
----
-
-## 8. Backend Configuration
-
-The application is pre-configured to connect to the live Supabase PostgreSQL backend:
-- **Supabase URL:** `https://vqhriwufmkxwyrilsqeq.supabase.co`
-- **Authentication:** Supported with automatic token persistence via `@react-native-async-storage/async-storage`.
-- **Offline / Resilient Mode:** If network connectivity drops or the database is unreachable, `dbService.ts` automatically serves cached data and in-memory updates seamlessly without app crashes.
-
----
-
-## 9. Academic Demo Accounts (Instant Testing)
-
-For quick evaluation, click the demo buttons on the Login screen:
-1. **Aditya Sharma (Student Lead, IIT Delhi):** `aditya.sharma@iitd.ac.in` (Password: `academicPass123`)
-2. **Dr. Rajesh K. Varma (Faculty Mentor, IIT Delhi):** `rajesh.varma@iitd.ac.in` (Password: `academicPass123`)
-3. **Priya Sundaram (Ph.D. Scholar, IISc Bangalore):** `priya.sundaram@iisc.ac.in` (Password: `academicPass123`)
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

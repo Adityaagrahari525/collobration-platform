@@ -32,7 +32,10 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "npx tsx -e \"import run from './tests/algorithms.test'; const res = run(); if (res.failed > 0) process.exit(1);\"",
     "test:e2e": "npx tsx -e \"import run from './tests/e2eIntegration.test'; run().then(res => { if (res.failed > 0) process.exit(1); })\"",
-    "test": "npm run test:unit && npm run test:e2e"
+    "test": "npm run test:unit && npm run test:e2e",
+    "build:apk": "eas build -p android --profile preview",
+    "update:ota": "eas update --branch production --message 'Automated OTA update'",
+    "version:bump": "npm version patch"
   },
   "private": true
 }
