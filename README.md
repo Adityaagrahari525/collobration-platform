@@ -3,7 +3,8 @@
 # 🎓 CampusLink — Academic Collaboration Network
 ### Nationwide Consortium Platform for Higher Education & Multi-Campus Research (PS004)
 
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg?style=flat-square&logo=github-actions)](https://github.com/Adityaagrahari525/collobration-platform)
+[![CI/CD Pipeline](https://github.com/Adityaagrahari525/collobration-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Adityaagrahari525/collobration-platform/actions)
+[![Docker Support](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](docker-compose.yml)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -12,14 +13,14 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](https://github.com/Adityaagrahari525/collobration-platform/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
 <p align="center">
   <b>Bridging Students, Researchers, and Faculty across 140+ Accredited Indian Academic Consortium Nodes</b><br>
   <i>IIT Delhi · IIT Bombay · IISc Bangalore · BITS Pilani · IIIT Hyderabad · IIT Madras · NIT Trichy · IIT Roorkee</i>
 </p>
 
-[Explore Documentation](#-table-of-contents) • [Live Demo](#-canonical-demo-accounts) • [Architecture](#-system-architecture) • [Getting Started](#-getting-started) • [API Reference](#-api-endpoint-reference)
+[Quick Start (Docker)](#-one-command-docker-quickstart) • [Live Demo](#-canonical-demo-accounts) • [Architecture](#-system-architecture) • [Comparison Matrix](#-why-campuslink-competitive-matrix) • [Contributing](CONTRIBUTING.md) • [Security](SECURITY.md)
 
 ---
 
@@ -62,6 +63,19 @@
 - **Relational Single Source of Truth:** Monolithic relational web architecture powered by **React 18 + Vite** (frontend), **Express 4 + TypeScript** (REST API), and **Prisma ORM on PostgreSQL** (30 relational models).
 - **Embedded Research Workspaces:** Integrated Monaco IDE for real-time code inspection, benchmark logs, and milestone deliveries.
 - **Zero Data Loss:** All connections, applications, answers, and messages are backed by persistent ACID transactions with relational foreign key integrity.
+
+### 📊 Why CampusLink? (Competitive Matrix)
+
+| Capabilities & Workflows | CampusLink 🎓 | LinkedIn / GitHub | Slack / Teams | ResearchGate |
+|---|:---:|:---:|:---:|:---:|
+| **Institutional Trust Nodes (.ac.in Verification)** | ✅ **Native** | ❌ Commercial | ❌ None | ⚠️ Email only |
+| **Cross-Campus Research Project Workspaces** | ✅ **Native** | ⚠️ Generic Git | ❌ None | ❌ None |
+| **Embedded Monaco Cloud IDE & Run Tests** | ✅ **Built-in** | ⚠️ GitHub Codespaces (Paid) | ❌ None | ❌ None |
+| **Faculty Mentorship & Office Hours Booking** | ✅ **Built-in** | ❌ None | ❌ None | ❌ None |
+| **Peer-Reviewed Canonical Q&A Threads** | ✅ **Built-in** | ❌ None | ⚠️ Unindexed chat | ⚠️ Static Q&A |
+| **Granular Academic RBAC (Student/Faculty/Lead)** | ✅ **Native** | ❌ Flat roles | ⚠️ Team admin only | ❌ Flat |
+| **ACID Relational Provenance (30 Prisma Models)** | ✅ **Full ACID** | ⚠️ Proprietary | ❌ Chat logs | ⚠️ Proprietary |
+| **One-Command Open-Source Self-Hosting** | ✅ **Docker Compose** | ❌ Proprietary SaaS | ❌ Proprietary SaaS | ❌ Proprietary SaaS |
 
 ---
 
@@ -333,20 +347,37 @@ Backend:
 
 ---
 
-## ⚡ Getting Started & Local Setup
+## ⚡ Getting Started & Deployment
 
-### 1. Prerequisites
+### 🐳 One-Command Docker Quickstart (Recommended)
+
+Get CampusLink up and running in **60 seconds** with isolated PostgreSQL 16, backend REST API, and frontend Nginx SPA:
+
+```bash
+# Clone the repository
+git clone https://github.com/Adityaagrahari525/collobration-platform.git
+cd collobration-platform
+
+# Spin up all 3 services (PostgreSQL, Express API, Vite SPA)
+docker compose up -d --build
+```
+
+- **Frontend Application:** [http://localhost](http://localhost)
+- **Backend API & Healthcheck:** [http://localhost:5000/api/health](http://localhost:5000/api/health)
+- **PostgreSQL Database:** `localhost:5432` (`campuslink_db`)
+
+---
+
+### 💻 Manual Local Development Setup
+
+If you prefer running services directly on your host machine:
+
+#### 1. Prerequisites
 - **Node.js**: `v18.0.0` or higher
 - **npm**: `v9.0.0` or higher
 - **PostgreSQL**: `v16.0` or higher (running on port 5432)
 
-### 2. Clone the Repository
-```bash
-git clone https://github.com/Adityaagrahari525/collobration-platform.git
-cd collobration-platform
-```
-
-### 3. Environment Configuration
+#### 2. Environment Configuration
 
 **Root Frontend Environment (`.env`):**
 ```env
@@ -363,7 +394,7 @@ NODE_ENV="development"
 PORT=5000
 ```
 
-### 4. Database Setup & Seeding
+#### 3. Database Setup & Seeding
 ```bash
 cd backend
 npm install
@@ -372,11 +403,11 @@ npm run prisma:seed
 cd ..
 ```
 
-### 5. Install Frontend Dependencies & Start
+#### 4. Install Frontend Dependencies & Start
 ```bash
 npm install
 
-# Start both backend and frontend concurrently or in two terminals:
+# Start both services concurrently:
 # Terminal 1: Backend API (Port 5000)
 cd backend && npm run dev
 
@@ -385,6 +416,18 @@ npm run dev
 ```
 
 Visit **`http://localhost:5173`** in your browser!
+
+---
+
+## 🤝 Community, Contribution & Security
+
+CampusLink is an enterprise-grade open-source project welcoming contributions from researchers, software engineers, and students worldwide.
+
+- **Found a Bug?** Open a report using our [Bug Report Form](.github/ISSUE_TEMPLATE/bug_report.yml).
+- **Proposing a Feature or RFC?** Submit a [Feature Request Form](.github/ISSUE_TEMPLATE/feature_request.yml).
+- **Submitting Code?** Review our [Contributing Guide (CONTRIBUTING.md)](CONTRIBUTING.md) and [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md).
+- **Security Policy:** Read our vulnerability disclosure timeline in [SECURITY.md](SECURITY.md).
+- **Code of Conduct:** We adhere to the Contributor Covenant v2.1 in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ---
 

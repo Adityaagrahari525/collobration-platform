@@ -1,0 +1,65 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug or functional defect in CampusLink
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in CampusLink Academic Network! Please provide as much detail as possible to help us reproduce and resolve it quickly.
+  - type: input
+    id: version
+    attributes:
+      label: CampusLink Version / Commit
+      placeholder: e.g. v1.0.0 or commit hash 098c228
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Subsystem
+      options:
+        - Scholar Directory & Connect (/people)
+        - Research Project Workspaces (/projects)
+        - Faculty Mentorship & Office Hours (/mentorship)
+        - Peer Q&A Knowledge Exchange (/questions)
+        - P2P Mesh Collaboration & Chat (/messages)
+        - Discipline Guilds & Communities (/communities)
+        - Authentication & JWT Session
+        - PostgreSQL Database / Prisma Schema
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+      placeholder: When clicking on...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Numbered steps to reproduce the issue.
+      placeholder: |
+        1. Go to '/people'
+        2. Click on 'Connect & Collaborate'
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+      placeholder: The connection request should be persisted and in-app toast displayed.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / OS
+      placeholder: e.g. Chrome 124 on Windows 11 / Safari on macOS
+    validations:
+      required: false
