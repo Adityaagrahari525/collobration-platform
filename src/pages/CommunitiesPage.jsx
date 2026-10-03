@@ -13,7 +13,9 @@ import {
   GraduationCap,
   ArrowRight,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Plus,
+  X
 } from "lucide-react";
 import { INITIAL_COMMUNITIES } from "../data/mockData";
 
