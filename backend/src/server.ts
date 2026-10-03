@@ -6,9 +6,12 @@ const server = app.listen(config.port, () => {
   console.log(`📡 Environment: ${config.nodeEnv}`);
 });
 
-process.on("unhandledRejection", (err: Error) => {
-  console.error("❌ Unhandled Rejection:", err.message);
-  server.close(() => process.exit(1));
+process.on("unhandledRejection", (reason: any) => {
+  console.error("⚠️ Unhandled Rejection:", reason?.message || reason);
+});
+
+process.on("uncaughtException", (err: Error) => {
+  console.error("⚠️ Uncaught Exception:", err);
 });
 
 export default server;

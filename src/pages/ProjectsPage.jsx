@@ -1,15 +1,48 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Sparkles, Info, ArrowRight } from "lucide-react";
+import { Search, Sparkles, Info, ArrowRight, Plus, X, FolderPlus } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { computeCompatibility, buildMatchExplanation } from "../utils/matchingAlgorithm";
 
 export const ProjectsPage = () => {
   const navigate = useNavigate();
-  const { projects, currentUser } = useApp();
+  const { projects, currentUser, createProject } = useApp();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSkill, setFilterSkill] = useState("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [description, setDescription] = useState("");
+  const [skillsStr, setSkillsStr] = useState("PyTorch, Embedded C++, Distributed Systems");
+
+  const handleCreateProject = async (e) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+    setIsSubmitting(true);
+    try {
+      const parsedSkills = skillsStr.split(",").map((s) => s.trim()).filter(Boolean);
+      await createProject({
+        title,
+        tagline: tagline || description.slice(0, 100),
+        description,
+        skillsRequired: parsedSkills,
+        requiredSkills: parsedSkills,
+        institution: currentUser?.institution || "IIT Delhi",
+        status: "ACTIVE",
+      });
+      setIsModalOpen(false);
+      setTitle("");
+      setTagline("");
+      setDescription("");
+    } catch (err) {
+      alert(err.message || "Failed to create project");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const filteredProjects = projects.filter((p) => {
     const skills = p.skillsRequired || p.requiredSkills || [];
@@ -33,6 +66,13 @@ export const ProjectsPage = () => {
             Collaborate on real-world academic research, open hardware telemetry, and computational infrastructure across India.
           </p>
         </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2.5 bg-primary text-on-primary rounded-xl font-title-sm text-title-sm font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-sm shrink-0"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Post Research Project</span>
+        </button>
       </div>
 
       {/* Filter Bar */}
@@ -134,6 +174,91 @@ export const ProjectsPage = () => {
           );
         })}
       </div>
+
+      {/* Post Project Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-on-surface/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-surface-container-high pb-4">
+              <div className="flex items-center gap-2 text-primary font-serif font-bold text-headline-sm">
+                <FolderPlus className="w-5 h-5 text-primary" />
+                <span>Post Inter-Institutional Project</span>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateProject} className="space-y-4 text-left">
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Project Title</label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Distributed Quantum State Simulator"
+                  className="w-full h-10 px-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Tagline / Short Brief</label>
+                <input
+                  type="text"
+                  value={tagline}
+                  onChange={(e) => setTagline(e.target.value)}
+                  placeholder="e.g. GPU-accelerated qubit state vector evolution across NKN nodes"
+                  className="w-full h-10 px-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Description & Objectives</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Detail the research scope, datasets involved, and open collaboration roles..."
+                  className="w-full p-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                ></textarea>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Required Skills (Comma separated)</label>
+                <input
+                  type="text"
+                  value={skillsStr}
+                  onChange={(e) => setSkillsStr(e.target.value)}
+                  placeholder="PyTorch, C++, Rust, ROS2, Edge AI"
+                  className="w-full h-10 px-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-surface-container-high">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-md text-label-md transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-5 py-2 bg-primary text-on-primary hover:bg-primary/90 rounded-lg font-label-md text-label-md font-semibold transition-all shadow-sm"
+                >
+                  {isSubmitting ? "Publishing..." : "Publish Project"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

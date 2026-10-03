@@ -1,78 +1,230 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { apiService } from "../services/apiService";
+
+const SCHOLAR_PEERS = [
+  {
+    id: "acf4e250-fa86-427e-87c3-375879e2598b",
+    name: "Rahul Sharma",
+    avatar: "RS",
+    role: "Lead Edge Architect",
+    institution: "IIT Delhi · Node #04",
+    email: "rahul.sharma@iitd.ac.in",
+  },
+  {
+    id: "5bd56243-ac60-4b69-8412-5ad8e20862fe",
+    name: "Ananya Iyer",
+    avatar: "AI",
+    role: "M.Tech AI Candidate · CV & Edge",
+    institution: "IIT Bombay · Node #02",
+    email: "ananya.iyer@iitb.ac.in",
+  },
+  {
+    id: "6f1ed189-5e0d-467b-b683-841d3acad116",
+    name: "Prof. Rajesh Sharma",
+    avatar: "PS",
+    role: ".ac.in Verified Faculty PI · CSE",
+    institution: "IIT Delhi · Faculty Node",
+    isFaculty: true,
+    email: "prof.sharma@cse.iitd.ac.in",
+  },
+  {
+    id: "4a567a2c-87c1-42ba-a16f-b131e99b9b06",
+    name: "Rohan Verma",
+    avatar: "RV",
+    role: "Distributed Systems Researcher",
+    institution: "IIIT Hyderabad · Node #07",
+    email: "rohan.verma@iiit.ac.in",
+  },
+];
+
+const INITIAL_ARCHIVE_MESSAGES = [
+  {
+    id: "m1",
+    sender: "Dr. K. Ramanathan",
+    avatar: "KR",
+    role: ".ac.in Verified Faculty PI · Hydrology Dept",
+    institution: "IIT Madras",
+    time: "09:15 AM",
+    signature: "0x3E1B...87A49",
+    isFaculty: true,
+    content: "Good morning team. During the overnight monsoonal simulation run at the Roorkee test flume, the ultrasonic depth readings showed high-frequency jitter during rapid crest surges (>12cm/min rise rate). We need to filter this before transmitting over LoRa to preserve battery life and payload efficiency.",
+    hasQuestionRef: true,
+  },
+  {
+    id: "m2",
+    sender: "Aditya Sharma",
+    isSelf: true,
+    avatar: "AS",
+    role: "Lead Edge Architect",
+    institution: "IIT Delhi · Node #04 · 4th Year B.Tech",
+    time: "09:32 AM",
+    signature: "Signed via Hardware Token",
+    content: "I've adapted the lightweight 1D Kalman filter implementation in Rust (crates/floodsense-dsp) to dynamically adjust measurement noise covariance R based on the surge velocity derivative. It drops redundant transmissions when rate-of-change is below threshold ε = 0.02:",
+    codeSnippet: true,
+  },
+  {
+    id: "m3",
+    sender: "Devavrat Saxena",
+    avatar: "DS",
+    role: "Ph.D. Candidate · Distributed Systems Lab",
+    institution: "IIT Delhi",
+    time: "09:48 AM",
+    signature: "Node Verified",
+    content: "Benchmarked Aditya's PR on the physical hardware test rig (ESP32-S3 + SX1262 LoRa module). Average active CPU awake time dropped from 48ms to 11ms per sample interval, extending simulated battery longevity from 42 days to 118 days on a standard 2500mAh LiFePO4 cell.",
+    milestoneRef: true,
+  },
+  {
+    id: "m4",
+    sender: "Dr. K. Ramanathan",
+    avatar: "KR",
+    role: "Faculty PI",
+    institution: "IIT Madras",
+    time: "10:04 AM",
+    signature: "0x3E1B...87A49",
+    isFaculty: true,
+    content: "Excellent work. I have formally signed off on this specification in the consortium provenance ledger. Please merge into main and tag release v0.3.2-alpha so the Roorkee field deployment team can flash the physical test nodes.",
+  }
+];
 
 export const MessagesPage = () => {
   const navigate = useNavigate();
-  const { messages, sendMessage } = useApp();
+  const { currentUser } = useApp();
   const [inputText, setInputText] = useState("");
-  const [chatMessages, setChatMessages] = useState([
-    {
-      id: "m1",
-      sender: "Dr. K. Ramanathan",
-      avatar: "KR",
-      role: ".ac.in Verified Faculty PI · Hydrology Dept",
-      institution: "IIT Madras",
-      time: "09:15 AM",
-      signature: "0x3E1B...87A49",
-      isFaculty: true,
-      content: "Good morning team. During the overnight monsoonal simulation run at the Roorkee test flume, the ultrasonic depth readings showed high-frequency jitter during rapid crest surges (>12cm/min rise rate). We need to filter this before transmitting over LoRa to preserve battery life and payload efficiency.",
-      hasQuestionRef: true,
-    },
-    {
-      id: "m2",
-      sender: "Aditya Sharma",
-      isSelf: true,
-      avatar: "AS",
-      role: "Lead Edge Architect",
-      institution: "IIT Delhi · Node #04 · 4th Year B.Tech",
-      time: "09:32 AM",
-      signature: "Signed via Hardware Token",
-      content: "I've adapted the lightweight 1D Kalman filter implementation in Rust (crates/floodsense-dsp) to dynamically adjust measurement noise covariance R based on the surge velocity derivative. It drops redundant transmissions when rate-of-change is below threshold ε = 0.02:",
-      codeSnippet: true,
-    },
-    {
-      id: "m3",
-      sender: "Devavrat Saxena",
-      avatar: "DS",
-      role: "Ph.D. Candidate · Distributed Systems Lab",
-      institution: "IIT Delhi",
-      time: "09:48 AM",
-      signature: "Node Verified",
-      content: "Benchmarked Aditya's PR on the physical hardware test rig (ESP32-S3 + SX1262 LoRa module). Average active CPU awake time dropped from 48ms to 11ms per sample interval, extending simulated battery longevity from 42 days to 118 days on a standard 2500mAh LiFePO4 cell.",
-      milestoneRef: true,
-    },
-    {
-      id: "m4",
-      sender: "Dr. K. Ramanathan",
-      avatar: "KR",
-      role: "Faculty PI",
-      institution: "IIT Madras",
-      time: "10:04 AM",
-      signature: "0x3E1B...87A49",
-      isFaculty: true,
-      content: "Excellent work. I have formally signed off on this specification in the consortium provenance ledger. Please merge into main and tag release v0.3.2-alpha so the Roorkee field deployment team can flash the physical test nodes.",
-    }
-  ]);
+  const [conversations, setConversations] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState("9c50287f-40c5-45cc-864f-a6056e8cfb49");
+  const [activePeer, setActivePeer] = useState(SCHOLAR_PEERS[1]); // default to Ananya
+  const [chatMessages, setChatMessages] = useState(INITIAL_ARCHIVE_MESSAGES);
+  const [livePulse, setLivePulse] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const pollTimerRef = useRef(null);
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+  // Synchronize conversation messages from backend / Supabase
+  const loadMessages = useCallback(async (convId) => {
+    if (!convId) return;
+    try {
+      const res = await apiService.getMessages(convId);
+      if (res && res.success && Array.isArray(res.data)) {
+        if (res.data.length > 0) {
+          const mapped = res.data.map((m) => {
+            const isMe = m.senderId === currentUser?.id || m.isSelf;
+            const initials = m.senderName
+              ? m.senderName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+              : "SC";
+            return {
+              id: m.id,
+              sender: isMe ? (currentUser?.name || m.senderName) : m.senderName,
+              avatar: initials,
+              role: isMe ? "Authenticated Scholar" : "Consortium Peer",
+              institution: isMe ? (currentUser?.institution || "IIT Delhi") : "Partner Node",
+              time: new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              signature: "PostgreSQL Persisted · Key Signed",
+              isSelf: isMe,
+              content: m.text,
+            };
+          });
+          // Merge archive with live database messages
+          setChatMessages([...INITIAL_ARCHIVE_MESSAGES, ...mapped]);
+        }
+      }
+    } catch {
+      // In offline or fallback mode, keep current messages
+    }
+  }, [currentUser]);
+
+  // Load conversations list
+  const loadConversations = useCallback(async () => {
+    try {
+      const res = await apiService.getConversations();
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        setConversations(res.data);
+        if (!activeConversationId && res.data[0]) {
+          setActiveConversationId(res.data[0].id);
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }, [activeConversationId]);
+
+  // Initial mount & real-time 2-second polling for multi-device sync
+  useEffect(() => {
+    loadConversations();
+    loadMessages(activeConversationId);
+
+    // Poll every 2 seconds so Device 2 immediately receives Device 1's messages
+    pollTimerRef.current = setInterval(() => {
+      loadMessages(activeConversationId);
+      setLivePulse((prev) => !prev);
+    }, 2000);
+
+    return () => {
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+    };
+  }, [activeConversationId, loadConversations, loadMessages]);
+
+  const handleSelectPeer = (peer) => {
+    setActivePeer(peer);
+    // Find if a conversation already exists with this peer
+    const match = conversations.find((c) => c.otherUser?.id === peer.id);
+    if (match) {
+      setActiveConversationId(match.id);
+      loadMessages(match.id);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!inputText.trim() || isSending) return;
+    const textToSend = inputText.trim();
+    setInputText("");
+    setIsSending(true);
+
     const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const newMsg = {
-      id: `m-${Date.now()}`,
-      sender: "Aditya Sharma",
+    const myInitials = currentUser?.name
+      ? currentUser.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+      : "ME";
+
+    // Immediate optimistic local message rendering
+    const optimisticMsg = {
+      id: `m-opt-${Date.now()}`,
+      sender: currentUser?.name || "You",
       isSelf: true,
-      avatar: "AS",
-      role: "Lead Edge Architect",
-      institution: "IIT Delhi · Node #04",
+      avatar: myInitials,
+      role: "Lead Node Architect",
+      institution: currentUser?.institution || "IIT Delhi · Node #04",
       time: timeStr,
       signature: "Key Signed (Consensus Verified)",
-      content: inputText.trim(),
+      content: textToSend,
     };
-    setChatMessages((prev) => [...prev, newMsg]);
-    setInputText("");
-    if (sendMessage) {
-      sendMessage(inputText.trim());
+    setChatMessages((prev) => [...prev, optimisticMsg]);
+
+    try {
+      // Determine recipient ID if conversation doesn't exist
+      let receiverId = activePeer?.id;
+      if (!receiverId) {
+        receiverId = currentUser?.email?.includes("ananya")
+          ? "acf4e250-fa86-427e-87c3-375879e2598b" // send to Rahul
+          : "5bd56243-ac60-4b69-8412-5ad8e20862fe"; // send to Ananya
+      }
+
+      const res = await apiService.sendMessage({
+        conversationId: activeConversationId || undefined,
+        receiverId: activeConversationId ? undefined : receiverId,
+        text: textToSend,
+      });
+
+      if (res && res.success && res.data) {
+        if (res.data.conversationId && res.data.conversationId !== activeConversationId) {
+          setActiveConversationId(res.data.conversationId);
+        }
+        // Immediately refresh database sync
+        loadMessages(res.data.conversationId || activeConversationId);
+      }
+    } catch (err) {
+      console.error("Message send failed:", err);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -82,23 +234,25 @@ export const MessagesPage = () => {
       <div className="bg-surface-container-lowest border-b border-surface-container px-space-lg py-2.5 flex items-center justify-between shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-secondary/10 text-secondary font-label-md text-label-md uppercase tracking-wider font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-            Encrypted Scholarly Mesh
+            <span className={`w-2 h-2 rounded-full transition-opacity duration-500 ${livePulse ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" : "bg-green-600"}`}></span>
+            Live Multi-Device Mesh Active
           </span>
           <span className="text-outline-variant">•</span>
-          <span className="font-body-sm text-body-sm text-on-surface-variant">Active Consortial Node: <strong className="text-on-surface font-title-sm">IITD-NODE-4091</strong> (Latency: 14ms · TLS 1.3 Strict)</span>
+          <span className="font-body-sm text-body-sm text-on-surface-variant">
+            Current Node: <strong className="text-on-surface font-title-sm">{currentUser?.name || "Rahul Sharma"}</strong> ({currentUser?.institution || "IIT Delhi"} · Role: {currentUser?.role || "STUDENT"})
+          </span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
-            <span>Institutional Key ID:</span>
-            <code className="font-mono bg-surface-container-high px-1.5 py-0.5 rounded text-primary">0x7F2B...C89A</code>
+            <span className="material-symbols-outlined text-[16px] text-secondary">sync</span>
+            <span>Real-time Polling:</span>
+            <code className="font-mono bg-surface-container-high px-1.5 py-0.5 rounded text-primary text-xs">2.0s Interval · PostgreSQL</code>
           </div>
           <span className="text-outline-variant">|</span>
-          <button className="font-label-md text-label-md text-primary-container hover:text-primary transition-colors flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">help</span>
-            <span>Discourse Ethics Guidelines</span>
-          </button>
+          <div className="flex items-center gap-1 text-primary text-xs font-semibold">
+            <span className="material-symbols-outlined text-[15px]">devices</span>
+            <span>2 Devices Connected</span>
+          </div>
         </div>
       </div>
 
@@ -223,28 +377,55 @@ export const MessagesPage = () => {
               </nav>
             </div>
 
-            {/* SECTION D: Direct Messages */}
+            {/* SECTION D: Direct Messages (Live Peer Network) */}
             <div className="py-2">
               <div className="px-space-md py-1.5 flex items-center justify-between text-outline">
                 <div className="flex items-center gap-1.5 font-label-md text-label-md uppercase tracking-wider">
                   <span className="material-symbols-outlined text-[15px]">chat</span>
                   <span>Scholarly Direct Messages</span>
                 </div>
+                <span className="font-mono text-[10px] text-green-600 font-bold">ONLINE</span>
               </div>
               <nav className="flex flex-col mt-0.5">
-                <a className="flex items-center gap-2.5 px-space-md py-2 hover:bg-surface-container-low transition-colors" href="#dm1">
-                  <div className="relative">
-                    <div className="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-title-sm text-[12px]">DS</div>
-                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-title-sm text-title-sm text-on-surface truncate">Devavrat Saxena</span>
-                      <span className="font-body-sm text-[10px] text-outline font-mono">10m</span>
-                    </div>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant truncate">Can you review the SPI driver timing diagram?</p>
-                  </div>
-                </a>
+                {SCHOLAR_PEERS.map((peer) => {
+                  const isSelected = activePeer?.id === peer.id;
+                  const isSelf = currentUser?.id === peer.id || currentUser?.email === peer.email;
+                  return (
+                    <button
+                      key={peer.id}
+                      onClick={() => handleSelectPeer(peer)}
+                      className={`w-full flex items-center gap-2.5 px-space-md py-2.5 transition-colors text-left border-l-2 ${
+                        isSelected
+                          ? "bg-surface-container border-primary font-semibold"
+                          : "hover:bg-surface-container-low border-transparent"
+                      }`}
+                    >
+                      <div className="relative flex-shrink-0">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-title-sm text-[11px] font-bold ${
+                          peer.isFaculty
+                            ? "bg-secondary text-on-secondary"
+                            : isSelected
+                            ? "bg-primary text-on-primary"
+                            : "bg-surface-container-high text-on-surface"
+                        }`}>
+                          {peer.avatar}
+                        </div>
+                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500 ring-2 ring-surface-container-lowest"></span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="font-title-sm text-title-sm text-on-surface truncate">
+                            {peer.name} {isSelf && <span className="text-primary text-[10px]">(You)</span>}
+                          </span>
+                          <span className="font-body-sm text-[10px] text-outline font-mono">Live</span>
+                        </div>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant truncate text-[11px]">
+                          {peer.role} · {peer.institution.split("·")[0]}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
               </nav>
             </div>
           </div>

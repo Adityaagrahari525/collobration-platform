@@ -18,4 +18,7 @@ export const config = {
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173",
   accessTokenExpiresIn: "15m",
   refreshTokenExpiresDays: 7,
+  googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/auth/google/callback",
 };

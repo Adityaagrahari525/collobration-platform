@@ -18,9 +18,13 @@ import {
 
 export const CommunitiesPage = () => {
   const navigate = useNavigate();
-  const { communities, joinCommunity, leaveCommunity } = useApp();
+  const { communities, joinCommunity, leaveCommunity, currentUser } = useApp();
   const [selectedDiscipline, setSelectedDiscipline] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("AI / ML");
+  const [description, setDescription] = useState("");
 
   const disciplines = [
     "1. All Communities",
@@ -35,6 +39,26 @@ export const CommunitiesPage = () => {
     "10. Mechanical",
     "11. Civil"
   ];
+
+  const handleCreateCommunity = (e) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    const newHub = {
+      id: `comm-${Date.now()}`,
+      name,
+      category,
+      description,
+      membersCount: 1,
+      isMember: true,
+      institution: currentUser?.institution || "IIT Delhi Hub",
+    };
+    if (safeCommunities) {
+      safeCommunities.unshift(newHub);
+    }
+    setIsModalOpen(false);
+    setName("");
+    setDescription("");
+  };
 
   const safeCommunities = Array.isArray(communities) ? communities : [];
   const filteredCommunities = safeCommunities.filter((c) => {
@@ -74,7 +98,7 @@ export const CommunitiesPage = () => {
                 <span className="font-label-sm text-label-sm text-primary uppercase tracking-widest bg-surface-container px-2 py-0.5 rounded">Consortium Node 04 / Multi-Campus Index</span>
                 <span className="text-on-surface-variant font-label-sm text-label-sm">•</span>
                 <span className="font-label-sm text-label-sm text-secondary flex items-center gap-0.5 font-medium">
-                  <span className="material-symbols-outlined text-[13px]">verified</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-secondary" />
                   Authenticated via .ac.in
                 </span>
               </div>
@@ -83,22 +107,31 @@ export const CommunitiesPage = () => {
                 Discipline-focused consortium hubs for collaborative inquiry, open-source repositories, and inter-institutional research.
               </p>
             </div>
-            {/* Institutional Stats Strip */}
-            <div className="flex items-center gap-space-lg bg-surface-container-low px-space-md py-space-sm rounded shadow-sm self-start lg:self-auto">
-              <div className="space-y-0.5">
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Indexed Guilds</div>
-                <div className="font-headline-sm text-headline-sm text-primary leading-none">28 <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">Hubs</span></div>
+            {/* Institutional Stats Strip & Action */}
+            <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto">
+              <div className="flex items-center gap-space-md bg-surface-container-low px-space-md py-space-sm rounded shadow-sm">
+                <div className="space-y-0.5">
+                  <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Indexed Guilds</div>
+                  <div className="font-headline-sm text-headline-sm text-primary leading-none">{safeCommunities.length} <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">Hubs</span></div>
+                </div>
+                <div className="w-px h-8 bg-surface-container"></div>
+                <div className="space-y-0.5">
+                  <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Faculty & Fellows</div>
+                  <div className="font-headline-sm text-headline-sm text-primary leading-none">4,820 <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">in 140+ Nodes</span></div>
+                </div>
+                <div className="w-px h-8 bg-surface-container"></div>
+                <div className="space-y-0.5">
+                  <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Peer Validation</div>
+                  <div className="font-headline-sm text-headline-sm text-tertiary-container leading-none">182 <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">Open Queries</span></div>
+                </div>
               </div>
-              <div className="w-px h-8 bg-surface-container"></div>
-              <div className="space-y-0.5">
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Faculty & Fellows</div>
-                <div className="font-headline-sm text-headline-sm text-primary leading-none">4,820 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">in 140+ Nodes</span></div>
-              </div>
-              <div className="w-px h-8 bg-surface-container"></div>
-              <div className="space-y-0.5">
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Peer Validation</div>
-                <div className="font-headline-sm text-headline-sm text-tertiary-container leading-none">182 <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">Open Queries</span></div>
-              </div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2.5 bg-primary text-on-primary rounded-xl font-title-sm text-title-sm font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-sm shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Guild / Hub</span>
+              </button>
             </div>
           </div>
           {/* Live Consortium Ledger Visual Micro-Strip */}
@@ -274,6 +307,84 @@ export const CommunitiesPage = () => {
           </div>
         </div>
       </section>
+      {/* Create Community Hub Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-on-surface/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest border border-surface-container-high rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-surface-container-high pb-4">
+              <div className="flex items-center gap-2 text-primary font-serif font-bold text-headline-sm">
+                <Plus className="w-5 h-5 text-primary" />
+                <span>Create Consortium Guild / Hub</span>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCommunity} className="space-y-4 text-left">
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Hub Name</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Indic LLM & Generative AI Lab"
+                  className="w-full h-10 px-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Category / Discipline</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-10 px-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="AI / ML">AI / ML</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Cybersecurity">Cybersecurity</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Research">Research</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-label-sm font-semibold text-on-surface">Description & Focus Areas</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Explain the mission, participating university labs, and focus topics..."
+                  className="w-full p-3 bg-surface-container-low border border-surface-container-high rounded-lg text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                ></textarea>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-surface-container-high">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-md text-label-md transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-primary text-on-primary hover:bg-primary/90 rounded-lg font-label-md text-label-md font-semibold transition-all shadow-sm"
+                >
+                  Establish Guild Hub
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

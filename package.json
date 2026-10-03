@@ -9,7 +9,8 @@
     "vercel-build": "cd backend && npm install && npx prisma generate && cd .. && vite build",
     "preview": "vite preview",
     "test:jury": "node scripts/test-jury-e2e.cjs",
-    "test:audit": "node scripts/test-comprehensive-audit.cjs"
+    "test:audit": "node scripts/test-comprehensive-audit.cjs",
+    "test:google": "node scripts/test-google-auth.cjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
