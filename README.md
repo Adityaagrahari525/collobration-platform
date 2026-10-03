@@ -15,24 +15,147 @@ CampusLink is engineered as a clean, monolithic, relational web system powered b
 
 ---
 
-## 🎯 Jury Acceptance Suite (100% Verified)
+## 🏛️ Comprehensive Transformation Log: What Was Done & Why
 
-To execute the automated end-to-end relational acceptance tests covering all 9 jury evaluation criteria, run:
+From the initial baseline repository to the current production-ready platform, the architecture underwent a systematic consolidation from a fragmented prototype into a **single relational source of truth**:
 
-```bash
-npm run test:jury
+### 1. Why Changes Were Made
+- **Fixed Authentication & Session Drop:** The initial codebase had dummy credentials (`scholar@iitd.ac.in`) that didn't exist in PostgreSQL, and cookies were dropped due to cross-origin port isolation (`5173` vs `5000`).
+- **Eliminated Data Loss & Volatile Mock State:** The previous prototype lacked an `/api/applications` backend route, silently writing application pitches into browser `localStorage` via a fallback shim (`dbService.js`). Applications vanished across different browsers and incognito tabs.
+- **Created a Single Relational Source of Truth:** Replaced the split prototype setup (unreachable Supabase project + localStorage + partial 6 Express routes) with a clean, monolithic architecture: **React 18 + Express 4 + TypeScript + Prisma ORM on PostgreSQL 18**.
+
+### 2. What Was Added
+- **`vite.config.js`:** Reverse proxy routing `/api` -> `http://localhost:5000` to eliminate cross-origin cookie drops.
+- **7 New Backend Domain Modules:**
+  - `applications/`: Relational application review, pitches, and status updates.
+  - `mentorship/`: Faculty office hours generation and slot reservation.
+  - `notifications/`: Event-driven alerts with unread badge counters.
+  - `communities/`: Inter-campus discipline hubs (AI/ML, Cybersecurity, Distributed Systems) with join/leave actions.
+  - `matching/`: Heuristic candidate compatibility calculation engine (0–100%).
+  - `messages/`: Inter-scholar collaboration chat.
+  - `audit/`: Administrative audit logging.
+- **4 Security & Observability Middlewares:** `requestIdMiddleware` (`X-Request-ID`), `authorization` (RBAC), `ownership`, and `rateLimit`.
+- **2 Automated Verification Suites:**
+  - `npm run test:jury` (`scripts/test-jury-e2e.cjs`): 9-criteria end-to-end acceptance suite.
+  - `npm run test:audit` (`scripts/test-comprehensive-audit.cjs`): 14-subsystem architecture and security audit suite.
+
+### 3. What Was Removed
+- **`src/services/dbService.js` (440 lines):** Removed client-side mock database fallback.
+- **`src/services/supabaseClient.js` (34 lines):** Removed dead Supabase client targeting unreachable remote host.
+- **18 Stitch Downloaded HTML Mockups (13,000+ lines):** Deleted unused static prototype files from `stitch_downloaded/`.
+- **Diagnostic Scripts:** Cleaned up `download_stitch.py` and `scratch/`.
+
+### 4. What Was Updated
+- **`backend/prisma/schema.prisma`:** Expanded to all **30 canonical relational models** with foreign key cascades (`onDelete: Cascade`).
+- **`backend/prisma/seed.ts`:** Pre-seeds 7 universities, 18 skills, 4 badges, 5 demo accounts, projects with open roles, applications, mentorship slots, faculty endorsements, and communities.
+- **`src/context/AppContext.jsx`:** Converted all mutations into live API transactions (`createProject`, `applyToProject`, `updateApplicationStatus`, `bookMentorshipSlot`, `voteQuestion`, `submitAnswer`, `joinCommunity`).
+- **Frontend Pages:** Wired `LoginPage`, `ProjectDetailPage`, `MentorshipPage`, `QuestionsFeedPage`, `PeoplePage`, and `CommunitiesPage` to real database APIs.
+
+---
+
+## ⏱️ Jury Step-by-Step Acceptance Walkthrough (Time-to-Time)
+
+To evaluate the system live, the jury can execute this chronological, step-by-step verification flow:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Lead as Project Lead (Rahul @ IITD)
+    participant UI as CampusLink React UI
+    participant API as Express API (:5000)
+    participant DB as PostgreSQL 18
+    actor Cand as Candidate (Ananya @ IITB)
+
+    Note over Lead,Cand: T+0:00 — CLI Automated Verification
+    Lead->>API: Run npm run test:jury & test:audit
+    API->>DB: Verify 14 Subsystems & 9 Criteria
+    DB-->>Lead: 100% Tests Pass
+
+    Note over Lead,Cand: T+0:30 — Candidate Applies (Browser A)
+    Cand->>UI: Log in as Ananya (1-Click Demo)
+    Cand->>UI: Apply for "Computer Vision Engineer" on FloodSense AI
+    UI->>API: POST /api/projects/:id/apply (Pitch + Match Score: 94.5%)
+    API->>DB: INSERT into ProjectApplication
+
+    Note over Lead,Cand: T+1:00 — Lead Reviews & Enrolls (Browser B)
+    Lead->>UI: Log in as Rahul (1-Click Demo)
+    UI->>API: GET /api/projects/:id (Fetch Applications)
+    Lead->>UI: Click [Accept into Project]
+    UI->>API: PATCH /api/applications/:id/status (ACCEPTED)
+    API->>DB: Transaction: UPDATE Application & UPSERT ProjectMember
+    API->>DB: INSERT Notification (APPLICATION_ACCEPTED)
+
+    Note over Lead,Cand: T+1:30 — Candidate Verification (Browser A)
+    Cand->>UI: Real-time Notification Received: "Application Accepted! 🎉"
+    Cand->>UI: Team Member Count Increments & Active Member Badge shown
+
+    Note over Lead,Cand: T+2:00 — Mentorship Booking
+    Cand->>UI: Book Faculty Slot with Dr. Rajesh Sharma
+    UI->>API: POST /api/mentorship/slots/:id/book
+    API->>DB: Reserve Slot & Decrement Capacity
 ```
 
-### Verified Criteria:
-1. **Canonical Backend Health & Envelopes:** `{ success: true, data: ..., requestId: "REQ-..." }` with `X-Request-ID` telemetry.
-2. **Project Lead JWT Authentication:** Hybrid HttpOnly cookies + Bearer auth headers.
-3. **Candidate Scholar Authentication:** Multi-user cross-session authentication.
-4. **Project Workspace Retrieval:** Relational projects, roles, and pending applications.
-5. **Interactive Application Review:** Express + Prisma relational status updates (`[Accept into Project]`).
-6. **Active Project Membership:** Atomic enrollment into `ProjectMember` in PostgreSQL.
-7. **Real-time Event Notifications:** Dispatch of `APPLICATION_ACCEPTED` and `PROJECT_APPLICATION` notifications.
-8. **Faculty Mentorship Booking:** Relational office hours reservation with capacity tracking.
-9. **Q&A Knowledge Exchange:** Inter-campus discussions, voting, and official faculty endorsements.
+### Chronological Step Breakdown:
+
+| Time | Step Name | Actor & Environment | Action & Expected Verification |
+| :---: | :--- | :--- | :--- |
+| **T+0:00** | **Automated Suite Execution** | Terminal CLI | Run `npm run test:jury` and `npm run test:audit`. All 23 tests pass with 100% green checkmarks. |
+| **T+0:30** | **Lead Session Sign-In** | Browser A (`127.0.0.1:5173/login`) | Click **Rahul (Lead)** button. Authenticates instantly with JWT, displays IIT Delhi institutional trust badge. |
+| **T+1:00** | **Applicant Session Sign-In** | Browser B (Incognito) | Click **Ananya (Candidate)** button. Authenticates as IIT Bombay M.Tech scholar. Browse to **Projects** -> **FloodSense AI**. |
+| **T+1:30** | **Candidate Application** | Browser B | Submit application for *Computer Vision & Remote Sensing Engineer*. Pitch and 94.5% heuristic match score recorded in PostgreSQL. |
+| **T+2:00** | **Lead Review & Acceptance** | Browser A | Switch to Rahul's browser. Notification badge lights up. Open FloodSense AI -> **Applications** tab -> Click **[Accept into Project]**. |
+| **T+2:30** | **Relational Team Enrollment** | Browser A & B | Ananya is enrolled as an active `ProjectMember`. Team member count increments from 1 to 2 in real-time. |
+| **T+3:00** | **Notification Receipt** | Browser B | Ananya receives instant notification: *"Application Accepted! Congratulations..."* linked to workspace. |
+| **T+3:30** | **Faculty Office Hours Reservation** | Browser B (`/mentorship`) | Browse faculty slots -> Book 45-min research session with Dr. Rajesh Sharma. Slot status updates to `BOOKED`. |
+| **T+4:00** | **Q&A Knowledge Exchange** | Browser A (`/questions`) | Upvote technical questions, review official faculty endorsement seals, and submit peer answers with proof attachments. |
+| **T+4:30** | **Persistence Verification** | Both Browsers | Hard refresh (`Ctrl + F5`) or restart browsers. All sessions, team memberships, and bookings remain intact in PostgreSQL. |
+
+---
+
+## 🎯 Test Results & Audit Matrix (100% Passing)
+
+### 1. Jury Acceptance Suite (`npm run test:jury`) — 9/9 Criteria
+```
+═══════════════════════════════════════════════════════════════
+ 🧪 CAMPUSLINK JURY ACCEPTANCE END-TO-END TEST
+═══════════════════════════════════════════════════════════════
+1️⃣  Verifying Backend Health & Canonical Envelopes...       ✅ PASS
+2️⃣  Authenticating Project Lead (Rahul Sharma @ IITD)...     ✅ PASS
+3️⃣  Authenticating Candidate (Ananya Iyer @ IITB)...        ✅ PASS
+4️⃣  Fetching FloodSense Research Project Workspace...       ✅ PASS
+5️⃣  Lead Reviews & Clicks [ACCEPT] Application...           ✅ PASS
+6️⃣  Verifying Project Membership in PostgreSQL...           ✅ PASS
+7️⃣  Verifying Notification delivered to Ananya...           ✅ PASS
+8️⃣  Testing Faculty Mentorship Slot Booking...              ✅ PASS
+9️⃣  Testing Q&A Thread & Endorsement Engine...               ✅ PASS
+═══════════════════════════════════════════════════════════════
+ 🎯 JURY ACCEPTANCE TEST RESULT: 100% PASSED (ALL 9 CRITERIA)
+═══════════════════════════════════════════════════════════════
+```
+
+### 2. Comprehensive Subsystems Audit (`npm run test:audit`) — 14/14 Tests
+```
+════════════════════════════════════════════════════════════════════════════════
+ 🧪 CAMPUSLINK CANONICAL SYSTEM & AUDIT TEST SUITE (14 SUBSYSTEMS)
+════════════════════════════════════════════════════════════════════════════════
+  ✅ [Infra] Backend Health & X-Request-ID Telemetry (REQ-...)
+  ✅ [Auth] Student Lead JWT Authentication (Rahul Sharma @ IITD)
+  ✅ [Auth] Candidate Scholar JWT Authentication (Ananya Iyer @ IITB)
+  ✅ [Auth] Faculty Mentor Authentication (Dr. Rajesh Sharma @ IITD)
+  ✅ [Auth] Consortium Admin Authentication (SuperAdmin)
+  ✅ [Directory] Institutional Directory Retrieval (7 Tier-1 Nodes)
+  ✅ [Directory] Verified Technical Skills Registry (18 Skills)
+  ✅ [Projects] Project Workspace Listing & Open Roles Retrieval
+  ✅ [Matching] Candidate Application & Heuristic Match Computation (94.5%)
+  ✅ [Workflow] Atomic Lead Review & [Accept into Project] Transaction
+  ✅ [Database] PostgreSQL ProjectMember Relational Enrollment
+  ✅ [Notifications] Application Acceptance Event Notification Delivery
+  ✅ [Q&A] Inter-Campus Q&A Engine & Official Faculty Endorsements
+  ✅ [Communities] Inter-Campus Communities & Discipline Guilds (3 Hubs)
+════════════════════════════════════════════════════════════════════════════════
+ 🎯 COMPREHENSIVE AUDIT RESULT: 14/14 TESTS PASSED (100%)
+════════════════════════════════════════════════════════════════════════════════
+```
 
 ---
 
@@ -50,43 +173,16 @@ The database includes pre-seeded verified accounts across key consortium institu
 
 ---
 
-## 🌟 Key Architecture & Capabilities
-
-### 1. 🗄️ Relational PostgreSQL Single Source of Truth
-- **30 Canonical Relational Models:** `User`, `UserProfile`, `Institution`, `Skill`, `UserSkill`, `Project`, `ProjectRole`, `ProjectApplication`, `ProjectMember`, `Question`, `Answer`, `QuestionVote`, `AnswerVote`, `MentorshipSlot`, `MentorshipBooking`, `Community`, `CommunityMember`, `Notification`, and more.
-- **Zero Mock State:** All actions persist directly to PostgreSQL; data survives page reloads, browser restarts, and cross-browser logins.
-
-### 2. 🔐 Robust Enterprise Authentication
-- **Dual Authentication Protocol:** Dual support for `HttpOnly` secure cookies and `Authorization: Bearer <token>` headers with local storage synchronization.
-- **Role-Based Access Control (RBAC):** Middleware checks for `STUDENT`, `FACULTY`, `ADMIN`, and project ownership.
-
-### 3. 🤝 Project Matching & Teammate Recruitment
-- **Heuristic Compatibility Scoring:** Multi-factor algorithm evaluating skill overlap, experience level, and domain interest (e.g., 94.5% match for Remote Sensing).
-- **Interactive Review Workspace:** Leads review pitch submissions, match badges, and approve candidates with instant team enrollment.
-
-### 4. 🎓 Faculty Mentorship & Office Hours
-- Real-time slot booking with capacity limits and status tracking (`AVAILABLE`, `BOOKED`, `COMPLETED`).
-- Direct integration with calendar links and student notification feeds.
-
-### 5. 💡 Academic Q&A & Knowledge Exchange
-- Inquiries tagged by department, academic year, and domain specializations.
-- Double-blind peer evaluations, upvoting mechanics, and official faculty endorsement seals.
-
-### 6. 💻 Embedded Monaco IDE Code Workspace
-- In-browser code editing inside project detail views supporting Python, JavaScript, TypeScript, C++, and JSON.
-
----
-
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Architecture
 
 | Layer | Technology |
 | :--- | :--- |
-| **Frontend** | React 18, Vite, React Router v6, TailwindCSS |
-| **Backend** | Node.js, Express 4, TypeScript |
-| **Database & ORM** | PostgreSQL 16+, Prisma ORM 5.x |
-| **Authentication** | JWT, HttpOnly Cookies, Bearer Tokens, Bcrypt |
-| **Code Workspace** | `@monaco-editor/react` (Monaco Editor) |
-| **Testing** | Node test harness (`scripts/test-jury-e2e.cjs`) |
+| **Frontend Framework** | React 18, Vite, React Router v6, TailwindCSS |
+| **Backend Framework** | Node.js, Express 4, TypeScript |
+| **Database & ORM** | PostgreSQL 16+, Prisma ORM 5.x (30 Relational Models) |
+| **Security & Auth** | JWT, HttpOnly Cookies, Bearer Auth, Bcrypt, Zod |
+| **Code Workspace** | `@monaco-editor/react` (Embedded Monaco IDE) |
+| **Testing Harnesses** | Node test runners (`scripts/test-jury-e2e.cjs`, `scripts/test-comprehensive-audit.cjs`) |
 
 ---
 
