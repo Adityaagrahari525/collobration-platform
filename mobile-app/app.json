@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "CampusLink — Academic Network",
+    "slug": "campuslink-academic",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#00236f"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.campuslink.academic"
+    },
+    "android": {
+      "package": "org.campuslink.academic",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#00236f",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
+      "predictiveBackGestureEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "campuslink-academic-ps004"
+      }
+    }
+  }
+}
